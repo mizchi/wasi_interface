@@ -1,14 +1,7 @@
 {
   "name": "mizchi/wasi_posix",
   "version": "0.1.0",
-  "deps": {
-    "mizchi/ast_printer": "0.2.0",
-    "mizchi/wit": "0.1.1",
-    "moonbitlang/parser": "0.1.13",
-    "moonbitlang/x": "0.4.40"
-  },
-  "source": "src",
-  "preferred-target": "wasm-gc",
+  "deps": {},
   "readme": "README.mbt.md",
   "repository": "https://github.com/mizchi/wasi_posix",
   "license": "MIT",
@@ -17,5 +10,7 @@
     "posix",
     "moonbit"
   ],
-  "description": "WASI Preview2/Preview3 contract definitions for host integration boundaries."
+  "description": "WASI Preview2/Preview3 contract definitions for host integration boundaries.",
+  "source": "src",
+  "preferred-target": "wasm-gc"
 }

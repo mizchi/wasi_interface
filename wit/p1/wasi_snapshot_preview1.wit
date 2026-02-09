@@ -1,0 +1,25 @@
+package wasi:preview1@0.1.0;
+
+interface wasi-snapshot-preview1 {
+  type fd = u32;
+  type errno = u16;
+  type size = u32;
+  type timestamp = u64;
+  type clockid = u32;
+  type exitcode = u32;
+
+  args-sizes-get: func() -> tuple<size, size>;
+  args-get: func() -> errno;
+  environ-sizes-get: func() -> tuple<size, size>;
+  environ-get: func() -> errno;
+  clock-time-get: func(id: clockid, precision: timestamp) -> result<timestamp, errno>;
+  fd-read: func(fd: fd, max-size: size) -> result<list<u8>, errno>;
+  fd-write: func(fd: fd, data: list<u8>) -> result<size, errno>;
+  fd-close: func(fd: fd) -> errno;
+  random-get: func(len: size) -> result<list<u8>, errno>;
+  proc-exit: func(code: exitcode);
+}
+
+world preview1-command {
+  import wasi-snapshot-preview1;
+}

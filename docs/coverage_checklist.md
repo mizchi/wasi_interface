@@ -2,7 +2,7 @@
 
 Last updated: 2026-02-09
 
-This file tracks generated contract modules in `src/p2/gen_*.mbt` and `src/p3/gen_*.mbt`.
+This file tracks generated contract modules in `src/p1/gen_*.mbt`, `src/p2/gen_*.mbt`, and `src/p3/gen_*.mbt`.
 
 Status:
 
@@ -46,6 +46,12 @@ Status:
 | sockets | `wasi:sockets/tcp-create-socket` | Done | `gen_sockets_tcp_create_socket.mbt` |
 | sockets | `wasi:sockets/ip-name-lookup` | Done | `gen_sockets_ip_name_lookup.mbt` |
 
+## p1 (`wit/p1/wasi_snapshot_preview1.wit`)
+
+| Domain | Interface | Status | Module |
+|---|---|---|---|
+| preview1 | `wasi:preview1/wasi-snapshot-preview1` | Done | `gen_preview1_wasi_snapshot_preview1.mbt` |
+
 ## p3 (`WebAssembly/WASI/proposals/*/wit-0.3.0-draft`)
 
 | Domain | Interface | Status | Module |
@@ -86,6 +92,6 @@ Status:
 
 ## Next checkpoints
 
-- [ ] Reduce sanitize-based drops by extending parser compatibility in `src/codegen/generator.mbt`
+- [ ] Reduce sanitize-based drops by extending parser compatibility in `tools/codegen/src/codegen/generator.mbt`
 - [ ] Add snapshot checks for trait/method counts to detect generation regressions
 - [ ] Re-run `just gen-all` when upstream WIT drafts are updated

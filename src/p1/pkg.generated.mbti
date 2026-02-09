@@ -1,0 +1,41 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/wasi_posix/p1"
+
+// Values
+
+// Errors
+pub(all) suberror WasiError {
+  NotImplemented(String)
+  CapabilityDenied(String)
+  FromPreview1wasisnapshotpreview1errno(Preview1WasiSnapshotPreview1Errno)
+}
+
+// Types and methods
+pub(all) type Preview1WasiSnapshotPreview1Clockid
+
+pub(all) type Preview1WasiSnapshotPreview1Errno
+
+pub(all) type Preview1WasiSnapshotPreview1Exitcode
+
+pub(all) type Preview1WasiSnapshotPreview1Fd
+
+pub(all) type Preview1WasiSnapshotPreview1Size
+
+pub(all) type Preview1WasiSnapshotPreview1Timestamp
+
+// Type aliases
+
+// Traits
+pub(open) trait WasiPreview1WasiSnapshotPreview1Adapter {
+  args_sizes_get(Self) -> Result[Bytes, WasiError] = _
+  args_get(Self) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
+  environ_sizes_get(Self) -> Result[Bytes, WasiError] = _
+  environ_get(Self) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
+  clock_time_get(Self, Preview1WasiSnapshotPreview1Clockid, Preview1WasiSnapshotPreview1Timestamp) -> Result[Preview1WasiSnapshotPreview1Timestamp, WasiError] = _
+  fd_read(Self, Preview1WasiSnapshotPreview1Fd, Preview1WasiSnapshotPreview1Size) -> Result[Bytes, WasiError] = _
+  fd_write(Self, Preview1WasiSnapshotPreview1Fd, Bytes) -> Result[Preview1WasiSnapshotPreview1Size, WasiError] = _
+  fd_close(Self, Preview1WasiSnapshotPreview1Fd) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
+  random_get(Self, Preview1WasiSnapshotPreview1Size) -> Result[Bytes, WasiError] = _
+  proc_exit(Self, Preview1WasiSnapshotPreview1Exitcode) -> Result[Unit, WasiError] = _
+}
+

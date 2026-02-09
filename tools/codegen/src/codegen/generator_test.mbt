@@ -41,17 +41,22 @@ test "generate trait adapters from WIT source for fs/clock/http/socket" {
     }
   }
   assert_true(code.contains("pub(open) trait WasiSampleFilesystemAdapter"))
-  assert_true(code.contains("read_file(Self, String) -> Result[Bytes, String]"))
+  assert_true(
+    code.contains("read_file(Self, String) -> Result[Bytes, WasiError] = _"),
+  )
   assert_true(code.contains("pub(open) trait WasiSampleClockAdapter"))
-  assert_true(code.contains("now(Self) -> UInt64"))
+  assert_true(code.contains("now(Self) -> Result[UInt64, WasiError] = _"))
   assert_true(code.contains("pub(open) trait WasiSampleHostHttpAdapter"))
   assert_true(
-    code.contains("send(Self, String, Bytes) -> Result[Bytes, String]"),
+    code.contains("send(Self, String, Bytes) -> Result[Bytes, WasiError] = _"),
   )
   assert_true(code.contains("pub(open) trait WasiSampleHostSocketAdapter"))
   assert_true(
-    code.contains("connect(Self, String, UInt) -> Result[UInt, String]"),
+    code.contains("connect(Self, String, UInt) -> Result[UInt, WasiError] = _"),
   )
+  assert_true(code.contains("pub(all) suberror WasiError"))
+  assert_true(code.contains("FromString(String)"))
+  assert_true(code.contains("Err(WasiError::NotImplemented("))
   let (_impls, reports) = @parser.parse_string(code)
   assert_eq(reports.length(), 0)
 }
@@ -70,7 +75,8 @@ test "generate trait adapter modules split by interface" {
     #|}
   let generated = generate_trait_adapter_modules_from_wit_source(source)
   guard generated is Ok(modules) else { abort("expected generator success") }
-  assert_eq(modules.length(), 2)
+  assert_eq(modules.length(), 3)
+  assert_true(find_module_code(modules, "gen_wasi_error.mbt") is Some(_))
   assert_true(find_module_code(modules, "gen_sample_filesystem.mbt") is Some(_))
   assert_true(find_module_code(modules, "gen_sample_clock.mbt") is Some(_))
 }
@@ -84,7 +90,10 @@ test "generate trait adapters keeps identifier conversion stable" {
   let generated = generate_trait_adapters_from_wit_source(source)
   guard generated is Ok(code) else { abort("expected generator success") }
   assert_true(code.contains("pub(open) trait WasiHttpHandlerAdapter"))
-  assert_true(code.contains("send_request(Self, String) -> String"))
+  assert_true(
+    code.contains("send_request(Self, String) -> Result[String, WasiError] = _"),
+  )
+  assert_true(code.contains("Err(WasiError::NotImplemented("))
 }
 
 ///|
@@ -122,7 +131,10 @@ test "generate trait adapters emit interface scoped types" {
   let generated = generate_trait_adapters_from_wit_source(source)
   guard generated is Ok(code) else { abort("expected generator success") }
   assert_true(code.contains("pub(all) struct FilesystemTypesNodeStat"))
-  assert_true(code.contains("get(Self) -> FilesystemTypesNodeStat"))
+  assert_true(
+    code.contains("get(Self) -> Result[FilesystemTypesNodeStat, WasiError] = _"),
+  )
+  assert_true(code.contains("Err(WasiError::NotImplemented("))
 }
 
 ///|

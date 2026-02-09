@@ -2,7 +2,6 @@
 pub(all) suberror GenerateError {
   WitParse(String)
   GeneratedCodeParse(String)
-  PrinterFailed(String)
 } derive(Show, Eq)
 
 ///|
@@ -17,6 +16,18 @@ pub(all) struct GeneratedModule {
   file_name : String
   code : String
 } derive(Show, Eq)
+
+///|
+priv struct GeneratedMethod {
+  method_name : String
+  param_count : Int
+}
+
+///|
+priv struct ErrorVariant {
+  variant_name : String
+  payload_type : String?
+}
 
 ///|
 fn parse_error_to_string(err : @wit.ParseError) -> String {
@@ -519,6 +530,18 @@ fn emit_result_type(result_ty : @wit.TypeExpr?, prefix : String) -> String {
 }
 
 ///|
+fn emit_contract_result_type(
+  result_ty : @wit.TypeExpr?,
+  prefix : String,
+) -> String {
+  match result_ty {
+    Some(@wit.TypeExpr::Result(ok_ty, _)) =>
+      "Result[" + emit_type_expr(ok_ty, prefix) + ", WasiError]"
+    _ => "Result[" + emit_result_type(result_ty, prefix) + ", WasiError]"
+  }
+}
+
+///|
 fn collect_type_refs_from_type_expr(
   ty : @wit.TypeExpr,
   refs : Array[String],
@@ -712,8 +735,33 @@ fn emit_trait_method(
     buf.write_string(emit_type_expr(param.ty, prefix))
   }
   buf.write_string(") -> ")
-  buf.write_string(emit_result_type(func.result, prefix))
-  buf.write_string("\n")
+  buf.write_string(emit_contract_result_type(func.result, prefix))
+  buf.write_string(" = _\n")
+}
+
+///|
+fn emit_default_trait_impl(
+  buf : StringBuilder,
+  trait_name : String,
+  generated_method : GeneratedMethod,
+  prefix : String,
+) -> Unit {
+  buf.write_string("impl ")
+  buf.write_string(trait_name)
+  buf.write_string(" with ")
+  buf.write_string(generated_method.method_name)
+  buf.write_string("(_self")
+  for i in 0..<generated_method.param_count {
+    buf.write_string(", _arg")
+    buf.write_string(i.to_string())
+  }
+  buf.write_string(") {\n")
+  buf.write_string("  Err(WasiError::NotImplemented(\"")
+  buf.write_string(prefix)
+  buf.write_string(".")
+  buf.write_string(generated_method.method_name)
+  buf.write_string("\"))\n")
+  buf.write_string("}\n")
 }
 
 ///|
@@ -767,6 +815,7 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
   buf.write_string(trait_name)
   buf.write_string(" {\n")
   let used_method_names : Array[String] = []
+  let generated_methods : Array[GeneratedMethod] = []
   for item in shape.items {
     match item {
       @wit.InterfaceItem::Function(func) => {
@@ -775,6 +824,10 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
           used_method_names,
         )
         emit_trait_method(buf, method_name, func, shape.prefix)
+        generated_methods.push({
+          method_name,
+          param_count: func.params.length(),
+        })
       }
       @wit.InterfaceItem::TypeDef(type_def) =>
         match type_def.kind {
@@ -785,11 +838,105 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
                 used_method_names,
               )
               emit_trait_method(buf, method_name, func, shape.prefix)
+              generated_methods.push({
+                method_name,
+                param_count: func.params.length(),
+              })
             }
           _ => ()
         }
       @wit.InterfaceItem::Use(_) => ()
     }
+  }
+  buf.write_string("}\n")
+  buf.write_string("\n")
+  for generated_method in generated_methods {
+    emit_default_trait_impl(buf, trait_name, generated_method, shape.prefix)
+    buf.write_string("\n")
+  }
+  buf.to_string()
+}
+
+///|
+fn collect_error_type_from_result(
+  result_ty : @wit.TypeExpr?,
+  prefix : String,
+  error_types : Array[String],
+) -> Unit {
+  match result_ty {
+    Some(@wit.TypeExpr::Result(_, Some(err_ty))) => {
+      let ty = emit_type_expr(err_ty, prefix)
+      push_unique_string(error_types, ty)
+    }
+    _ => ()
+  }
+}
+
+///|
+fn collect_error_types_from_shape(
+  shape : InterfaceShape,
+  error_types : Array[String],
+) -> Unit {
+  for item in shape.items {
+    match item {
+      @wit.InterfaceItem::Function(func) =>
+        collect_error_type_from_result(func.result, shape.prefix, error_types)
+      @wit.InterfaceItem::TypeDef(type_def) =>
+        match type_def.kind {
+          @wit.TypeDefKind::Resource(resource) =>
+            for func in resource.funcs {
+              collect_error_type_from_result(
+                func.result,
+                shape.prefix,
+                error_types,
+              )
+            }
+          _ => ()
+        }
+      @wit.InterfaceItem::Use(_) => ()
+    }
+  }
+}
+
+///|
+fn build_error_variants(shapes : Array[InterfaceShape]) -> Array[ErrorVariant] {
+  let error_types : Array[String] = []
+  for shape in shapes {
+    collect_error_types_from_shape(shape, error_types)
+  }
+  let used_names : Array[String] = []
+  let variants : Array[ErrorVariant] = []
+  for ty in error_types {
+    let base = "From" + to_pascal_case(ty)
+    let variant_name = unique_method_name(base, used_names)
+    variants.push({ variant_name, payload_type: Some(ty) })
+  }
+  variants
+}
+
+///|
+fn emit_wasi_error_module(variants : Array[ErrorVariant]) -> String {
+  let buf = StringBuilder::new()
+  buf.write_string("///| Generated by wasi_posix WIT adapter generator.\n")
+  buf.write_string(
+    "///| This file is intended to be generated; do not edit manually.\n\n",
+  )
+  buf.write_string("///|\n")
+  buf.write_string("pub(all) suberror WasiError {\n")
+  buf.write_string("  NotImplemented(String)\n")
+  buf.write_string("  CapabilityDenied(String)\n")
+  for variant in variants {
+    buf.write_string("  ")
+    buf.write_string(variant.variant_name)
+    match variant.payload_type {
+      Some(payload_type) => {
+        buf.write_char('(')
+        buf.write_string(payload_type)
+        buf.write_char(')')
+      }
+      None => ()
+    }
+    buf.write_string("\n")
   }
   buf.write_string("}\n")
   buf.to_string()
@@ -906,11 +1053,7 @@ fn format_generated_code(raw : String) -> Result[String, GenerateError] {
   if reports.length() > 0 {
     return Err(GenerateError::GeneratedCodeParse(reports[0].to_string()))
   }
-  match @ast_printer.print_code(parsed) {
-    Some(printed) => Ok(printed)
-    None =>
-      Err(GenerateError::PrinterFailed("ast_printer.print_code returned None"))
-  }
+  Ok(raw)
 }
 
 ///|
@@ -918,6 +1061,12 @@ fn generate_modules_from_shapes(
   shapes : Array[InterfaceShape],
 ) -> Result[Array[GeneratedModule], GenerateError] {
   let modules : Array[GeneratedModule] = []
+  let error_variants = build_error_variants(shapes)
+  let error_raw = emit_wasi_error_module(error_variants)
+  match format_generated_code(error_raw) {
+    Ok(code) => modules.push({ file_name: "gen_wasi_error.mbt", code })
+    Err(err) => return Err(err)
+  }
   for shape in shapes {
     let raw = emit_raw_module_code(shape)
     match format_generated_code(raw) {

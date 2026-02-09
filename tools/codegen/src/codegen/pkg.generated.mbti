@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/wasi_posix/codegen"
+package "mizchi/wasi_posix_codegen/codegen"
 
 import {
   "mizchi/wit",
@@ -34,7 +34,6 @@ pub fn generate_trait_adapters_from_wit_sources(Array[String]) -> Result[String,
 pub(all) suberror GenerateError {
   WitParse(String)
   GeneratedCodeParse(String)
-  PrinterFailed(String)
 }
 pub impl Eq for GenerateError
 pub impl Show for GenerateError
