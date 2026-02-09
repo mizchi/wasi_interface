@@ -1,4 +1,4 @@
-# wasi_posix
+# wasi_interface
 
 WASI Preview2/Preview3 contract definitions for host injection boundaries.
 

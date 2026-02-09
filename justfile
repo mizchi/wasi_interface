@@ -4,7 +4,7 @@
 target := "wasm-gc"
 p2_wit_root := "/Users/mz/ghq/github.com/mizchi/wasi.mbt/wit/deps"
 p3_wit_root := "/Users/mz/ghq/github.com/WebAssembly/WASI/proposals"
-p1_wit_path := "/Users/mz/ghq/github.com/mizchi/wasi_posix/wit/p1/wasi_snapshot_preview1.wit"
+p1_wit_path := "wit/p1/wasi_snapshot_preview1.wit"
 codegen_dir := "tools/codegen"
 
 # Default task: check and test

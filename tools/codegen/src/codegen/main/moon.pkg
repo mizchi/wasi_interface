@@ -1,5 +1,5 @@
 import {
-  "mizchi/wasi_posix_codegen/codegen" as @codegen,
+  "mizchi/wasi_interface_codegen/codegen" as @codegen,
   "moonbitlang/x/fs" as @fs,
   "moonbitlang/x/sys" as @sys,
 }

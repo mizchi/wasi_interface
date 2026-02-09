@@ -1,13 +1,13 @@
 {
-  "name": "mizchi/wasi_posix",
+  "name": "mizchi/wasi_interface",
   "version": "0.1.0",
   "deps": {},
   "readme": "README.mbt.md",
-  "repository": "https://github.com/mizchi/wasi_posix",
+  "repository": "https://github.com/mizchi/wasi_interface",
   "license": "MIT",
   "keywords": [
     "wasi",
-    "posix",
+    "interface",
     "moonbit"
   ],
   "description": "WASI Preview2/Preview3 contract definitions for host integration boundaries.",

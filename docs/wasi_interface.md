@@ -1,6 +1,6 @@
-# wasi_posix contract policy
+# wasi_interface contract policy
 
-`mizchi/wasi_posix` is a contract-only module for WASI preview boundaries.
+`mizchi/wasi_interface` is a contract-only module for WASI preview boundaries.
 
 ## Layering
 

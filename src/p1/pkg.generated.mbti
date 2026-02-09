@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/wasi_posix/p1"
+package "mizchi/wasi_interface/p1"
 
 // Values
 

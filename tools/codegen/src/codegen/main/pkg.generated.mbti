@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "mizchi/wasi_posix_codegen/codegen/main"
+package "mizchi/wasi_interface_codegen/codegen/main"
 
 // Values
 
