@@ -106,8 +106,7 @@ test "p2 contract: filesystem provider can be consumed via trait" {
   assert_eq(read_ok(provider), b"ok")
   inspect(
     try? provider.read_file("/missing"),
-    content=
-      "Err(NotFound(\"/missing\"))",
+    content="Err(NotFound(\"/missing\"))",
   )
 }
 

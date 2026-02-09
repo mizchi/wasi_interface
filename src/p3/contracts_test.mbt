@@ -98,8 +98,7 @@ test "p3 contract: filesystem provider signatures" {
   assert_eq(provider.read_file("/p3"), b"p3")
   inspect(
     try? provider.read_file("/missing"),
-    content=
-      "Err(NotFound(\"/missing\"))",
+    content="Err(NotFound(\"/missing\"))",
   )
 }
 

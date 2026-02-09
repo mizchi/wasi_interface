@@ -1,12 +1,9 @@
-///| WASI Preview2 contract package.
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/wasi_posix/p2"
 
-///|
+// Values
 
-///| This package defines only host/provider contracts.
-
-///| Concrete injection/adapter implementations belong to another module.
-
-///|
+// Errors
 pub(all) suberror WasiError {
   NotFound(String)
   AlreadyExists(String)
@@ -15,30 +12,43 @@ pub(all) suberror WasiError {
   NotEmpty(String)
   Io(String)
   Unsupported(String)
-} derive(Show, Eq)
+}
+pub impl Eq for WasiError
+pub impl Show for WasiError
 
-///|
+// Types and methods
+pub(all) struct WasiDirEntry {
+  name : String
+  node_type : WasiNodeType
+}
+pub impl Eq for WasiDirEntry
+pub impl Show for WasiDirEntry
+
+pub(all) struct WasiNodeStat {
+  node_type : WasiNodeType
+  size : Int
+}
+pub impl Eq for WasiNodeStat
+pub impl Show for WasiNodeStat
+
 pub(all) enum WasiNodeType {
   File
   Directory
   Symlink
   Other
-} derive(Show, Eq)
+}
+pub impl Eq for WasiNodeType
+pub impl Show for WasiNodeType
 
-///|
-pub(all) struct WasiNodeStat {
-  node_type : WasiNodeType
-  size : Int
-} derive(Show, Eq)
+// Type aliases
 
-///|
-pub(all) struct WasiDirEntry {
-  name : String
-  node_type : WasiNodeType
-} derive(Show, Eq)
+// Traits
+pub(open) trait WasiCliProvider {
+  read_stdin(Self, Int) -> Bytes
+  write_stdout(Self, Bytes) -> Int
+  write_stderr(Self, Bytes) -> Int
+}
 
-///|
-/// Filesystem contract for WASI Preview2 host integration.
 pub(open) trait WasiFsProvider {
   read_file(Self, String) -> Bytes raise WasiError
   exists(Self, String) -> Bool
@@ -52,10 +62,3 @@ pub(open) trait WasiFsProvider {
   rename(Self, String, String) -> Unit raise WasiError
 }
 
-///|
-/// CLI stdio contract for WASI Preview2 host integration.
-pub(open) trait WasiCliProvider {
-  read_stdin(Self, Int) -> Bytes
-  write_stdout(Self, Bytes) -> Int
-  write_stderr(Self, Bytes) -> Int
-}

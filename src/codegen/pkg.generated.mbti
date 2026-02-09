@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "mizchi/wasi_posix/codegen"
+
+import {
+  "mizchi/wit",
+}
+
+// Values
+pub fn generate_trait_adapters_from_wit_file(@wit.WitFile) -> Result[String, GenerateError]
+
+pub fn generate_trait_adapters_from_wit_path(String) -> Result[String, GenerateError]
+
+pub fn generate_trait_adapters_from_wit_source(String) -> Result[String, GenerateError]
+
+// Errors
+pub(all) suberror GenerateError {
+  WitParse(String)
+  GeneratedCodeParse(String)
+  PrinterFailed(String)
+}
+pub impl Eq for GenerateError
+pub impl Show for GenerateError
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

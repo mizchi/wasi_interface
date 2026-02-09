@@ -8,6 +8,10 @@ WASI Preview2/Preview3 contract definitions for host injection boundaries.
   - Preview2 contracts (`pub(open) trait`) and shared contract types
 - `@p3`
   - Preview3 contracts (`pub(open) trait`) and shared contract types
+- `@codegen`
+  - WIT AST (`mizchi/wit`) から trait adapter の MoonBit コード文字列を生成する補助 API
+  - `moonbitlang/parser` + `mizchi/ast_printer` で構文検証と整形を行う
+  - このモジュール内ではファイル生成を実行しない（生成実行は別ワークフロー）
 
 ## Scope
 

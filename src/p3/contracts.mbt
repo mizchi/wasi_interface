@@ -1,6 +1,9 @@
 ///| WASI Preview3 contract package.
+
 ///|
+
 ///| This package defines only host/provider contracts.
+
 ///| Concrete injection/adapter implementations belong to another module.
 
 ///|
