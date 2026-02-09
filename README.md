@@ -11,6 +11,20 @@ WASI Preview2/Preview3 contract definitions for host injection boundaries.
 - `@p3`
   - Preview3 contracts (`pub(open) trait`) and shared contract types
 
+## Version References
+
+- `@p1`
+  - Reference: WASI Preview1 (`wasi_snapshot_preview1`)
+  - Source: `wit/p1/wasi_snapshot_preview1.wit`
+- `@p2`
+  - Reference: WASI Preview2 (`wasi:*@0.2.9`)
+  - Source: `mizchi/wasi.mbt/wit/deps/wasi-*-0.2.9/package.wit`
+- `@p3`
+  - Reference: WASI Preview3 draft (`wasi:*@0.3.0-draft`)
+  - Source: `WebAssembly/WASI/proposals/*/wit-0.3.0-draft`
+
+Each generated file under `src/p1`, `src/p2`, and `src/p3` includes a `Contract reference` header line with the same version/source mapping.
+
 ## Scope
 
 This module is contract-only.
