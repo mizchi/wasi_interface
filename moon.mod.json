@@ -12,5 +12,9 @@
   ],
   "description": "WASI Preview2/Preview3 contract definitions for host integration boundaries.",
   "source": "src",
-  "preferred-target": "wasm-gc"
+  "preferred-target": "wasm-gc",
+  "exclude": [
+    "tools/codegen",
+    "wit"
+  ]
 }

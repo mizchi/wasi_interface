@@ -1,13 +1,13 @@
 # wasi_interface codegen
 
-`wasi_interface` の契約コード（`src/p1`, `src/p2`, `src/p3`）を WIT から再生成するための補助モジュール。
+Helper module to regenerate `wasi_interface` contract code (`src/p1`, `src/p2`, `src/p3`) from WIT.
 
-- 実行: `moon -C tools/codegen run src/codegen/main -- <output-dir> <wit-path> [wit-path ...]`
-- 依存: `mizchi/wit`, `moonbitlang/parser`
+- Run: `moon -C tools/codegen run src/codegen/main -- <output-dir> <wit-path> [wit-path ...]`
+- Dependencies: `mizchi/wit`, `moonbitlang/parser`
 
-生成される trait は以下の方針で出力されます。
+Generated traits follow these rules:
 
-- 返り値: `Result[<WIT-return>, WasiError]`
-- default 実装: `Err(WasiError::NotImplemented(...))`
+- Return type: `Result[<WIT-return>, WasiError]`
+- Default implementation: `Err(WasiError::NotImplemented(...))`
 
-このモジュールは生成専用で、`mizchi/wasi_interface` 本体の公開 API バンドルには含めません。
+This module is generation-only and is excluded from the published API bundle of `mizchi/wasi_interface`.
