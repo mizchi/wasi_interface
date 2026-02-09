@@ -8,6 +8,8 @@ pub(all) suberror GenerateError {
 priv struct InterfaceShape {
   key : String
   prefix : String
+  pkg : @wit.PackageName?
+  resolved_aliases : Map[String, String]
   items : Array[@wit.InterfaceItem]
 }
 
@@ -479,7 +481,23 @@ fn scoped_type_name(prefix : String, raw_name : String) -> String {
 }
 
 ///|
-fn emit_type_expr(ty : @wit.TypeExpr, prefix : String) -> String {
+fn resolve_type_name(
+  raw_name : String,
+  prefix : String,
+  imported_aliases : Map[String, String],
+) -> String {
+  match imported_aliases.get(raw_name) {
+    Some(resolved) => resolved
+    None => scoped_type_name(prefix, raw_name)
+  }
+}
+
+///|
+fn emit_type_expr(
+  ty : @wit.TypeExpr,
+  prefix : String,
+  imported_aliases : Map[String, String],
+) -> String {
   match ty {
     @wit.TypeExpr::Bool => "Bool"
     @wit.TypeExpr::U8 => "Byte"
@@ -494,27 +512,41 @@ fn emit_type_expr(ty : @wit.TypeExpr, prefix : String) -> String {
     @wit.TypeExpr::F64 => "Double"
     @wit.TypeExpr::Char => "Char"
     @wit.TypeExpr::String_ => "String"
-    @wit.TypeExpr::Id(name) => scoped_type_name(prefix, name)
-    @wit.TypeExpr::Own(name) => scoped_type_name(prefix, name)
-    @wit.TypeExpr::Borrow(name) => scoped_type_name(prefix, name)
+    @wit.TypeExpr::Id(name) => resolve_type_name(name, prefix, imported_aliases)
+    @wit.TypeExpr::Own(name) =>
+      resolve_type_name(name, prefix, imported_aliases)
+    @wit.TypeExpr::Borrow(name) =>
+      resolve_type_name(name, prefix, imported_aliases)
     @wit.TypeExpr::List(inner) =>
       match inner {
         @wit.TypeExpr::U8 => "Bytes"
-        _ => "Array[" + emit_type_expr(inner, prefix) + "]"
+        _ => "Array[" + emit_type_expr(inner, prefix, imported_aliases) + "]"
       }
-    @wit.TypeExpr::Option(inner) => emit_type_expr(inner, prefix) + "?"
+    @wit.TypeExpr::Option(inner) =>
+      emit_type_expr(inner, prefix, imported_aliases) + "?"
+    @wit.TypeExpr::Future(inner) =>
+      emit_type_expr(inner, prefix, imported_aliases)
+    @wit.TypeExpr::Stream(inner) =>
+      match inner {
+        @wit.TypeExpr::U8 => "Bytes"
+        _ => "Array[" + emit_type_expr(inner, prefix, imported_aliases) + "]"
+      }
     @wit.TypeExpr::Result(ok, err) => {
       let err_type = match err {
-        Some(err_ty) => emit_type_expr(err_ty, prefix)
+        Some(err_ty) => emit_type_expr(err_ty, prefix, imported_aliases)
         None => "Unit"
       }
-      "Result[" + emit_type_expr(ok, prefix) + ", " + err_type + "]"
+      "Result[" +
+      emit_type_expr(ok, prefix, imported_aliases) +
+      ", " +
+      err_type +
+      "]"
     }
     @wit.TypeExpr::Tuple(items) =>
       if items.length() == 0 {
         "Unit"
       } else if items.length() == 1 {
-        emit_type_expr(items[0], prefix)
+        emit_type_expr(items[0], prefix, imported_aliases)
       } else {
         "Bytes"
       }
@@ -522,9 +554,13 @@ fn emit_type_expr(ty : @wit.TypeExpr, prefix : String) -> String {
 }
 
 ///|
-fn emit_result_type(result_ty : @wit.TypeExpr?, prefix : String) -> String {
+fn emit_result_type(
+  result_ty : @wit.TypeExpr?,
+  prefix : String,
+  imported_aliases : Map[String, String],
+) -> String {
   match result_ty {
-    Some(ty) => emit_type_expr(ty, prefix)
+    Some(ty) => emit_type_expr(ty, prefix, imported_aliases)
     None => "Unit"
   }
 }
@@ -533,11 +569,17 @@ fn emit_result_type(result_ty : @wit.TypeExpr?, prefix : String) -> String {
 fn emit_contract_result_type(
   result_ty : @wit.TypeExpr?,
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> String {
   match result_ty {
     Some(@wit.TypeExpr::Result(ok_ty, _)) =>
-      "Result[" + emit_type_expr(ok_ty, prefix) + ", WasiError]"
-    _ => "Result[" + emit_result_type(result_ty, prefix) + ", WasiError]"
+      "Result[" +
+      emit_type_expr(ok_ty, prefix, imported_aliases) +
+      ", WasiError]"
+    _ =>
+      "Result[" +
+      emit_result_type(result_ty, prefix, imported_aliases) +
+      ", WasiError]"
   }
 }
 
@@ -546,24 +588,34 @@ fn collect_type_refs_from_type_expr(
   ty : @wit.TypeExpr,
   refs : Array[String],
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> Unit {
   match ty {
     @wit.TypeExpr::Id(name)
     | @wit.TypeExpr::Own(name)
     | @wit.TypeExpr::Borrow(name) =>
-      push_unique_string(refs, scoped_type_name(prefix, name))
-    @wit.TypeExpr::List(inner) | @wit.TypeExpr::Option(inner) =>
-      collect_type_refs_from_type_expr(inner, refs, prefix)
+      push_unique_string(
+        refs,
+        resolve_type_name(name, prefix, imported_aliases),
+      )
+    @wit.TypeExpr::List(inner)
+    | @wit.TypeExpr::Option(inner)
+    | @wit.TypeExpr::Future(inner)
+    | @wit.TypeExpr::Stream(inner) =>
+      collect_type_refs_from_type_expr(inner, refs, prefix, imported_aliases)
     @wit.TypeExpr::Result(ok, err) => {
-      collect_type_refs_from_type_expr(ok, refs, prefix)
+      collect_type_refs_from_type_expr(ok, refs, prefix, imported_aliases)
       match err {
-        Some(err_ty) => collect_type_refs_from_type_expr(err_ty, refs, prefix)
+        Some(err_ty) =>
+          collect_type_refs_from_type_expr(
+            err_ty, refs, prefix, imported_aliases,
+          )
         None => ()
       }
     }
     @wit.TypeExpr::Tuple(items) =>
       for item in items {
-        collect_type_refs_from_type_expr(item, refs, prefix)
+        collect_type_refs_from_type_expr(item, refs, prefix, imported_aliases)
       }
     _ => ()
   }
@@ -574,12 +626,16 @@ fn collect_type_refs_from_function(
   func : @wit.Function,
   refs : Array[String],
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> Unit {
   for param in func.params {
-    collect_type_refs_from_type_expr(param.ty, refs, prefix)
+    collect_type_refs_from_type_expr(param.ty, refs, prefix, imported_aliases)
   }
   match func.result {
-    Some(result_ty) => collect_type_refs_from_type_expr(result_ty, refs, prefix)
+    Some(result_ty) =>
+      collect_type_refs_from_type_expr(
+        result_ty, refs, prefix, imported_aliases,
+      )
     None => ()
   }
 }
@@ -589,25 +645,33 @@ fn collect_type_refs_from_typedef_kind(
   kind : @wit.TypeDefKind,
   refs : Array[String],
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> Unit {
   match kind {
     @wit.TypeDefKind::Record(fields) =>
       for field in fields {
-        collect_type_refs_from_type_expr(field.ty, refs, prefix)
+        collect_type_refs_from_type_expr(
+          field.ty,
+          refs,
+          prefix,
+          imported_aliases,
+        )
       }
     @wit.TypeDefKind::Variant(cases) =>
       for c in cases {
         match c.ty {
           Some(case_ty) =>
-            collect_type_refs_from_type_expr(case_ty, refs, prefix)
+            collect_type_refs_from_type_expr(
+              case_ty, refs, prefix, imported_aliases,
+            )
           None => ()
         }
       }
     @wit.TypeDefKind::Alias(alias_ty) =>
-      collect_type_refs_from_type_expr(alias_ty, refs, prefix)
+      collect_type_refs_from_type_expr(alias_ty, refs, prefix, imported_aliases)
     @wit.TypeDefKind::Resource(resource) =>
       for func in resource.funcs {
-        collect_type_refs_from_function(func, refs, prefix)
+        collect_type_refs_from_function(func, refs, prefix, imported_aliases)
       }
     @wit.TypeDefKind::Enum(_) | @wit.TypeDefKind::Flags(_) => ()
   }
@@ -618,6 +682,7 @@ fn emit_record_typedef(
   name : String,
   fields : Array[@wit.Field],
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> String {
   let buf = StringBuilder::new()
   buf.write_string("pub(all) struct ")
@@ -627,7 +692,7 @@ fn emit_record_typedef(
     buf.write_string("  ")
     buf.write_string(to_snake_case(field.name))
     buf.write_string(" : ")
-    buf.write_string(emit_type_expr(field.ty, prefix))
+    buf.write_string(emit_type_expr(field.ty, prefix, imported_aliases))
     buf.write_string("\n")
   }
   buf.write_string("}\n")
@@ -654,6 +719,7 @@ fn emit_variant_typedef(
   name : String,
   cases : Array[@wit.VariantCase],
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> String {
   let buf = StringBuilder::new()
   buf.write_string("pub(all) enum ")
@@ -665,7 +731,7 @@ fn emit_variant_typedef(
     match c.ty {
       Some(case_ty) => {
         buf.write_char('(')
-        buf.write_string(emit_type_expr(case_ty, prefix))
+        buf.write_string(emit_type_expr(case_ty, prefix, imported_aliases))
         buf.write_char(')')
       }
       None => ()
@@ -677,15 +743,19 @@ fn emit_variant_typedef(
 }
 
 ///|
-fn emit_typedef(type_def : @wit.TypeDef, prefix : String) -> String {
+fn emit_typedef(
+  type_def : @wit.TypeDef,
+  prefix : String,
+  imported_aliases : Map[String, String],
+) -> String {
   let name = scoped_type_name(prefix, type_def.name)
   match type_def.kind {
     @wit.TypeDefKind::Record(fields) =>
-      emit_record_typedef(name, fields, prefix)
+      emit_record_typedef(name, fields, prefix, imported_aliases)
     @wit.TypeDefKind::Enum(cases) => emit_enum_typedef(name, cases)
     @wit.TypeDefKind::Flags(_) => "pub(all) type " + name + "\n"
     @wit.TypeDefKind::Variant(cases) =>
-      emit_variant_typedef(name, cases, prefix)
+      emit_variant_typedef(name, cases, prefix, imported_aliases)
     @wit.TypeDefKind::Alias(_alias_ty) => "pub(all) type " + name + "\n"
     @wit.TypeDefKind::Resource(_) => "pub(all) struct " + name + "(Int)\n"
   }
@@ -726,16 +796,19 @@ fn emit_trait_method(
   method_name : String,
   func : @wit.Function,
   prefix : String,
+  imported_aliases : Map[String, String],
 ) -> Unit {
   buf.write_string("  ")
   buf.write_string(method_name)
   buf.write_string("(Self")
   for param in func.params {
     buf.write_string(", ")
-    buf.write_string(emit_type_expr(param.ty, prefix))
+    buf.write_string(emit_type_expr(param.ty, prefix, imported_aliases))
   }
   buf.write_string(") -> ")
-  buf.write_string(emit_contract_result_type(func.result, prefix))
+  buf.write_string(
+    emit_contract_result_type(func.result, prefix, imported_aliases),
+  )
   buf.write_string(" = _\n")
 }
 
@@ -765,7 +838,139 @@ fn emit_default_trait_impl(
 }
 
 ///|
+fn use_decl_target_prefix(
+  shape : InterfaceShape,
+  decl : @wit.UseDecl,
+) -> String {
+  let target_pkg = match decl.from.pkg {
+    Some(pkg) => Some(pkg)
+    None => shape.pkg
+  }
+  interface_prefix(target_pkg, None, decl.from.interface)
+}
+
+///|
+fn resolved_interface_prefix(
+  pkg : @wit.RPackageName?,
+  interface_name : String,
+) -> String {
+  let buf = StringBuilder::new()
+  match pkg {
+    Some(pkg_name) => buf.write_string(to_pascal_case(pkg_name.name))
+    None => ()
+  }
+  buf.write_string(to_pascal_case(interface_name))
+  buf.to_string()
+}
+
+///|
+fn collect_resolved_aliases_by_prefix(
+  infos : Array[@wit.ResolvedInterfaceInfo],
+) -> Map[String, Map[String, String]] {
+  let aliases_by_prefix : Map[String, Map[String, String]] = {}
+  for info in infos {
+    let interface_name = match info.name {
+      Some(name) => name
+      None => continue
+    }
+    let prefix = resolved_interface_prefix(info.package_name, interface_name)
+    let aliases = match aliases_by_prefix.get(prefix) {
+      Some(existing) => existing
+      None => {}
+    }
+    for local_name, type_info in info.types {
+      match type_info.owner {
+        @wit.RTypeOwner::Interface(owner_id) =>
+          if owner_id == info.interface_id {
+            continue
+          }
+        _ => continue
+      }
+      let owner_interface = match type_info.owner_interface {
+        Some(name) => name
+        None => continue
+      }
+      let owner_prefix = resolved_interface_prefix(
+        type_info.owner_package,
+        owner_interface,
+      )
+      let type_name = match type_info.type_name {
+        Some(name) => name
+        None => local_name
+      }
+      aliases.set(local_name, scoped_type_name(owner_prefix, type_name))
+    }
+    aliases_by_prefix.set(prefix, aliases)
+  }
+  aliases_by_prefix
+}
+
+///|
+fn collect_resolved_interface_infos_from_sources(
+  sources : Array[String],
+) -> Array[@wit.ResolvedInterfaceInfo] {
+  let infos : Array[@wit.ResolvedInterfaceInfo] = []
+  for source in sources {
+    match @wit.resolve_interface_infos(source) {
+      Ok(resolved_infos) =>
+        for info in resolved_infos {
+          infos.push(info)
+        }
+      Err(_) => ()
+    }
+  }
+  infos
+}
+
+///|
+fn collect_resolved_interface_infos_from_paths(
+  paths : Array[String],
+) -> Array[@wit.ResolvedInterfaceInfo] {
+  let infos : Array[@wit.ResolvedInterfaceInfo] = []
+  for path in paths {
+    match @wit.resolve_path_interface_infos(path) {
+      Ok(resolved_infos) =>
+        for info in resolved_infos {
+          infos.push(info)
+        }
+      Err(_) => ()
+    }
+  }
+  infos
+}
+
+///|
+fn build_import_aliases(shape : InterfaceShape) -> Map[String, String] {
+  let imported_aliases : Map[String, String] = {}
+  for source_type, target_type in shape.resolved_aliases {
+    imported_aliases.set(source_type, target_type)
+  }
+  for item in shape.items {
+    match item {
+      @wit.InterfaceItem::Use(decl) => {
+        let target_prefix = use_decl_target_prefix(shape, decl)
+        for name in decl.names {
+          let source_type = name
+          let target_type = scoped_type_name(target_prefix, name)
+          match imported_aliases.get(source_type) {
+            Some(_) => ()
+            None => imported_aliases.set(source_type, target_type)
+          }
+        }
+      }
+      _ => ()
+    }
+  }
+  imported_aliases
+}
+
+///|
 fn emit_interface_contract(shape : InterfaceShape) -> String {
+  let imported_aliases = build_import_aliases(shape)
+  let imported_target_types : Array[String] = []
+  for _name, resolved in imported_aliases {
+    push_unique_string(imported_target_types, resolved)
+  }
   let defined_types : Array[String] = []
   let referenced_types : Array[String] = []
   for item in shape.items {
@@ -779,10 +984,16 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
           type_def.kind,
           referenced_types,
           shape.prefix,
+          imported_aliases,
         )
       }
       @wit.InterfaceItem::Function(func) =>
-        collect_type_refs_from_function(func, referenced_types, shape.prefix)
+        collect_type_refs_from_function(
+          func,
+          referenced_types,
+          shape.prefix,
+          imported_aliases,
+        )
       @wit.InterfaceItem::Use(_) => ()
     }
   }
@@ -790,7 +1001,7 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
   for item in shape.items {
     match item {
       @wit.InterfaceItem::TypeDef(type_def) => {
-        buf.write_string(emit_typedef(type_def, shape.prefix))
+        buf.write_string(emit_typedef(type_def, shape.prefix, imported_aliases))
         buf.write_string("\n")
       }
       _ => ()
@@ -803,6 +1014,9 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
     }
   }
   for fallback in fallback_types {
+    if contains_string(imported_target_types, fallback) {
+      continue
+    }
     buf.write_string("pub(all) type ")
     buf.write_string(fallback)
     buf.write_string("\n")
@@ -823,7 +1037,13 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
           method_name_from_function(func),
           used_method_names,
         )
-        emit_trait_method(buf, method_name, func, shape.prefix)
+        emit_trait_method(
+          buf,
+          method_name,
+          func,
+          shape.prefix,
+          imported_aliases,
+        )
         generated_methods.push({
           method_name,
           param_count: func.params.length(),
@@ -837,7 +1057,13 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
                 method_name_from_function(func),
                 used_method_names,
               )
-              emit_trait_method(buf, method_name, func, shape.prefix)
+              emit_trait_method(
+                buf,
+                method_name,
+                func,
+                shape.prefix,
+                imported_aliases,
+              )
               generated_methods.push({
                 method_name,
                 param_count: func.params.length(),
@@ -861,11 +1087,12 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
 fn collect_error_type_from_result(
   result_ty : @wit.TypeExpr?,
   prefix : String,
+  imported_aliases : Map[String, String],
   error_types : Array[String],
 ) -> Unit {
   match result_ty {
     Some(@wit.TypeExpr::Result(_, Some(err_ty))) => {
-      let ty = emit_type_expr(err_ty, prefix)
+      let ty = emit_type_expr(err_ty, prefix, imported_aliases)
       push_unique_string(error_types, ty)
     }
     _ => ()
@@ -877,10 +1104,16 @@ fn collect_error_types_from_shape(
   shape : InterfaceShape,
   error_types : Array[String],
 ) -> Unit {
+  let imported_aliases = build_import_aliases(shape)
   for item in shape.items {
     match item {
       @wit.InterfaceItem::Function(func) =>
-        collect_error_type_from_result(func.result, shape.prefix, error_types)
+        collect_error_type_from_result(
+          func.result,
+          shape.prefix,
+          imported_aliases,
+          error_types,
+        )
       @wit.InterfaceItem::TypeDef(type_def) =>
         match type_def.kind {
           @wit.TypeDefKind::Resource(resource) =>
@@ -888,6 +1121,7 @@ fn collect_error_types_from_shape(
               collect_error_type_from_result(
                 func.result,
                 shape.prefix,
+                imported_aliases,
                 error_types,
               )
             }
@@ -978,21 +1212,36 @@ fn push_interface_shape(
   world_name : String?,
   interface_name : String,
   items : Array[@wit.InterfaceItem],
+  resolved_aliases_by_prefix : Map[String, Map[String, String]],
 ) -> Unit {
   let prefix = interface_prefix(pkg, world_name, interface_name)
   let key = prefix
   if has_shape(shapes, key) {
     return
   }
-  shapes.push({ key, prefix, items })
+  let resolved_aliases = match resolved_aliases_by_prefix.get(prefix) {
+    Some(aliases) => aliases
+    None => {}
+  }
+  shapes.push({ key, prefix, pkg, resolved_aliases, items })
 }
 
 ///|
-fn collect_interfaces(wit_files : Array[@wit.WitFile]) -> Array[InterfaceShape] {
+fn collect_interfaces(
+  wit_files : Array[@wit.WitFile],
+  resolved_aliases_by_prefix : Map[String, Map[String, String]],
+) -> Array[InterfaceShape] {
   let shapes : Array[InterfaceShape] = []
   for wit_file in wit_files {
     for iface in wit_file.interfaces {
-      push_interface_shape(shapes, wit_file.pkg, None, iface.name, iface.items)
+      push_interface_shape(
+        shapes,
+        wit_file.pkg,
+        None,
+        iface.name,
+        iface.items,
+        resolved_aliases_by_prefix,
+      )
     }
     for world in wit_file.worlds {
       for item in world.imports {
@@ -1004,6 +1253,7 @@ fn collect_interfaces(wit_files : Array[@wit.WitFile]) -> Array[InterfaceShape] 
               Some(world.name),
               iface.name,
               iface.items,
+              resolved_aliases_by_prefix,
             )
           _ => ()
         }
@@ -1017,6 +1267,7 @@ fn collect_interfaces(wit_files : Array[@wit.WitFile]) -> Array[InterfaceShape] 
               Some(world.name),
               iface.name,
               iface.items,
+              resolved_aliases_by_prefix,
             )
           _ => ()
         }
@@ -1091,12 +1342,23 @@ fn combine_modules(modules : Array[GeneratedModule]) -> String {
 }
 
 ///|
+fn generate_trait_adapter_modules_from_wit_files_with_aliases(
+  wit_files : Array[@wit.WitFile],
+  resolved_aliases_by_prefix : Map[String, Map[String, String]],
+) -> Result[Array[GeneratedModule], GenerateError] {
+  let shapes = collect_interfaces(wit_files, resolved_aliases_by_prefix)
+  generate_modules_from_shapes(shapes)
+}
+
+///|
 /// Generate trait adapter modules from parsed WIT AST files.
 pub fn generate_trait_adapter_modules_from_wit_files(
   wit_files : Array[@wit.WitFile],
 ) -> Result[Array[GeneratedModule], GenerateError] {
-  let shapes = collect_interfaces(wit_files)
-  generate_modules_from_shapes(shapes)
+  let empty_aliases : Map[String, Map[String, String]] = {}
+  generate_trait_adapter_modules_from_wit_files_with_aliases(
+    wit_files, empty_aliases,
+  )
 }
 
 ///|
@@ -1132,7 +1394,17 @@ pub fn generate_trait_adapter_modules_from_wit_sources(
   sources : Array[String],
 ) -> Result[Array[GeneratedModule], GenerateError] {
   match parse_wit_files_from_sources(sources) {
-    Ok(wit_files) => generate_trait_adapter_modules_from_wit_files(wit_files)
+    Ok(wit_files) => {
+      let resolved_infos = collect_resolved_interface_infos_from_sources(
+        sources,
+      )
+      let resolved_aliases_by_prefix = collect_resolved_aliases_by_prefix(
+        resolved_infos,
+      )
+      generate_trait_adapter_modules_from_wit_files_with_aliases(
+        wit_files, resolved_aliases_by_prefix,
+      )
+    }
     Err(err) => Err(err)
   }
 }
@@ -1170,7 +1442,15 @@ pub fn generate_trait_adapter_modules_from_wit_paths(
   paths : Array[String],
 ) -> Result[Array[GeneratedModule], GenerateError] {
   match parse_wit_files_from_paths(paths) {
-    Ok(wit_files) => generate_trait_adapter_modules_from_wit_files(wit_files)
+    Ok(wit_files) => {
+      let resolved_infos = collect_resolved_interface_infos_from_paths(paths)
+      let resolved_aliases_by_prefix = collect_resolved_aliases_by_prefix(
+        resolved_infos,
+      )
+      generate_trait_adapter_modules_from_wit_files_with_aliases(
+        wit_files, resolved_aliases_by_prefix,
+      )
+    }
     Err(err) => Err(err)
   }
 }

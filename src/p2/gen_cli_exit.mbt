@@ -5,7 +5,13 @@
 ///|
 /// Module key: CliExit
 pub(open) trait WasiCliExitAdapter {
+  exit(Self, Result[Unit, Unit]) -> Result[Unit, WasiError] = _
   exit_with_code(Self, Byte) -> Result[Unit, WasiError] = _
+}
+
+///|
+impl WasiCliExitAdapter with exit(_self, _arg0) {
+  Err(WasiError::NotImplemented("CliExit.exit"))
 }
 
 ///|

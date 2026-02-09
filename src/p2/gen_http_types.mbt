@@ -144,9 +144,6 @@ pub(all) struct HttpTypesOutgoingBody(Int)
 pub(all) struct HttpTypesFutureIncomingResponse(Int)
 
 ///|
-pub(all) type HttpTypesGenerated
-
-///|
 pub(all) type HttpTypesDuration
 
 ///|
@@ -167,15 +164,12 @@ pub(open) trait WasiHttpTypesAdapter {
   ] = _
   fields_has(Self, HttpTypesFieldName) -> Result[Bool, WasiError] = _
   fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[
-    HttpTypesGenerated,
+    Unit,
     WasiError,
   ] = _
-  fields_delete(Self, HttpTypesFieldName) -> Result[
-    HttpTypesGenerated,
-    WasiError,
-  ] = _
+  fields_delete(Self, HttpTypesFieldName) -> Result[Unit, WasiError] = _
   fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[
-    HttpTypesGenerated,
+    Unit,
     WasiError,
   ] = _
   fields_entries(Self) -> Result[Array[Bytes], WasiError] = _
@@ -207,7 +201,7 @@ pub(open) trait WasiHttpTypesAdapter {
     WasiError,
   ] = _
   response_outparam_send_informational(Self, UInt, HttpTypesHeaders) -> Result[
-    HttpTypesGenerated,
+    Unit,
     WasiError,
   ] = _
   incoming_response_status(Self) -> Result[HttpTypesStatusCode, WasiError] = _

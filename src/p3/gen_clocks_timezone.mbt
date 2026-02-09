@@ -4,12 +4,9 @@
 
 ///|
 /// Module key: ClocksTimezone
-pub(all) type ClocksTimezoneInstant
-
-///|
 pub(open) trait WasiClocksTimezoneAdapter {
   iana_id(Self) -> Result[String?, WasiError] = _
-  utc_offset(Self, ClocksTimezoneInstant) -> Result[Int64?, WasiError] = _
+  utc_offset(Self, ClocksSystemClockInstant) -> Result[Int64?, WasiError] = _
   to_debug_string(Self) -> Result[String, WasiError] = _
 }
 

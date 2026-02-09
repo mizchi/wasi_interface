@@ -8,8 +8,8 @@ pub(all) suberror WasiError {
   CapabilityDenied(String)
   FromFilesystemtypeserrorcode(FilesystemTypesErrorCode)
   FromHttptypesheadererror(HttpTypesHeaderError)
+  FromUnit(Unit)
   FromHttptypesrequestoptionserror(HttpTypesRequestOptionsError)
-  FromHttphandlererrorcode(HttpHandlerErrorCode)
-  FromHttpclienterrorcode(HttpClientErrorCode)
+  FromHttptypeserrorcode(HttpTypesErrorCode)
   FromIpnamelookuperrorcode(IpNameLookupErrorCode)
 }

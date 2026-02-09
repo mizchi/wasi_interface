@@ -124,9 +124,6 @@ pub(all) type FilesystemTypesInputStream
 pub(all) type FilesystemTypesOutputStream
 
 ///|
-pub(all) type FilesystemTypesGenerated
-
-///|
 pub(all) type FilesystemTypesError
 
 ///|
@@ -148,22 +145,19 @@ pub(open) trait WasiFilesystemTypesAdapter {
     FilesystemTypesFilesize,
     FilesystemTypesFilesize,
     FilesystemTypesAdvice,
-  ) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_sync_data(Self) -> Result[FilesystemTypesGenerated, WasiError] = _
+  ) -> Result[Unit, WasiError] = _
+  descriptor_sync_data(Self) -> Result[Unit, WasiError] = _
   descriptor_get_flags(Self) -> Result[
     FilesystemTypesDescriptorFlags,
     WasiError,
   ] = _
   descriptor_get_type(Self) -> Result[FilesystemTypesDescriptorType, WasiError] = _
-  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[
-    FilesystemTypesGenerated,
-    WasiError,
-  ] = _
+  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[Unit, WasiError] = _
   descriptor_set_times(
     Self,
     FilesystemTypesNewTimestamp,
     FilesystemTypesNewTimestamp,
-  ) -> Result[FilesystemTypesGenerated, WasiError] = _
+  ) -> Result[Unit, WasiError] = _
   descriptor_read(Self, FilesystemTypesFilesize, FilesystemTypesFilesize) -> Result[
     Bytes,
     WasiError,
@@ -176,11 +170,8 @@ pub(open) trait WasiFilesystemTypesAdapter {
     FilesystemTypesDirectoryEntryStream,
     WasiError,
   ] = _
-  descriptor_sync(Self) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_create_directory_at(Self, String) -> Result[
-    FilesystemTypesGenerated,
-    WasiError,
-  ] = _
+  descriptor_sync(Self) -> Result[Unit, WasiError] = _
+  descriptor_create_directory_at(Self, String) -> Result[Unit, WasiError] = _
   descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
   descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[
     FilesystemTypesDescriptorStat,
@@ -192,31 +183,22 @@ pub(open) trait WasiFilesystemTypesAdapter {
     String,
     FilesystemTypesNewTimestamp,
     FilesystemTypesNewTimestamp,
-  ) -> Result[FilesystemTypesGenerated, WasiError] = _
+  ) -> Result[Unit, WasiError] = _
   descriptor_link_at(
     Self,
     FilesystemTypesPathFlags,
     String,
     FilesystemTypesDescriptor,
     String,
-  ) -> Result[FilesystemTypesGenerated, WasiError] = _
+  ) -> Result[Unit, WasiError] = _
   descriptor_readlink_at(Self, String) -> Result[String, WasiError] = _
-  descriptor_remove_directory_at(Self, String) -> Result[
-    FilesystemTypesGenerated,
-    WasiError,
-  ] = _
+  descriptor_remove_directory_at(Self, String) -> Result[Unit, WasiError] = _
   descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[
-    FilesystemTypesGenerated,
+    Unit,
     WasiError,
   ] = _
-  descriptor_symlink_at(Self, String, String) -> Result[
-    FilesystemTypesGenerated,
-    WasiError,
-  ] = _
-  descriptor_unlink_file_at(Self, String) -> Result[
-    FilesystemTypesGenerated,
-    WasiError,
-  ] = _
+  descriptor_symlink_at(Self, String, String) -> Result[Unit, WasiError] = _
+  descriptor_unlink_file_at(Self, String) -> Result[Unit, WasiError] = _
   descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Result[
     Bool,
     WasiError,

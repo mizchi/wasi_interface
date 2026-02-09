@@ -4,17 +4,8 @@
 
 ///|
 /// Module key: HttpClient
-pub(all) type HttpClientRequest
-
-///|
-pub(all) type HttpClientResponse
-
-///|
-pub(all) type HttpClientErrorCode
-
-///|
 pub(open) trait WasiHttpClientAdapter {
-  send(Self, HttpClientRequest) -> Result[HttpClientResponse, WasiError] = _
+  send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
 }
 
 ///|

@@ -31,9 +31,6 @@ pub(all) type SocketsUdpIpSocketAddress
 pub(all) type SocketsUdpNetwork
 
 ///|
-pub(all) type SocketsUdpGenerated
-
-///|
 pub(all) type SocketsUdpErrorCode
 
 ///|
@@ -45,10 +42,10 @@ pub(all) type SocketsUdpPollable
 ///|
 pub(open) trait WasiSocketsUdpAdapter {
   udp_socket_start_bind(Self, SocketsUdpNetwork, SocketsUdpIpSocketAddress) -> Result[
-    SocketsUdpGenerated,
+    Unit,
     WasiError,
   ] = _
-  udp_socket_finish_bind(Self) -> Result[SocketsUdpGenerated, WasiError] = _
+  udp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
   udp_socket_local_address(Self) -> Result[SocketsUdpIpSocketAddress, WasiError] = _
   udp_socket_remote_address(Self) -> Result[
     SocketsUdpIpSocketAddress,
@@ -59,20 +56,11 @@ pub(open) trait WasiSocketsUdpAdapter {
     WasiError,
   ] = _
   udp_socket_unicast_hop_limit(Self) -> Result[Byte, WasiError] = _
-  udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[
-    SocketsUdpGenerated,
-    WasiError,
-  ] = _
+  udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
   udp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[
-    SocketsUdpGenerated,
-    WasiError,
-  ] = _
+  udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   udp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  udp_socket_set_send_buffer_size(Self, UInt64) -> Result[
-    SocketsUdpGenerated,
-    WasiError,
-  ] = _
+  udp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   udp_socket_subscribe(Self) -> Result[SocketsUdpPollable, WasiError] = _
   incoming_datagram_stream_receive(Self, UInt64) -> Result[
     Array[SocketsUdpIncomingDatagram],

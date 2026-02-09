@@ -157,6 +157,43 @@ test "generate trait adapters emit fallback alias for unresolved ids" {
 }
 
 ///|
+test "generate trait adapters emit alias for use-imported types" {
+  let source =
+    #|package wasi:http;
+    #|
+    #|interface types {
+    #|  type request = string;
+    #|  type response = string;
+    #|  type error-code = string;
+    #|}
+    #|
+    #|interface client {
+    #|  use types.{request, response, error-code};
+    #|  send: func(request: request) -> result<response, error-code>;
+    #|}
+  let generated = generate_trait_adapter_modules_from_wit_source(source)
+  let modules = match generated {
+    Ok(modules) => modules
+    Err(err) => {
+      println(err.to_string())
+      abort("expected generator success")
+    }
+  }
+  let client_module = match find_module_code(modules, "gen_http_client.mbt") {
+    Some(code) => code
+    None => abort("missing gen_http_client.mbt")
+  }
+  assert_true(
+    client_module.contains(
+      "send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _",
+    ),
+  )
+  assert_true(not(client_module.contains("pub(all) type HttpClientRequest")))
+  assert_true(not(client_module.contains("pub(all) type HttpClientResponse")))
+  assert_true(not(client_module.contains("pub(all) type HttpClientErrorCode")))
+}
+
+///|
 test "generate trait adapters reports WIT parse errors" {
   let generated = generate_trait_adapters_from_wit_source("interface broken {")
   match generated {

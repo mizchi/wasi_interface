@@ -4,4 +4,14 @@
 
 ///|
 /// Module key: Stdin
-pub(open) trait WasiStdinAdapter {}
+pub(all) type StdinErrorCode
+
+///|
+pub(open) trait WasiStdinAdapter {
+  read_via_stream(Self) -> Result[Bytes, WasiError] = _
+}
+
+///|
+impl WasiStdinAdapter with read_via_stream(_self) {
+  Err(WasiError::NotImplemented("Stdin.read_via_stream"))
+}

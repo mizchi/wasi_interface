@@ -141,8 +141,6 @@ pub(all) enum FilesystemTypesErrorCode {
 
 pub(all) type FilesystemTypesFilesize
 
-pub(all) type FilesystemTypesGenerated
-
 pub(all) type FilesystemTypesInputStream
 
 pub(all) type FilesystemTypesLinkCount
@@ -248,8 +246,6 @@ pub(all) struct HttpTypesFutureTrailers(Int)
 #deprecated
 pub fn HttpTypesFutureTrailers::inner(Self) -> Int
 
-pub(all) type HttpTypesGenerated
-
 pub(all) enum HttpTypesHeaderError {
   InvalidSyntax
   Forbidden
@@ -332,10 +328,6 @@ pub(all) struct IoPollPollable(Int)
 #deprecated
 pub fn IoPollPollable::inner(Self) -> Int
 
-pub(all) type IoStreamsError
-
-pub(all) type IoStreamsGenerated
-
 pub(all) struct IoStreamsInputStream(Int)
 #deprecated
 pub fn IoStreamsInputStream::inner(Self) -> Int
@@ -344,10 +336,8 @@ pub(all) struct IoStreamsOutputStream(Int)
 #deprecated
 pub fn IoStreamsOutputStream::inner(Self) -> Int
 
-pub(all) type IoStreamsPollable
-
 pub(all) enum IoStreamsStreamError {
-  LastOperationFailed(IoStreamsError)
+  LastOperationFailed(IoErrorError)
   Closed
 }
 
@@ -432,8 +422,6 @@ pub(all) type SocketsTcpDuration
 
 pub(all) type SocketsTcpErrorCode
 
-pub(all) type SocketsTcpGenerated
-
 pub(all) type SocketsTcpInputStream
 
 pub(all) type SocketsTcpIpAddressFamily
@@ -463,8 +451,6 @@ pub(all) type SocketsUdpCreateSocketIpAddressFamily
 pub(all) type SocketsUdpCreateSocketUdpSocket
 
 pub(all) type SocketsUdpErrorCode
-
-pub(all) type SocketsUdpGenerated
 
 pub(all) struct SocketsUdpIncomingDatagram {
   data : Bytes
@@ -506,6 +492,7 @@ pub(open) trait WasiCliEnvironmentAdapter {
 }
 
 pub(open) trait WasiCliExitAdapter {
+  exit(Self, Result[Unit, Unit]) -> Result[Unit, WasiError] = _
   exit_with_code(Self, Byte) -> Result[Unit, WasiError] = _
 }
 
@@ -567,26 +554,26 @@ pub(open) trait WasiFilesystemTypesAdapter {
   descriptor_read_via_stream(Self, FilesystemTypesFilesize) -> Result[FilesystemTypesInputStream, WasiError] = _
   descriptor_write_via_stream(Self, FilesystemTypesFilesize) -> Result[FilesystemTypesOutputStream, WasiError] = _
   descriptor_append_via_stream(Self) -> Result[FilesystemTypesOutputStream, WasiError] = _
-  descriptor_advise(Self, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesAdvice) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_sync_data(Self) -> Result[FilesystemTypesGenerated, WasiError] = _
+  descriptor_advise(Self, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesAdvice) -> Result[Unit, WasiError] = _
+  descriptor_sync_data(Self) -> Result[Unit, WasiError] = _
   descriptor_get_flags(Self) -> Result[FilesystemTypesDescriptorFlags, WasiError] = _
   descriptor_get_type(Self) -> Result[FilesystemTypesDescriptorType, WasiError] = _
-  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_set_times(Self, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[FilesystemTypesGenerated, WasiError] = _
+  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[Unit, WasiError] = _
+  descriptor_set_times(Self, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[Unit, WasiError] = _
   descriptor_read(Self, FilesystemTypesFilesize, FilesystemTypesFilesize) -> Result[Bytes, WasiError] = _
   descriptor_write(Self, Bytes, FilesystemTypesFilesize) -> Result[FilesystemTypesFilesize, WasiError] = _
   descriptor_read_directory(Self) -> Result[FilesystemTypesDirectoryEntryStream, WasiError] = _
-  descriptor_sync(Self) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_create_directory_at(Self, String) -> Result[FilesystemTypesGenerated, WasiError] = _
+  descriptor_sync(Self) -> Result[Unit, WasiError] = _
+  descriptor_create_directory_at(Self, String) -> Result[Unit, WasiError] = _
   descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
   descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
-  descriptor_set_times_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_link_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesDescriptor, String) -> Result[FilesystemTypesGenerated, WasiError] = _
+  descriptor_set_times_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[Unit, WasiError] = _
+  descriptor_link_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesDescriptor, String) -> Result[Unit, WasiError] = _
   descriptor_readlink_at(Self, String) -> Result[String, WasiError] = _
-  descriptor_remove_directory_at(Self, String) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_symlink_at(Self, String, String) -> Result[FilesystemTypesGenerated, WasiError] = _
-  descriptor_unlink_file_at(Self, String) -> Result[FilesystemTypesGenerated, WasiError] = _
+  descriptor_remove_directory_at(Self, String) -> Result[Unit, WasiError] = _
+  descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[Unit, WasiError] = _
+  descriptor_symlink_at(Self, String, String) -> Result[Unit, WasiError] = _
+  descriptor_unlink_file_at(Self, String) -> Result[Unit, WasiError] = _
   descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Result[Bool, WasiError] = _
   descriptor_metadata_hash(Self) -> Result[FilesystemTypesMetadataHashValue, WasiError] = _
   descriptor_metadata_hash_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesMetadataHashValue, WasiError] = _
@@ -606,9 +593,9 @@ pub(open) trait WasiHttpTypesAdapter {
   fields_constructor(Self) -> Result[Unit, WasiError] = _
   fields_get(Self, HttpTypesFieldName) -> Result[Array[HttpTypesFieldValue], WasiError] = _
   fields_has(Self, HttpTypesFieldName) -> Result[Bool, WasiError] = _
-  fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[HttpTypesGenerated, WasiError] = _
-  fields_delete(Self, HttpTypesFieldName) -> Result[HttpTypesGenerated, WasiError] = _
-  fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[HttpTypesGenerated, WasiError] = _
+  fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[Unit, WasiError] = _
+  fields_delete(Self, HttpTypesFieldName) -> Result[Unit, WasiError] = _
+  fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[Unit, WasiError] = _
   fields_entries(Self) -> Result[Array[Bytes], WasiError] = _
   fields_clone(Self) -> Result[HttpTypesFields, WasiError] = _
   incoming_request_method(Self) -> Result[HttpTypesMethod, WasiError] = _
@@ -628,7 +615,7 @@ pub(open) trait WasiHttpTypesAdapter {
   request_options_connect_timeout(Self) -> Result[HttpTypesDuration?, WasiError] = _
   request_options_first_byte_timeout(Self) -> Result[HttpTypesDuration?, WasiError] = _
   request_options_between_bytes_timeout(Self) -> Result[HttpTypesDuration?, WasiError] = _
-  response_outparam_send_informational(Self, UInt, HttpTypesHeaders) -> Result[HttpTypesGenerated, WasiError] = _
+  response_outparam_send_informational(Self, UInt, HttpTypesHeaders) -> Result[Unit, WasiError] = _
   incoming_response_status(Self) -> Result[HttpTypesStatusCode, WasiError] = _
   incoming_response_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
   incoming_response_consume(Self) -> Result[HttpTypesIncomingBody, WasiError] = _
@@ -659,15 +646,15 @@ pub(open) trait WasiIoStreamsAdapter {
   input_stream_blocking_read(Self, UInt64) -> Result[Bytes, WasiError] = _
   input_stream_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
   input_stream_blocking_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
-  input_stream_subscribe(Self) -> Result[IoStreamsPollable, WasiError] = _
+  input_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
   output_stream_check_write(Self) -> Result[UInt64, WasiError] = _
-  output_stream_write(Self, Bytes) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_blocking_write_and_flush(Self, Bytes) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_flush(Self) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_blocking_flush(Self) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_subscribe(Self) -> Result[IoStreamsPollable, WasiError] = _
-  output_stream_write_zeroes(Self, UInt64) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_blocking_write_zeroes_and_flush(Self, UInt64) -> Result[IoStreamsGenerated, WasiError] = _
+  output_stream_write(Self, Bytes) -> Result[Unit, WasiError] = _
+  output_stream_blocking_write_and_flush(Self, Bytes) -> Result[Unit, WasiError] = _
+  output_stream_flush(Self) -> Result[Unit, WasiError] = _
+  output_stream_blocking_flush(Self) -> Result[Unit, WasiError] = _
+  output_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
+  output_stream_write_zeroes(Self, UInt64) -> Result[Unit, WasiError] = _
+  output_stream_blocking_write_zeroes_and_flush(Self, UInt64) -> Result[Unit, WasiError] = _
   output_stream_splice(Self, IoStreamsInputStream, UInt64) -> Result[UInt64, WasiError] = _
   output_stream_blocking_splice(Self, IoStreamsInputStream, UInt64) -> Result[UInt64, WasiError] = _
 }
@@ -701,34 +688,34 @@ pub(open) trait WasiSocketsNetworkAdapter {
 }
 
 pub(open) trait WasiSocketsTcpAdapter {
-  tcp_socket_start_bind(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[SocketsTcpGenerated, WasiError] = _
-  tcp_socket_finish_bind(Self) -> Result[SocketsTcpGenerated, WasiError] = _
-  tcp_socket_start_connect(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_start_bind(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[Unit, WasiError] = _
+  tcp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
+  tcp_socket_start_connect(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[Unit, WasiError] = _
   tcp_socket_finish_connect(Self) -> Result[Bytes, WasiError] = _
-  tcp_socket_start_listen(Self) -> Result[SocketsTcpGenerated, WasiError] = _
-  tcp_socket_finish_listen(Self) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_start_listen(Self) -> Result[Unit, WasiError] = _
+  tcp_socket_finish_listen(Self) -> Result[Unit, WasiError] = _
   tcp_socket_accept(Self) -> Result[Bytes, WasiError] = _
   tcp_socket_local_address(Self) -> Result[SocketsTcpIpSocketAddress, WasiError] = _
   tcp_socket_remote_address(Self) -> Result[SocketsTcpIpSocketAddress, WasiError] = _
   tcp_socket_is_listening(Self) -> Result[Bool, WasiError] = _
   tcp_socket_address_family(Self) -> Result[SocketsTcpIpAddressFamily, WasiError] = _
-  tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[Unit, WasiError] = _
   tcp_socket_keep_alive_enabled(Self) -> Result[Bool, WasiError] = _
-  tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[Unit, WasiError] = _
   tcp_socket_keep_alive_idle_time(Self) -> Result[SocketsTcpDuration, WasiError] = _
-  tcp_socket_set_keep_alive_idle_time(Self, SocketsTcpDuration) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_keep_alive_idle_time(Self, SocketsTcpDuration) -> Result[Unit, WasiError] = _
   tcp_socket_keep_alive_interval(Self) -> Result[SocketsTcpDuration, WasiError] = _
-  tcp_socket_set_keep_alive_interval(Self, SocketsTcpDuration) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_keep_alive_interval(Self, SocketsTcpDuration) -> Result[Unit, WasiError] = _
   tcp_socket_keep_alive_count(Self) -> Result[UInt, WasiError] = _
-  tcp_socket_set_keep_alive_count(Self, UInt) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_keep_alive_count(Self, UInt) -> Result[Unit, WasiError] = _
   tcp_socket_hop_limit(Self) -> Result[Byte, WasiError] = _
-  tcp_socket_set_hop_limit(Self, Byte) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
   tcp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   tcp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   tcp_socket_subscribe(Self) -> Result[SocketsTcpPollable, WasiError] = _
-  tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[Unit, WasiError] = _
 }
 
 pub(open) trait WasiSocketsTcpCreateSocketAdapter {
@@ -736,17 +723,17 @@ pub(open) trait WasiSocketsTcpCreateSocketAdapter {
 }
 
 pub(open) trait WasiSocketsUdpAdapter {
-  udp_socket_start_bind(Self, SocketsUdpNetwork, SocketsUdpIpSocketAddress) -> Result[SocketsUdpGenerated, WasiError] = _
-  udp_socket_finish_bind(Self) -> Result[SocketsUdpGenerated, WasiError] = _
+  udp_socket_start_bind(Self, SocketsUdpNetwork, SocketsUdpIpSocketAddress) -> Result[Unit, WasiError] = _
+  udp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
   udp_socket_local_address(Self) -> Result[SocketsUdpIpSocketAddress, WasiError] = _
   udp_socket_remote_address(Self) -> Result[SocketsUdpIpSocketAddress, WasiError] = _
   udp_socket_address_family(Self) -> Result[SocketsUdpIpAddressFamily, WasiError] = _
   udp_socket_unicast_hop_limit(Self) -> Result[Byte, WasiError] = _
-  udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[SocketsUdpGenerated, WasiError] = _
+  udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
   udp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[SocketsUdpGenerated, WasiError] = _
+  udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   udp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  udp_socket_set_send_buffer_size(Self, UInt64) -> Result[SocketsUdpGenerated, WasiError] = _
+  udp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   udp_socket_subscribe(Self) -> Result[SocketsUdpPollable, WasiError] = _
   incoming_datagram_stream_receive(Self, UInt64) -> Result[Array[SocketsUdpIncomingDatagram], WasiError] = _
   incoming_datagram_stream_subscribe(Self) -> Result[SocketsUdpPollable, WasiError] = _

@@ -10,12 +10,9 @@ pub(all) struct ClocksSystemClockInstant {
 }
 
 ///|
-pub(all) type ClocksSystemClockDuration
-
-///|
 pub(open) trait WasiClocksSystemClockAdapter {
   now(Self) -> Result[ClocksSystemClockInstant, WasiError] = _
-  get_resolution(Self) -> Result[ClocksSystemClockDuration, WasiError] = _
+  get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
 }
 
 ///|

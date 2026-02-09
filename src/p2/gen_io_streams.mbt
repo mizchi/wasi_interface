@@ -5,7 +5,7 @@
 ///|
 /// Module key: IoStreams
 pub(all) enum IoStreamsStreamError {
-  LastOperationFailed(IoStreamsError)
+  LastOperationFailed(IoErrorError)
   Closed
 }
 
@@ -16,36 +16,21 @@ pub(all) struct IoStreamsInputStream(Int)
 pub(all) struct IoStreamsOutputStream(Int)
 
 ///|
-pub(all) type IoStreamsError
-
-///|
-pub(all) type IoStreamsPollable
-
-///|
-pub(all) type IoStreamsGenerated
-
-///|
 pub(open) trait WasiIoStreamsAdapter {
   input_stream_read(Self, UInt64) -> Result[Bytes, WasiError] = _
   input_stream_blocking_read(Self, UInt64) -> Result[Bytes, WasiError] = _
   input_stream_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
   input_stream_blocking_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
-  input_stream_subscribe(Self) -> Result[IoStreamsPollable, WasiError] = _
+  input_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
   output_stream_check_write(Self) -> Result[UInt64, WasiError] = _
-  output_stream_write(Self, Bytes) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_blocking_write_and_flush(Self, Bytes) -> Result[
-    IoStreamsGenerated,
-    WasiError,
-  ] = _
-  output_stream_flush(Self) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_blocking_flush(Self) -> Result[IoStreamsGenerated, WasiError] = _
-  output_stream_subscribe(Self) -> Result[IoStreamsPollable, WasiError] = _
-  output_stream_write_zeroes(Self, UInt64) -> Result[
-    IoStreamsGenerated,
-    WasiError,
-  ] = _
+  output_stream_write(Self, Bytes) -> Result[Unit, WasiError] = _
+  output_stream_blocking_write_and_flush(Self, Bytes) -> Result[Unit, WasiError] = _
+  output_stream_flush(Self) -> Result[Unit, WasiError] = _
+  output_stream_blocking_flush(Self) -> Result[Unit, WasiError] = _
+  output_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
+  output_stream_write_zeroes(Self, UInt64) -> Result[Unit, WasiError] = _
   output_stream_blocking_write_zeroes_and_flush(Self, UInt64) -> Result[
-    IoStreamsGenerated,
+    Unit,
     WasiError,
   ] = _
   output_stream_splice(Self, IoStreamsInputStream, UInt64) -> Result[

@@ -20,9 +20,6 @@ pub(all) type SocketsTcpNetwork
 pub(all) type SocketsTcpIpSocketAddress
 
 ///|
-pub(all) type SocketsTcpGenerated
-
-///|
 pub(all) type SocketsTcpErrorCode
 
 ///|
@@ -43,17 +40,17 @@ pub(all) type SocketsTcpPollable
 ///|
 pub(open) trait WasiSocketsTcpAdapter {
   tcp_socket_start_bind(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[
-    SocketsTcpGenerated,
+    Unit,
     WasiError,
   ] = _
-  tcp_socket_finish_bind(Self) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
   tcp_socket_start_connect(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[
-    SocketsTcpGenerated,
+    Unit,
     WasiError,
   ] = _
   tcp_socket_finish_connect(Self) -> Result[Bytes, WasiError] = _
-  tcp_socket_start_listen(Self) -> Result[SocketsTcpGenerated, WasiError] = _
-  tcp_socket_finish_listen(Self) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_start_listen(Self) -> Result[Unit, WasiError] = _
+  tcp_socket_finish_listen(Self) -> Result[Unit, WasiError] = _
   tcp_socket_accept(Self) -> Result[Bytes, WasiError] = _
   tcp_socket_local_address(Self) -> Result[SocketsTcpIpSocketAddress, WasiError] = _
   tcp_socket_remote_address(Self) -> Result[
@@ -65,47 +62,29 @@ pub(open) trait WasiSocketsTcpAdapter {
     SocketsTcpIpAddressFamily,
     WasiError,
   ] = _
-  tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[
-    SocketsTcpGenerated,
-    WasiError,
-  ] = _
+  tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[Unit, WasiError] = _
   tcp_socket_keep_alive_enabled(Self) -> Result[Bool, WasiError] = _
-  tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[
-    SocketsTcpGenerated,
-    WasiError,
-  ] = _
+  tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[Unit, WasiError] = _
   tcp_socket_keep_alive_idle_time(Self) -> Result[SocketsTcpDuration, WasiError] = _
   tcp_socket_set_keep_alive_idle_time(Self, SocketsTcpDuration) -> Result[
-    SocketsTcpGenerated,
+    Unit,
     WasiError,
   ] = _
   tcp_socket_keep_alive_interval(Self) -> Result[SocketsTcpDuration, WasiError] = _
   tcp_socket_set_keep_alive_interval(Self, SocketsTcpDuration) -> Result[
-    SocketsTcpGenerated,
+    Unit,
     WasiError,
   ] = _
   tcp_socket_keep_alive_count(Self) -> Result[UInt, WasiError] = _
-  tcp_socket_set_keep_alive_count(Self, UInt) -> Result[
-    SocketsTcpGenerated,
-    WasiError,
-  ] = _
+  tcp_socket_set_keep_alive_count(Self, UInt) -> Result[Unit, WasiError] = _
   tcp_socket_hop_limit(Self) -> Result[Byte, WasiError] = _
-  tcp_socket_set_hop_limit(Self, Byte) -> Result[SocketsTcpGenerated, WasiError] = _
+  tcp_socket_set_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
   tcp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[
-    SocketsTcpGenerated,
-    WasiError,
-  ] = _
+  tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   tcp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[
-    SocketsTcpGenerated,
-    WasiError,
-  ] = _
+  tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
   tcp_socket_subscribe(Self) -> Result[SocketsTcpPollable, WasiError] = _
-  tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[
-    SocketsTcpGenerated,
-    WasiError,
-  ] = _
+  tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[Unit, WasiError] = _
 }
 
 ///|

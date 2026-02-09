@@ -4,17 +4,8 @@
 
 ///|
 /// Module key: HttpHandler
-pub(all) type HttpHandlerRequest
-
-///|
-pub(all) type HttpHandlerResponse
-
-///|
-pub(all) type HttpHandlerErrorCode
-
-///|
 pub(open) trait WasiHttpHandlerAdapter {
-  handle(Self, HttpHandlerRequest) -> Result[HttpHandlerResponse, WasiError] = _
+  handle(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
 }
 
 ///|

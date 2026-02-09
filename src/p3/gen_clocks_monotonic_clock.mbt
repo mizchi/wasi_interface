@@ -7,14 +7,11 @@
 pub(all) type ClocksMonotonicClockMark
 
 ///|
-pub(all) type ClocksMonotonicClockDuration
-
-///|
 pub(open) trait WasiClocksMonotonicClockAdapter {
   now(Self) -> Result[ClocksMonotonicClockMark, WasiError] = _
-  get_resolution(Self) -> Result[ClocksMonotonicClockDuration, WasiError] = _
+  get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
   wait_until(Self, ClocksMonotonicClockMark) -> Result[Unit, WasiError] = _
-  wait_for(Self, ClocksMonotonicClockDuration) -> Result[Unit, WasiError] = _
+  wait_for(Self, ClocksTypesDuration) -> Result[Unit, WasiError] = _
 }
 
 ///|

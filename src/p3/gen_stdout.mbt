@@ -4,4 +4,17 @@
 
 ///|
 /// Module key: Stdout
-pub(open) trait WasiStdoutAdapter {}
+pub(all) type StdoutErrorCode
+
+///|
+pub(open) trait WasiStdoutAdapter {
+  write_via_stream(Self, Bytes) -> Result[
+    Result[Unit, StdoutErrorCode],
+    WasiError,
+  ] = _
+}
+
+///|
+impl WasiStdoutAdapter with write_via_stream(_self, _arg0) {
+  Err(WasiError::NotImplemented("Stdout.write_via_stream"))
+}
