@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: FilesystemPreopens
-pub(all) type FilesystemPreopensDescriptor
+pub(all) struct FilesystemPreopensDescriptor(Int)
 
 ///|
 pub(open) trait WasiFilesystemPreopensAdapter {

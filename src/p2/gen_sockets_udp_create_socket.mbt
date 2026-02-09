@@ -6,13 +6,13 @@
 
 ///|
 /// Module key: SocketsUdpCreateSocket
-pub(all) type SocketsUdpCreateSocketIpAddressFamily
+pub(all) struct SocketsUdpCreateSocketIpAddressFamily(Int)
 
 ///|
-pub(all) type SocketsUdpCreateSocketUdpSocket
+pub(all) struct SocketsUdpCreateSocketUdpSocket(Int)
 
 ///|
-pub(all) type SocketsUdpCreateSocketErrorCode
+pub(all) struct SocketsUdpCreateSocketErrorCode(Int)
 
 ///|
 pub(open) trait WasiSocketsUdpCreateSocketAdapter {

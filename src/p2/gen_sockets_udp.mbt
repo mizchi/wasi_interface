@@ -27,19 +27,19 @@ pub(all) struct SocketsUdpIncomingDatagramStream(Int)
 pub(all) struct SocketsUdpOutgoingDatagramStream(Int)
 
 ///|
-pub(all) type SocketsUdpIpSocketAddress
+pub(all) struct SocketsUdpIpSocketAddress(Int)
 
 ///|
-pub(all) type SocketsUdpNetwork
+pub(all) struct SocketsUdpNetwork(Int)
 
 ///|
-pub(all) type SocketsUdpErrorCode
+pub(all) struct SocketsUdpErrorCode(Int)
 
 ///|
-pub(all) type SocketsUdpIpAddressFamily
+pub(all) struct SocketsUdpIpAddressFamily(Int)
 
 ///|
-pub(all) type SocketsUdpPollable
+pub(all) struct SocketsUdpPollable(Int)
 
 ///|
 pub(open) trait WasiSocketsUdpAdapter {

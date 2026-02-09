@@ -1,6 +1,6 @@
 {
   "name": "mizchi/wasi_interface",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "deps": {},
   "readme": "README.mbt.md",
   "repository": "https://github.com/mizchi/wasi_interface",

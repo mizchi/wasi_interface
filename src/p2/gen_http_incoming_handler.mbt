@@ -6,10 +6,10 @@
 
 ///|
 /// Module key: HttpIncomingHandler
-pub(all) type HttpIncomingHandlerIncomingRequest
+pub(all) struct HttpIncomingHandlerIncomingRequest(Int)
 
 ///|
-pub(all) type HttpIncomingHandlerResponseOutparam
+pub(all) struct HttpIncomingHandlerResponseOutparam(Int)
 
 ///|
 pub(open) trait WasiHttpIncomingHandlerAdapter {

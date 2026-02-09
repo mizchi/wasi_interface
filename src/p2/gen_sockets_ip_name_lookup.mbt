@@ -9,16 +9,16 @@
 pub(all) struct SocketsIpNameLookupResolveAddressStream(Int)
 
 ///|
-pub(all) type SocketsIpNameLookupIpAddress
+pub(all) struct SocketsIpNameLookupIpAddress(Int)
 
 ///|
-pub(all) type SocketsIpNameLookupErrorCode
+pub(all) struct SocketsIpNameLookupErrorCode(Int)
 
 ///|
-pub(all) type SocketsIpNameLookupPollable
+pub(all) struct SocketsIpNameLookupPollable(Int)
 
 ///|
-pub(all) type SocketsIpNameLookupNetwork
+pub(all) struct SocketsIpNameLookupNetwork(Int)
 
 ///|
 pub(open) trait WasiSocketsIpNameLookupAdapter {

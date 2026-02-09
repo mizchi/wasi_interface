@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: CliStdout
-pub(all) type CliStdoutOutputStream
+pub(all) struct CliStdoutOutputStream(Int)
 
 ///|
 pub(open) trait WasiCliStdoutAdapter {

@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: CliTerminalStderr
-pub(all) type CliTerminalStderrTerminalOutput
+pub(all) struct CliTerminalStderrTerminalOutput(Int)
 
 ///|
 pub(open) trait WasiCliTerminalStderrAdapter {

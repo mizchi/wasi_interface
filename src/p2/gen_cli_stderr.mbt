@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: CliStderr
-pub(all) type CliStderrOutputStream
+pub(all) struct CliStderrOutputStream(Int)
 
 ///|
 pub(open) trait WasiCliStderrAdapter {

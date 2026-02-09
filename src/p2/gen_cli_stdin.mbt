@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: CliStdin
-pub(all) type CliStdinInputStream
+pub(all) struct CliStdinInputStream(Int)
 
 ///|
 pub(open) trait WasiCliStdinAdapter {

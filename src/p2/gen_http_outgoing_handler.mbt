@@ -6,16 +6,16 @@
 
 ///|
 /// Module key: HttpOutgoingHandler
-pub(all) type HttpOutgoingHandlerOutgoingRequest
+pub(all) struct HttpOutgoingHandlerOutgoingRequest(Int)
 
 ///|
-pub(all) type HttpOutgoingHandlerRequestOptions
+pub(all) struct HttpOutgoingHandlerRequestOptions(Int)
 
 ///|
-pub(all) type HttpOutgoingHandlerFutureIncomingResponse
+pub(all) struct HttpOutgoingHandlerFutureIncomingResponse(Int)
 
 ///|
-pub(all) type HttpOutgoingHandlerErrorCode
+pub(all) struct HttpOutgoingHandlerErrorCode(Int)
 
 ///|
 pub(open) trait WasiHttpOutgoingHandlerAdapter {

@@ -95,22 +95,22 @@ pub(all) enum HttpTypesHeaderError {
 }
 
 ///|
-pub(all) type HttpTypesFieldKey
+pub(all) struct HttpTypesFieldKey(String)
 
 ///|
-pub(all) type HttpTypesFieldName
+pub(all) struct HttpTypesFieldName(String)
 
 ///|
-pub(all) type HttpTypesFieldValue
+pub(all) struct HttpTypesFieldValue(Bytes)
 
 ///|
 pub(all) struct HttpTypesFields(Int)
 
 ///|
-pub(all) type HttpTypesHeaders
+pub(all) struct HttpTypesHeaders(Int)
 
 ///|
-pub(all) type HttpTypesTrailers
+pub(all) struct HttpTypesTrailers(Int)
 
 ///|
 pub(all) struct HttpTypesIncomingRequest(Int)
@@ -125,7 +125,7 @@ pub(all) struct HttpTypesRequestOptions(Int)
 pub(all) struct HttpTypesResponseOutparam(Int)
 
 ///|
-pub(all) type HttpTypesStatusCode
+pub(all) struct HttpTypesStatusCode(Int)
 
 ///|
 pub(all) struct HttpTypesIncomingResponse(Int)
@@ -146,16 +146,16 @@ pub(all) struct HttpTypesOutgoingBody(Int)
 pub(all) struct HttpTypesFutureIncomingResponse(Int)
 
 ///|
-pub(all) type HttpTypesDuration
+pub(all) struct HttpTypesDuration(UInt64)
 
 ///|
-pub(all) type HttpTypesPollable
+pub(all) struct HttpTypesPollable(Int)
 
 ///|
-pub(all) type HttpTypesOutputStream
+pub(all) struct HttpTypesOutputStream(Int)
 
 ///|
-pub(all) type HttpTypesIoError
+pub(all) struct HttpTypesIoError(Int)
 
 ///|
 pub(open) trait WasiHttpTypesAdapter {

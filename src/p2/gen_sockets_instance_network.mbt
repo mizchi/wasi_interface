@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: SocketsInstanceNetwork
-pub(all) type SocketsInstanceNetworkNetwork
+pub(all) struct SocketsInstanceNetworkNetwork(Int)
 
 ///|
 pub(open) trait WasiSocketsInstanceNetworkAdapter {

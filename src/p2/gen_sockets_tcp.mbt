@@ -16,28 +16,28 @@ pub(all) enum SocketsTcpShutdownType {
 pub(all) struct SocketsTcpTcpSocket(Int)
 
 ///|
-pub(all) type SocketsTcpNetwork
+pub(all) struct SocketsTcpNetwork(Int)
 
 ///|
-pub(all) type SocketsTcpIpSocketAddress
+pub(all) struct SocketsTcpIpSocketAddress(Int)
 
 ///|
-pub(all) type SocketsTcpErrorCode
+pub(all) struct SocketsTcpErrorCode(Int)
 
 ///|
-pub(all) type SocketsTcpInputStream
+pub(all) struct SocketsTcpInputStream(Int)
 
 ///|
-pub(all) type SocketsTcpOutputStream
+pub(all) struct SocketsTcpOutputStream(Int)
 
 ///|
-pub(all) type SocketsTcpIpAddressFamily
+pub(all) struct SocketsTcpIpAddressFamily(Int)
 
 ///|
-pub(all) type SocketsTcpDuration
+pub(all) struct SocketsTcpDuration(UInt64)
 
 ///|
-pub(all) type SocketsTcpPollable
+pub(all) struct SocketsTcpPollable(Int)
 
 ///|
 pub(open) trait WasiSocketsTcpAdapter {

@@ -37,10 +37,10 @@ pub(all) enum SocketsNetworkIpAddressFamily {
 }
 
 ///|
-pub(all) type SocketsNetworkIpv4Address
+pub(all) struct SocketsNetworkIpv4Address(UInt)
 
 ///|
-pub(all) type SocketsNetworkIpv6Address
+pub(all) struct SocketsNetworkIpv6Address(UInt64)
 
 ///|
 pub(all) enum SocketsNetworkIpAddress {
@@ -69,7 +69,7 @@ pub(all) enum SocketsNetworkIpSocketAddress {
 }
 
 ///|
-pub(all) type SocketsNetworkError
+pub(all) struct SocketsNetworkError(Int)
 
 ///|
 pub(open) trait WasiSocketsNetworkAdapter {

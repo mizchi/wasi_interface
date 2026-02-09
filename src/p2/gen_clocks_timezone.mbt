@@ -13,7 +13,7 @@ pub(all) struct ClocksTimezoneTimezoneDisplay {
 }
 
 ///|
-pub(all) type ClocksTimezoneDatetime
+pub(all) struct ClocksTimezoneDatetime(UInt64)
 
 ///|
 pub(open) trait WasiClocksTimezoneAdapter {

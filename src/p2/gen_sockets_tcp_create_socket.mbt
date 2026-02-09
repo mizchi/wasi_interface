@@ -6,13 +6,13 @@
 
 ///|
 /// Module key: SocketsTcpCreateSocket
-pub(all) type SocketsTcpCreateSocketIpAddressFamily
+pub(all) struct SocketsTcpCreateSocketIpAddressFamily(Int)
 
 ///|
-pub(all) type SocketsTcpCreateSocketTcpSocket
+pub(all) struct SocketsTcpCreateSocketTcpSocket(Int)
 
 ///|
-pub(all) type SocketsTcpCreateSocketErrorCode
+pub(all) struct SocketsTcpCreateSocketErrorCode(Int)
 
 ///|
 pub(open) trait WasiSocketsTcpCreateSocketAdapter {

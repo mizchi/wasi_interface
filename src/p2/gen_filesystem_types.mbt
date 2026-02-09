@@ -6,7 +6,7 @@
 
 ///|
 /// Module key: FilesystemTypes
-pub(all) type FilesystemTypesFilesize
+pub(all) struct FilesystemTypesFilesize(UInt64)
 
 ///|
 pub(all) enum FilesystemTypesDescriptorType {
@@ -21,16 +21,16 @@ pub(all) enum FilesystemTypesDescriptorType {
 }
 
 ///|
-pub(all) type FilesystemTypesDescriptorFlags
+pub(all) struct FilesystemTypesDescriptorFlags(UInt)
 
 ///|
-pub(all) type FilesystemTypesPathFlags
+pub(all) struct FilesystemTypesPathFlags(UInt)
 
 ///|
-pub(all) type FilesystemTypesOpenFlags
+pub(all) struct FilesystemTypesOpenFlags(Int)
 
 ///|
-pub(all) type FilesystemTypesLinkCount
+pub(all) struct FilesystemTypesLinkCount(UInt64)
 
 ///|
 pub(all) struct FilesystemTypesDescriptorStat {
@@ -117,16 +117,16 @@ pub(all) struct FilesystemTypesDescriptor(Int)
 pub(all) struct FilesystemTypesDirectoryEntryStream(Int)
 
 ///|
-pub(all) type FilesystemTypesDatetime
+pub(all) struct FilesystemTypesDatetime(UInt64)
 
 ///|
-pub(all) type FilesystemTypesInputStream
+pub(all) struct FilesystemTypesInputStream(Int)
 
 ///|
-pub(all) type FilesystemTypesOutputStream
+pub(all) struct FilesystemTypesOutputStream(Int)
 
 ///|
-pub(all) type FilesystemTypesError
+pub(all) struct FilesystemTypesError(Int)
 
 ///|
 pub(open) trait WasiFilesystemTypesAdapter {

@@ -6,13 +6,13 @@
 
 ///|
 /// Module key: ClocksMonotonicClock
-pub(all) type ClocksMonotonicClockInstant
+pub(all) struct ClocksMonotonicClockInstant(UInt64)
 
 ///|
-pub(all) type ClocksMonotonicClockDuration
+pub(all) struct ClocksMonotonicClockDuration(UInt64)
 
 ///|
-pub(all) type ClocksMonotonicClockPollable
+pub(all) struct ClocksMonotonicClockPollable(Int)
 
 ///|
 pub(open) trait WasiClocksMonotonicClockAdapter {
