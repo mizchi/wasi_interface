@@ -1,33 +1,24 @@
-# wasi_posix layering
+# wasi_posix contract policy
 
-`@wasi_posix` separates moonix core contracts (`@fs`, `@posix`) from WASI preview-specific details.
+`mizchi/wasi_posix` is a contract-only module for WASI preview boundaries.
 
 ## Layering
 
-1. `WasiFsProvider` / `WasiCliProvider` (`src/wasi_posix/contracts.mbt`)
-2. `WasiFs` / `WasiStreamHandler` adapters (`src/wasi_posix/fs_adapter.mbt`, `src/wasi_posix/cli_adapter.mbt`)
-3. Preview-specific namespaces
-   - p2: `src/p2/wasi_posix/` (preview2 provider implementations and constructors)
-   - p3: `src/p3/wasi_posix/` (scaffolded)
+1. Contract layer (`src/p2`, `src/p3`)
+2. Concrete implementation layer (separate module)
+3. Injection/adapter composition (separate module)
 
-## Why this boundary
+## Rules
 
-WASI preview2 and preview3 differ in low-level API shape.
+- `src/p2` and `src/p3` expose only `pub(open) trait` and contract data types
+- No provider implementation, no adapter implementation, no runtime injection logic
+- Consumers implement these traits and compose with their own runtime adapters
 
-- Filesystem
-  - p2: direct read/write and mostly sync calls
-  - p3 draft (`wasi:filesystem@0.3.0-rc-2026-02-05`): expanded descriptor flags/stat metadata and ongoing 0.3 stream/future alignment
-- CLI stdio
-  - p2: `get-stdin/get-stdout/get-stderr` + `wasi:io/streams`
-  - p3 draft (`wasi:cli@0.3.0-rc-2026-02-05`): world-level imports reorganized under 0.3 package set
-- Clocks used by filesystem metadata
-  - p2 uses `wasi:clocks/wall-clock`
-  - p3 draft references `wasi:clocks/system-clock`
+## Notes on p3
 
-The contract layer keeps these changes local to provider implementations.
+Current p3 contracts intentionally mirror p2 for migration ease.
+As `wasi:*@0.3.x` stabilizes, update p3 contracts first and migrate implementations independently.
 
-## Preview3 migration plan
+## Optional workflow with `wkg`
 
-1. Implement `WasiPreview3FsProvider` / `WasiPreview3CliProvider` with `WasiFsProvider` / `WasiCliProvider`.
-2. Expose p3 factory functions parallel to `src/p2/wasi_posix/factory.mbt`.
-3. Switch call sites by namespace (`@p2/wasi_posix` -> `@p3/wasi_posix`) without changing shared adapters.
+When needed, use `wkg` to fetch p2/p3 WIT definitions and generate/update contract scaffolding, then keep this repository as the reviewed contract surface.

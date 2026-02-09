@@ -1,25 +1,27 @@
 # wasi_posix
 
-WASI preview-aware provider implementations and adapter contracts for `moonix` POSIX abstractions.
+WASI Preview2/Preview3 contract definitions for host injection boundaries.
 
 ## Packages
 
-- `@wasi_posix`
-  - Preview-agnostic contract layer (`WasiFsProvider`, `WasiCliProvider`)
-  - Adapter implementations (`WasiFs`, `WasiStreamHandler`)
-- `@p2/wasi_posix`
-  - WASI preview2 provider implementations and factories
-- `@p3/wasi_posix`
-  - Preview3 scaffold namespace (targeting `wasi:*@0.3.x` drafts)
+- `@p2`
+  - Preview2 contracts (`pub(open) trait`) and shared contract types
+- `@p3`
+  - Preview3 contracts (`pub(open) trait`) and shared contract types
 
-## Dependency Direction
+## Scope
 
-This module depends on:
+This module is contract-only.
 
-- `mizchi/moonix` (`@fs`, `@posix` contracts)
-- `mizchi/wasi` (generated WASI bindings)
+- Define contracts for WASI host integration
+- Keep API/type boundary stable across implementations
+- Do not include concrete injection/provider/adapter implementations
 
-`moonix` can keep core filesystem/process contracts while WASI host details evolve in this module.
+Concrete host injection should live in a separate module that depends on this one.
+
+## Optional generation strategy
+
+If maintaining contracts manually becomes costly, define source WIT for p2/p3 and generate contract stubs from `wkg` outputs in a dedicated generation workflow.
 
 ## Quick Commands
 
@@ -28,8 +30,3 @@ just        # check + test (wasm-gc)
 just check  # moon check --deny-warn --target wasm-gc
 just test   # moon test --target wasm-gc
 ```
-
-## Design Notes
-
-- Layering details: `docs/wasi_posix.md`
-- Current p3 references are aligned with WIT draft packages under `wasi:*@0.3.0-rc-2026-02-05`
