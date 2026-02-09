@@ -2,4 +2,5 @@ import {
   "mizchi/wit" as @wit,
   "mizchi/ast_printer" as @ast_printer,
   "moonbitlang/parser" as @parser,
+  "moonbitlang/x/fs" as @fs,
 }

@@ -16,8 +16,10 @@
 
 ## Notes on p3
 
-Current p3 contracts intentionally mirror p2 for migration ease.
-As `wasi:*@0.3.x` stabilizes, update p3 contracts first and migrate implementations independently.
+`src/p3` is generated from `WebAssembly/WASI/proposals/*/wit-0.3.0-draft`.
+`src/p2` and `src/p3` are managed independently as contract namespaces (`gen_*.mbt` per interface).
+
+Coverage and remaining gaps are tracked in `docs/coverage_checklist.md`.
 
 ## Optional workflow with `wkg`
 

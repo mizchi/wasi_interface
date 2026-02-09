@@ -7,9 +7,16 @@ pub(all) suberror GenerateError {
 
 ///|
 priv struct InterfaceShape {
-  name : String
+  key : String
+  prefix : String
   items : Array[@wit.InterfaceItem]
 }
+
+///|
+pub(all) struct GeneratedModule {
+  file_name : String
+  code : String
+} derive(Show, Eq)
 
 ///|
 fn parse_error_to_string(err : @wit.ParseError) -> String {
@@ -131,12 +138,337 @@ fn to_pascal_case(name : String) -> String {
 }
 
 ///|
-fn to_type_name(name : String) -> String {
-  to_pascal_case(name)
+fn pascal_to_snake_case(name : String) -> String {
+  let buf = StringBuilder::new()
+  let mut wrote_any = false
+  let mut prev_was_lower_or_digit = false
+  for ch in name.to_array() {
+    if is_ascii_alnum(ch) {
+      let code = ch.to_int()
+      let is_upper = code >= 65 && code <= 90
+      if is_upper && wrote_any && prev_was_lower_or_digit {
+        buf.write_char('_')
+      }
+      buf.write_char(to_ascii_lower(ch))
+      wrote_any = true
+      prev_was_lower_or_digit = not(is_upper)
+    } else {
+      if wrote_any {
+        buf.write_char('_')
+      }
+      prev_was_lower_or_digit = false
+    }
+  }
+  let normalized = buf.to_string()
+  if normalized == "" {
+    "generated"
+  } else {
+    normalized
+  }
 }
 
 ///|
-fn emit_type_expr(ty : @wit.TypeExpr) -> String {
+fn contains_string(items : Array[String], value : String) -> Bool {
+  for item in items {
+    if item == value {
+      return true
+    }
+  }
+  false
+}
+
+///|
+fn push_unique_string(items : Array[String], value : String) -> Unit {
+  if not(contains_string(items, value)) {
+    items.push(value)
+  }
+}
+
+///|
+fn starts_with_keyword(line : String, keyword : String) -> Bool {
+  let trimmed = line.trim()
+  trimmed.has_prefix(keyword)
+}
+
+///|
+fn join_path(dir : String, entry : String) -> String {
+  if dir == "" || dir == "." {
+    entry
+  } else if dir.has_suffix("/") {
+    dir + entry
+  } else {
+    dir + "/" + entry
+  }
+}
+
+///|
+fn sort_strings(items : Array[String]) -> Unit {
+  let len = items.length()
+  if len < 2 {
+    return
+  }
+  for i in 1..<len {
+    let key = items[i]
+    let mut j = i - 1
+    while j >= 0 && items[j].compare(key) > 0 {
+      items[j + 1] = items[j]
+      j = j - 1
+    }
+    items[j + 1] = key
+  }
+}
+
+///|
+fn list_wit_file_paths_in_dir(
+  dir : String,
+) -> Result[Array[String], GenerateError] {
+  let entries = @fs.read_dir(dir) catch {
+    e =>
+      return Err(GenerateError::WitParse("read_dir failed: " + e.to_string()))
+  }
+  let files : Array[String] = []
+  for entry in entries {
+    if entry == "deps" {
+      continue
+    }
+    let path = join_path(dir, entry)
+    let is_file = @fs.is_file(path) catch { _ => false }
+    if is_file && entry.has_suffix(".wit") {
+      files.push(path)
+    }
+  }
+  sort_strings(files)
+  Ok(files)
+}
+
+///|
+fn sanitize_package_version(line : String) -> String {
+  if not(starts_with_keyword(line, "package ")) {
+    return line
+  }
+  let chars = line.to_array()
+  let mut at_index = -1
+  let mut semi_index = -1
+  for i, ch in chars {
+    if ch == '@' && at_index < 0 {
+      at_index = i
+    }
+    if ch == ';' {
+      semi_index = i
+      break
+    }
+  }
+  if at_index < 0 || semi_index < 0 || at_index > semi_index {
+    return line
+  }
+  let buf = StringBuilder::new()
+  for i in 0..<at_index {
+    buf.write_char(chars[i])
+  }
+  for i in semi_index..<chars.length() {
+    buf.write_char(chars[i])
+  }
+  buf.to_string()
+}
+
+///|
+fn should_skip_line_for_parse(line : String) -> Bool {
+  let trimmed = line.trim()
+  if trimmed == "" {
+    return false
+  }
+  if trimmed.has_prefix("@") || trimmed.has_prefix("use ") {
+    return true
+  }
+  if trimmed.has_prefix("resource ") && trimmed.has_suffix(";") {
+    return true
+  }
+  if trimmed.contains(": static func") {
+    return true
+  }
+  if trimmed.contains("-> result;") {
+    return true
+  }
+  for ch in line.to_array() {
+    if ch == '%' {
+      return true
+    }
+  }
+  false
+}
+
+///|
+fn sanitize_wit_lines(source : String) -> Array[String] {
+  let lines : Array[String] = []
+  for line in source.split("\n") {
+    let line_text = line.to_string()
+    if should_skip_line_for_parse(line_text) {
+      continue
+    }
+    let sanitized_line = sanitize_package_version(line_text)
+    lines.push(sanitized_line)
+  }
+  lines
+}
+
+///|
+fn join_lines(lines : Array[String]) -> String {
+  let buf = StringBuilder::new()
+  for line in lines {
+    buf.write_string(line)
+    buf.write_char('\n')
+  }
+  buf.to_string()
+}
+
+///|
+fn line_index_from_offset(lines : Array[String], offset : Int) -> Int {
+  let mut acc = 0
+  for i, line in lines {
+    let width = line.length() + 1
+    if acc + width > offset {
+      return i
+    }
+    acc = acc + width
+  }
+  -1
+}
+
+///|
+fn without_line(lines : Array[String], index : Int) -> Array[String] {
+  let out : Array[String] = []
+  for i, line in lines {
+    if i != index {
+      out.push(line)
+    }
+  }
+  out
+}
+
+///|
+fn adaptive_parse_sanitized_source(
+  path : String,
+  source : String,
+) -> Result[@wit.WitFile, GenerateError] {
+  let mut lines = sanitize_wit_lines(source)
+  let mut attempts = 0
+  while attempts < 512 {
+    let sanitized = join_lines(lines)
+    match @wit.parse(sanitized) {
+      Ok(wit_file) => return Ok(wit_file)
+      Err(@wit.ParseError::Message(message, offset)) => {
+        let line_index = line_index_from_offset(lines, offset)
+        if line_index < 0 || line_index >= lines.length() {
+          return Err(
+            GenerateError::WitParse(
+              path + ": " + message + " (offset=" + offset.to_string() + ")",
+            ),
+          )
+        }
+        let trimmed = lines[line_index].trim()
+        if trimmed == "}" || trimmed == "{" || trimmed == "}," {
+          return Err(
+            GenerateError::WitParse(
+              path + ": " + message + " (offset=" + offset.to_string() + ")",
+            ),
+          )
+        }
+        lines = without_line(lines, line_index)
+      }
+    }
+    attempts = attempts + 1
+  }
+  Err(GenerateError::WitParse(path + ": failed to sanitize WIT for parser"))
+}
+
+///|
+fn parse_wit_file_path_with_sanitize(
+  path : String,
+) -> Result[@wit.WitFile, GenerateError] {
+  let source = @fs.read_file_to_string(path) catch {
+    e => return Err(GenerateError::WitParse("read failed: " + e.to_string()))
+  }
+  adaptive_parse_sanitized_source(path, source)
+}
+
+///|
+fn parse_wit_dir_path_with_sanitize(
+  path : String,
+) -> Result[Array[@wit.WitFile], GenerateError] {
+  let files = match list_wit_file_paths_in_dir(path) {
+    Ok(files) => files
+    Err(err) => return Err(err)
+  }
+  if files.length() == 0 {
+    return Err(GenerateError::WitParse("no .wit files in dir: " + path))
+  }
+  let out : Array[@wit.WitFile] = []
+  for file in files {
+    match parse_wit_file_path_with_sanitize(file) {
+      Ok(wit_file) => out.push(wit_file)
+      Err(err) => return Err(err)
+    }
+  }
+  Ok(out)
+}
+
+///|
+fn parse_wit_files_from_sources(
+  sources : Array[String],
+) -> Result[Array[@wit.WitFile], GenerateError] {
+  let wit_files : Array[@wit.WitFile] = []
+  for source in sources {
+    match @wit.parse(source) {
+      Ok(wit_file) => wit_files.push(wit_file)
+      Err(err) =>
+        return Err(GenerateError::WitParse(parse_error_to_string(err)))
+    }
+  }
+  Ok(wit_files)
+}
+
+///|
+fn parse_wit_files_from_paths(
+  paths : Array[String],
+) -> Result[Array[@wit.WitFile], GenerateError] {
+  let wit_files : Array[@wit.WitFile] = []
+  for path in paths {
+    match @wit.parse_path(path) {
+      Ok(wit_file) => wit_files.push(wit_file)
+      Err(err) => {
+        let is_file = @fs.is_file(path) catch { _ => false }
+        if is_file {
+          match parse_wit_file_path_with_sanitize(path) {
+            Ok(wit_file) => wit_files.push(wit_file)
+            Err(sanitized_err) => return Err(sanitized_err)
+          }
+          continue
+        }
+        let is_dir = @fs.is_dir(path) catch { _ => false }
+        if is_dir {
+          match parse_wit_dir_path_with_sanitize(path) {
+            Ok(parsed_files) =>
+              for wit_file in parsed_files {
+                wit_files.push(wit_file)
+              }
+            Err(sanitized_err) => return Err(sanitized_err)
+          }
+          continue
+        }
+        return Err(GenerateError::WitParse(parse_error_to_string(err)))
+      }
+    }
+  }
+  Ok(wit_files)
+}
+
+///|
+fn scoped_type_name(prefix : String, raw_name : String) -> String {
+  prefix + to_pascal_case(raw_name)
+}
+
+///|
+fn emit_type_expr(ty : @wit.TypeExpr, prefix : String) -> String {
   match ty {
     @wit.TypeExpr::Bool => "Bool"
     @wit.TypeExpr::U8 => "Byte"
@@ -151,43 +483,341 @@ fn emit_type_expr(ty : @wit.TypeExpr) -> String {
     @wit.TypeExpr::F64 => "Double"
     @wit.TypeExpr::Char => "Char"
     @wit.TypeExpr::String_ => "String"
-    @wit.TypeExpr::Id(name) => to_type_name(name)
-    @wit.TypeExpr::Own(name) => to_type_name(name)
-    @wit.TypeExpr::Borrow(name) => to_type_name(name)
+    @wit.TypeExpr::Id(name) => scoped_type_name(prefix, name)
+    @wit.TypeExpr::Own(name) => scoped_type_name(prefix, name)
+    @wit.TypeExpr::Borrow(name) => scoped_type_name(prefix, name)
     @wit.TypeExpr::List(inner) =>
       match inner {
         @wit.TypeExpr::U8 => "Bytes"
-        _ => "Array[" + emit_type_expr(inner) + "]"
+        _ => "Array[" + emit_type_expr(inner, prefix) + "]"
       }
-    @wit.TypeExpr::Option(inner) => emit_type_expr(inner) + "?"
+    @wit.TypeExpr::Option(inner) => emit_type_expr(inner, prefix) + "?"
     @wit.TypeExpr::Result(ok, err) => {
       let err_type = match err {
-        Some(err_ty) => emit_type_expr(err_ty)
+        Some(err_ty) => emit_type_expr(err_ty, prefix)
         None => "Unit"
       }
-      "Result[" + emit_type_expr(ok) + ", " + err_type + "]"
+      "Result[" + emit_type_expr(ok, prefix) + ", " + err_type + "]"
     }
     @wit.TypeExpr::Tuple(items) =>
       if items.length() == 0 {
         "Unit"
+      } else if items.length() == 1 {
+        emit_type_expr(items[0], prefix)
       } else {
-        "Array[Any]"
+        "Bytes"
       }
   }
 }
 
 ///|
-fn emit_result_type(result_ty : @wit.TypeExpr?) -> String {
+fn emit_result_type(result_ty : @wit.TypeExpr?, prefix : String) -> String {
   match result_ty {
-    Some(ty) => emit_type_expr(ty)
+    Some(ty) => emit_type_expr(ty, prefix)
     None => "Unit"
   }
 }
 
 ///|
-fn is_collected(shapes : Array[InterfaceShape], name : String) -> Bool {
+fn collect_type_refs_from_type_expr(
+  ty : @wit.TypeExpr,
+  refs : Array[String],
+  prefix : String,
+) -> Unit {
+  match ty {
+    @wit.TypeExpr::Id(name)
+    | @wit.TypeExpr::Own(name)
+    | @wit.TypeExpr::Borrow(name) =>
+      push_unique_string(refs, scoped_type_name(prefix, name))
+    @wit.TypeExpr::List(inner) | @wit.TypeExpr::Option(inner) =>
+      collect_type_refs_from_type_expr(inner, refs, prefix)
+    @wit.TypeExpr::Result(ok, err) => {
+      collect_type_refs_from_type_expr(ok, refs, prefix)
+      match err {
+        Some(err_ty) => collect_type_refs_from_type_expr(err_ty, refs, prefix)
+        None => ()
+      }
+    }
+    @wit.TypeExpr::Tuple(items) =>
+      for item in items {
+        collect_type_refs_from_type_expr(item, refs, prefix)
+      }
+    _ => ()
+  }
+}
+
+///|
+fn collect_type_refs_from_function(
+  func : @wit.Function,
+  refs : Array[String],
+  prefix : String,
+) -> Unit {
+  for param in func.params {
+    collect_type_refs_from_type_expr(param.ty, refs, prefix)
+  }
+  match func.result {
+    Some(result_ty) => collect_type_refs_from_type_expr(result_ty, refs, prefix)
+    None => ()
+  }
+}
+
+///|
+fn collect_type_refs_from_typedef_kind(
+  kind : @wit.TypeDefKind,
+  refs : Array[String],
+  prefix : String,
+) -> Unit {
+  match kind {
+    @wit.TypeDefKind::Record(fields) =>
+      for field in fields {
+        collect_type_refs_from_type_expr(field.ty, refs, prefix)
+      }
+    @wit.TypeDefKind::Variant(cases) =>
+      for c in cases {
+        match c.ty {
+          Some(case_ty) =>
+            collect_type_refs_from_type_expr(case_ty, refs, prefix)
+          None => ()
+        }
+      }
+    @wit.TypeDefKind::Alias(alias_ty) =>
+      collect_type_refs_from_type_expr(alias_ty, refs, prefix)
+    @wit.TypeDefKind::Resource(resource) =>
+      for func in resource.funcs {
+        collect_type_refs_from_function(func, refs, prefix)
+      }
+    @wit.TypeDefKind::Enum(_) | @wit.TypeDefKind::Flags(_) => ()
+  }
+}
+
+///|
+fn emit_record_typedef(
+  name : String,
+  fields : Array[@wit.Field],
+  prefix : String,
+) -> String {
+  let buf = StringBuilder::new()
+  buf.write_string("pub(all) struct ")
+  buf.write_string(name)
+  buf.write_string(" {\n")
+  for field in fields {
+    buf.write_string("  ")
+    buf.write_string(to_snake_case(field.name))
+    buf.write_string(" : ")
+    buf.write_string(emit_type_expr(field.ty, prefix))
+    buf.write_string("\n")
+  }
+  buf.write_string("}\n")
+  buf.to_string()
+}
+
+///|
+fn emit_enum_typedef(name : String, cases : Array[String]) -> String {
+  let buf = StringBuilder::new()
+  buf.write_string("pub(all) enum ")
+  buf.write_string(name)
+  buf.write_string(" {\n")
+  for c in cases {
+    buf.write_string("  ")
+    buf.write_string(to_pascal_case(c))
+    buf.write_string("\n")
+  }
+  buf.write_string("}\n")
+  buf.to_string()
+}
+
+///|
+fn emit_variant_typedef(
+  name : String,
+  cases : Array[@wit.VariantCase],
+  prefix : String,
+) -> String {
+  let buf = StringBuilder::new()
+  buf.write_string("pub(all) enum ")
+  buf.write_string(name)
+  buf.write_string(" {\n")
+  for c in cases {
+    buf.write_string("  ")
+    buf.write_string(to_pascal_case(c.name))
+    match c.ty {
+      Some(case_ty) => {
+        buf.write_char('(')
+        buf.write_string(emit_type_expr(case_ty, prefix))
+        buf.write_char(')')
+      }
+      None => ()
+    }
+    buf.write_string("\n")
+  }
+  buf.write_string("}\n")
+  buf.to_string()
+}
+
+///|
+fn emit_typedef(type_def : @wit.TypeDef, prefix : String) -> String {
+  let name = scoped_type_name(prefix, type_def.name)
+  match type_def.kind {
+    @wit.TypeDefKind::Record(fields) =>
+      emit_record_typedef(name, fields, prefix)
+    @wit.TypeDefKind::Enum(cases) => emit_enum_typedef(name, cases)
+    @wit.TypeDefKind::Flags(_) => "pub(all) type " + name + "\n"
+    @wit.TypeDefKind::Variant(cases) =>
+      emit_variant_typedef(name, cases, prefix)
+    @wit.TypeDefKind::Alias(_alias_ty) => "pub(all) type " + name + "\n"
+    @wit.TypeDefKind::Resource(_) => "pub(all) struct " + name + "(Int)\n"
+  }
+}
+
+///|
+fn method_name_from_function(func : @wit.Function) -> String {
+  match func.kind {
+    @wit.FunctionKind::Freestanding => to_snake_case(func.name)
+    @wit.FunctionKind::Constructor(resource_name)
+    | @wit.FunctionKind::Method(resource_name)
+    | @wit.FunctionKind::Static(resource_name) =>
+      to_snake_case(resource_name + "_" + func.name)
+  }
+}
+
+///|
+fn unique_method_name(base : String, used : Array[String]) -> String {
+  if not(contains_string(used, base)) {
+    used.push(base)
+    return base
+  }
+  let mut i = 2
+  while true {
+    let candidate = base + "_" + i.to_string()
+    if not(contains_string(used, candidate)) {
+      used.push(candidate)
+      return candidate
+    }
+    i = i + 1
+  }
+  base
+}
+
+///|
+fn emit_trait_method(
+  buf : StringBuilder,
+  method_name : String,
+  func : @wit.Function,
+  prefix : String,
+) -> Unit {
+  buf.write_string("  ")
+  buf.write_string(method_name)
+  buf.write_string("(Self")
+  for param in func.params {
+    buf.write_string(", ")
+    buf.write_string(emit_type_expr(param.ty, prefix))
+  }
+  buf.write_string(") -> ")
+  buf.write_string(emit_result_type(func.result, prefix))
+  buf.write_string("\n")
+}
+
+///|
+fn emit_interface_contract(shape : InterfaceShape) -> String {
+  let defined_types : Array[String] = []
+  let referenced_types : Array[String] = []
+  for item in shape.items {
+    match item {
+      @wit.InterfaceItem::TypeDef(type_def) => {
+        push_unique_string(
+          defined_types,
+          scoped_type_name(shape.prefix, type_def.name),
+        )
+        collect_type_refs_from_typedef_kind(
+          type_def.kind,
+          referenced_types,
+          shape.prefix,
+        )
+      }
+      @wit.InterfaceItem::Function(func) =>
+        collect_type_refs_from_function(func, referenced_types, shape.prefix)
+      @wit.InterfaceItem::Use(_) => ()
+    }
+  }
+  let buf = StringBuilder::new()
+  for item in shape.items {
+    match item {
+      @wit.InterfaceItem::TypeDef(type_def) => {
+        buf.write_string(emit_typedef(type_def, shape.prefix))
+        buf.write_string("\n")
+      }
+      _ => ()
+    }
+  }
+  let fallback_types : Array[String] = []
+  for ref_name in referenced_types {
+    if not(contains_string(defined_types, ref_name)) {
+      push_unique_string(fallback_types, ref_name)
+    }
+  }
+  for fallback in fallback_types {
+    buf.write_string("pub(all) type ")
+    buf.write_string(fallback)
+    buf.write_string("\n")
+  }
+  if fallback_types.length() > 0 {
+    buf.write_string("\n")
+  }
+  let trait_name = "Wasi" + shape.prefix + "Adapter"
+  buf.write_string("pub(open) trait ")
+  buf.write_string(trait_name)
+  buf.write_string(" {\n")
+  let used_method_names : Array[String] = []
+  for item in shape.items {
+    match item {
+      @wit.InterfaceItem::Function(func) => {
+        let method_name = unique_method_name(
+          method_name_from_function(func),
+          used_method_names,
+        )
+        emit_trait_method(buf, method_name, func, shape.prefix)
+      }
+      @wit.InterfaceItem::TypeDef(type_def) =>
+        match type_def.kind {
+          @wit.TypeDefKind::Resource(resource) =>
+            for func in resource.funcs {
+              let method_name = unique_method_name(
+                method_name_from_function(func),
+                used_method_names,
+              )
+              emit_trait_method(buf, method_name, func, shape.prefix)
+            }
+          _ => ()
+        }
+      @wit.InterfaceItem::Use(_) => ()
+    }
+  }
+  buf.write_string("}\n")
+  buf.to_string()
+}
+
+///|
+fn interface_prefix(
+  pkg : @wit.PackageName?,
+  world_name : String?,
+  interface_name : String,
+) -> String {
+  let buf = StringBuilder::new()
+  match pkg {
+    Some(pkg_name) => buf.write_string(to_pascal_case(pkg_name.name))
+    None => ()
+  }
+  match world_name {
+    Some(name) => buf.write_string(to_pascal_case(name))
+    None => ()
+  }
+  buf.write_string(to_pascal_case(interface_name))
+  buf.to_string()
+}
+
+///|
+fn has_shape(shapes : Array[InterfaceShape], key : String) -> Bool {
   for shape in shapes {
-    if shape.name == name {
+    if shape.key == key {
       return true
     }
   }
@@ -197,34 +827,52 @@ fn is_collected(shapes : Array[InterfaceShape], name : String) -> Bool {
 ///|
 fn push_interface_shape(
   shapes : Array[InterfaceShape],
-  name : String,
+  pkg : @wit.PackageName?,
+  world_name : String?,
+  interface_name : String,
   items : Array[@wit.InterfaceItem],
 ) -> Unit {
-  if is_collected(shapes, name) {
+  let prefix = interface_prefix(pkg, world_name, interface_name)
+  let key = prefix
+  if has_shape(shapes, key) {
     return
   }
-  shapes.push({ name, items })
+  shapes.push({ key, prefix, items })
 }
 
 ///|
-fn collect_interfaces(wit_file : @wit.WitFile) -> Array[InterfaceShape] {
+fn collect_interfaces(wit_files : Array[@wit.WitFile]) -> Array[InterfaceShape] {
   let shapes : Array[InterfaceShape] = []
-  for iface in wit_file.interfaces {
-    push_interface_shape(shapes, iface.name, iface.items)
-  }
-  for world in wit_file.worlds {
-    for item in world.imports {
-      match item {
-        @wit.WorldItem::InlineInterface(iface) =>
-          push_interface_shape(shapes, iface.name, iface.items)
-        _ => ()
-      }
+  for wit_file in wit_files {
+    for iface in wit_file.interfaces {
+      push_interface_shape(shapes, wit_file.pkg, None, iface.name, iface.items)
     }
-    for item in world.exports {
-      match item {
-        @wit.WorldItem::InlineInterface(iface) =>
-          push_interface_shape(shapes, iface.name, iface.items)
-        _ => ()
+    for world in wit_file.worlds {
+      for item in world.imports {
+        match item {
+          @wit.WorldItem::InlineInterface(iface) =>
+            push_interface_shape(
+              shapes,
+              wit_file.pkg,
+              Some(world.name),
+              iface.name,
+              iface.items,
+            )
+          _ => ()
+        }
+      }
+      for item in world.exports {
+        match item {
+          @wit.WorldItem::InlineInterface(iface) =>
+            push_interface_shape(
+              shapes,
+              wit_file.pkg,
+              Some(world.name),
+              iface.name,
+              iface.items,
+            )
+          _ => ()
+        }
       }
     }
   }
@@ -232,45 +880,22 @@ fn collect_interfaces(wit_file : @wit.WitFile) -> Array[InterfaceShape] {
 }
 
 ///|
-fn emit_interface_trait(shape : InterfaceShape) -> String {
-  let trait_name = "Wasi" + to_pascal_case(shape.name) + "Adapter"
-  let buf = StringBuilder::new()
-  buf.write_string("pub(open) trait ")
-  buf.write_string(trait_name)
-  buf.write_string(" {\n")
-  for item in shape.items {
-    match item {
-      @wit.InterfaceItem::Function(func) => {
-        buf.write_string("  ")
-        buf.write_string(to_snake_case(func.name))
-        buf.write_string("(Self")
-        for param in func.params {
-          buf.write_string(", ")
-          buf.write_string(emit_type_expr(param.ty))
-        }
-        buf.write_string(") -> ")
-        buf.write_string(emit_result_type(func.result))
-        buf.write_string("\n")
-      }
-      _ => ()
-    }
-  }
-  buf.write_string("}\n")
-  buf.to_string()
+fn module_file_name(shape : InterfaceShape) -> String {
+  "gen_" + pascal_to_snake_case(shape.prefix) + ".mbt"
 }
 
 ///|
-fn emit_raw_contract_code(wit_file : @wit.WitFile) -> String {
+fn emit_raw_module_code(shape : InterfaceShape) -> String {
   let buf = StringBuilder::new()
   buf.write_string("///| Generated by wasi_posix WIT adapter generator.\n")
   buf.write_string(
-    "///| This file is intended to be generated; do not edit manually.\n\n",
+    "///| This file is intended to be generated; do not edit manually.\n",
   )
-  let shapes = collect_interfaces(wit_file)
-  for shape in shapes {
-    buf.write_string(emit_interface_trait(shape))
-    buf.write_string("\n")
-  }
+  buf.write_string("///| Module key: ")
+  buf.write_string(shape.key)
+  buf.write_string("\n\n")
+  buf.write_string(emit_interface_contract(shape))
+  buf.write_string("\n")
   buf.to_string()
 }
 
@@ -289,12 +914,89 @@ fn format_generated_code(raw : String) -> Result[String, GenerateError] {
 }
 
 ///|
+fn generate_modules_from_shapes(
+  shapes : Array[InterfaceShape],
+) -> Result[Array[GeneratedModule], GenerateError] {
+  let modules : Array[GeneratedModule] = []
+  for shape in shapes {
+    let raw = emit_raw_module_code(shape)
+    match format_generated_code(raw) {
+      Ok(code) => modules.push({ file_name: module_file_name(shape), code })
+      Err(err) => return Err(err)
+    }
+  }
+  Ok(modules)
+}
+
+///|
+fn combine_modules(modules : Array[GeneratedModule]) -> String {
+  let buf = StringBuilder::new()
+  for generated in modules {
+    buf.write_string(generated.code)
+    if not(generated.code.has_suffix("\n")) {
+      buf.write_char('\n')
+    }
+    buf.write_char('\n')
+  }
+  buf.to_string()
+}
+
+///|
+/// Generate trait adapter modules from parsed WIT AST files.
+pub fn generate_trait_adapter_modules_from_wit_files(
+  wit_files : Array[@wit.WitFile],
+) -> Result[Array[GeneratedModule], GenerateError] {
+  let shapes = collect_interfaces(wit_files)
+  generate_modules_from_shapes(shapes)
+}
+
+///|
+/// Generate trait adapter code from parsed WIT AST files.
+pub fn generate_trait_adapters_from_wit_files(
+  wit_files : Array[@wit.WitFile],
+) -> Result[String, GenerateError] {
+  match generate_trait_adapter_modules_from_wit_files(wit_files) {
+    Ok(modules) => Ok(combine_modules(modules))
+    Err(err) => Err(err)
+  }
+}
+
+///|
 /// Generate trait adapter code from parsed WIT AST.
 pub fn generate_trait_adapters_from_wit_file(
   wit_file : @wit.WitFile,
 ) -> Result[String, GenerateError] {
-  let raw = emit_raw_contract_code(wit_file)
-  format_generated_code(raw)
+  generate_trait_adapters_from_wit_files([wit_file])
+}
+
+///|
+/// Generate trait adapter modules from parsed WIT AST.
+pub fn generate_trait_adapter_modules_from_wit_file(
+  wit_file : @wit.WitFile,
+) -> Result[Array[GeneratedModule], GenerateError] {
+  generate_trait_adapter_modules_from_wit_files([wit_file])
+}
+
+///|
+/// Generate trait adapter modules from multiple WIT sources.
+pub fn generate_trait_adapter_modules_from_wit_sources(
+  sources : Array[String],
+) -> Result[Array[GeneratedModule], GenerateError] {
+  match parse_wit_files_from_sources(sources) {
+    Ok(wit_files) => generate_trait_adapter_modules_from_wit_files(wit_files)
+    Err(err) => Err(err)
+  }
+}
+
+///|
+/// Generate trait adapter code from multiple WIT sources.
+pub fn generate_trait_adapters_from_wit_sources(
+  sources : Array[String],
+) -> Result[String, GenerateError] {
+  match generate_trait_adapter_modules_from_wit_sources(sources) {
+    Ok(modules) => Ok(combine_modules(modules))
+    Err(err) => Err(err)
+  }
 }
 
 ///|
@@ -302,9 +1004,36 @@ pub fn generate_trait_adapters_from_wit_file(
 pub fn generate_trait_adapters_from_wit_source(
   source : String,
 ) -> Result[String, GenerateError] {
-  match @wit.parse(source) {
-    Ok(wit_file) => generate_trait_adapters_from_wit_file(wit_file)
-    Err(err) => Err(GenerateError::WitParse(parse_error_to_string(err)))
+  generate_trait_adapters_from_wit_sources([source])
+}
+
+///|
+/// Generate trait adapter modules from WIT source.
+pub fn generate_trait_adapter_modules_from_wit_source(
+  source : String,
+) -> Result[Array[GeneratedModule], GenerateError] {
+  generate_trait_adapter_modules_from_wit_sources([source])
+}
+
+///|
+/// Generate trait adapter modules from multiple WIT file or directory paths.
+pub fn generate_trait_adapter_modules_from_wit_paths(
+  paths : Array[String],
+) -> Result[Array[GeneratedModule], GenerateError] {
+  match parse_wit_files_from_paths(paths) {
+    Ok(wit_files) => generate_trait_adapter_modules_from_wit_files(wit_files)
+    Err(err) => Err(err)
+  }
+}
+
+///|
+/// Generate trait adapter code from multiple WIT file or directory paths.
+pub fn generate_trait_adapters_from_wit_paths(
+  paths : Array[String],
+) -> Result[String, GenerateError] {
+  match generate_trait_adapter_modules_from_wit_paths(paths) {
+    Ok(modules) => Ok(combine_modules(modules))
+    Err(err) => Err(err)
   }
 }
 
@@ -313,8 +1042,13 @@ pub fn generate_trait_adapters_from_wit_source(
 pub fn generate_trait_adapters_from_wit_path(
   path : String,
 ) -> Result[String, GenerateError] {
-  match @wit.parse_path(path) {
-    Ok(wit_file) => generate_trait_adapters_from_wit_file(wit_file)
-    Err(err) => Err(GenerateError::WitParse(parse_error_to_string(err)))
-  }
+  generate_trait_adapters_from_wit_paths([path])
+}
+
+///|
+/// Generate trait adapter modules from a WIT file or directory path.
+pub fn generate_trait_adapter_modules_from_wit_path(
+  path : String,
+) -> Result[Array[GeneratedModule], GenerateError] {
+  generate_trait_adapter_modules_from_wit_paths([path])
 }

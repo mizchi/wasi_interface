@@ -6,11 +6,29 @@ import {
 }
 
 // Values
+pub fn generate_trait_adapter_modules_from_wit_file(@wit.WitFile) -> Result[Array[GeneratedModule], GenerateError]
+
+pub fn generate_trait_adapter_modules_from_wit_files(Array[@wit.WitFile]) -> Result[Array[GeneratedModule], GenerateError]
+
+pub fn generate_trait_adapter_modules_from_wit_path(String) -> Result[Array[GeneratedModule], GenerateError]
+
+pub fn generate_trait_adapter_modules_from_wit_paths(Array[String]) -> Result[Array[GeneratedModule], GenerateError]
+
+pub fn generate_trait_adapter_modules_from_wit_source(String) -> Result[Array[GeneratedModule], GenerateError]
+
+pub fn generate_trait_adapter_modules_from_wit_sources(Array[String]) -> Result[Array[GeneratedModule], GenerateError]
+
 pub fn generate_trait_adapters_from_wit_file(@wit.WitFile) -> Result[String, GenerateError]
+
+pub fn generate_trait_adapters_from_wit_files(Array[@wit.WitFile]) -> Result[String, GenerateError]
 
 pub fn generate_trait_adapters_from_wit_path(String) -> Result[String, GenerateError]
 
+pub fn generate_trait_adapters_from_wit_paths(Array[String]) -> Result[String, GenerateError]
+
 pub fn generate_trait_adapters_from_wit_source(String) -> Result[String, GenerateError]
+
+pub fn generate_trait_adapters_from_wit_sources(Array[String]) -> Result[String, GenerateError]
 
 // Errors
 pub(all) suberror GenerateError {
@@ -22,6 +40,12 @@ pub impl Eq for GenerateError
 pub impl Show for GenerateError
 
 // Types and methods
+pub(all) struct GeneratedModule {
+  file_name : String
+  code : String
+}
+pub impl Eq for GeneratedModule
+pub impl Show for GeneratedModule
 
 // Type aliases
 

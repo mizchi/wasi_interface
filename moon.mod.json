@@ -4,7 +4,8 @@
   "deps": {
     "mizchi/ast_printer": "0.2.0",
     "mizchi/wit": "0.1.1",
-    "moonbitlang/parser": "0.1.13"
+    "moonbitlang/parser": "0.1.13",
+    "moonbitlang/x": "0.4.40"
   },
   "source": "src",
   "preferred-target": "wasm-gc",

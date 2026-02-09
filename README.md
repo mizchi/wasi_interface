@@ -11,7 +11,7 @@ WASI Preview2/Preview3 contract definitions for host injection boundaries.
 - `@codegen`
   - WIT AST (`mizchi/wit`) から trait adapter の MoonBit コード文字列を生成する補助 API
   - `moonbitlang/parser` + `mizchi/ast_printer` で構文検証と整形を行う
-  - このモジュール内ではファイル生成を実行しない（生成実行は別ワークフロー）
+  - CLI (`src/codegen/main`) から `src/p2`, `src/p3` に `gen_*.mbt` を出力可能
 
 ## Scope
 
@@ -25,7 +25,22 @@ Concrete host injection should live in a separate module that depends on this on
 
 ## Optional generation strategy
 
-If maintaining contracts manually becomes costly, define source WIT for p2/p3 and generate contract stubs from `wkg` outputs in a dedicated generation workflow.
+Use `wkg` + codegen when updating p2/p3 contract surfaces from upstream WIT.
+
+Coverage tracking is maintained in `docs/coverage_checklist.md`.
+
+## Generate Contracts
+
+```bash
+# usage: moon run src/codegen/main -- <output-dir> <wit-path> [wit-path ...]
+moon run src/codegen/main -- src/p2 /path/to/p2/a.wit /path/to/p2/b.wit
+moon run src/codegen/main -- src/p3 /path/to/p3/a.wit /path/to/p3/b.wit
+
+# project presets
+just gen-p2
+just gen-p3
+just gen-all
+```
 
 ## Quick Commands
 

@@ -1,0 +1,9 @@
+import {
+  "mizchi/wasi_posix/codegen" as @codegen,
+  "moonbitlang/x/fs" as @fs,
+  "moonbitlang/x/sys" as @sys,
+}
+
+options(
+  "is-main": true,
+)

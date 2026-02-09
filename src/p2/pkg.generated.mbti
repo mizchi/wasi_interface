@@ -4,61 +4,744 @@ package "mizchi/wasi_posix/p2"
 // Values
 
 // Errors
-pub(all) suberror WasiError {
-  NotFound(String)
-  AlreadyExists(String)
-  NotDirectory(String)
-  IsDirectory(String)
-  NotEmpty(String)
-  Io(String)
-  Unsupported(String)
-}
-pub impl Eq for WasiError
-pub impl Show for WasiError
 
 // Types and methods
-pub(all) struct WasiDirEntry {
+pub(all) type CliStderrOutputStream
+
+pub(all) type CliStdinInputStream
+
+pub(all) type CliStdoutOutputStream
+
+pub(all) type CliTerminalStderrTerminalOutput
+
+pub(all) type CliTerminalStdinTerminalInput
+
+pub(all) type CliTerminalStdoutTerminalOutput
+
+pub(all) type ClocksMonotonicClockDuration
+
+pub(all) type ClocksMonotonicClockInstant
+
+pub(all) type ClocksMonotonicClockPollable
+
+pub(all) type ClocksTimezoneDatetime
+
+pub(all) struct ClocksTimezoneTimezoneDisplay {
+  utc_offset : Int
   name : String
-  node_type : WasiNodeType
+  in_daylight_saving_time : Bool
 }
-pub impl Eq for WasiDirEntry
-pub impl Show for WasiDirEntry
 
-pub(all) struct WasiNodeStat {
-  node_type : WasiNodeType
-  size : Int
+pub(all) struct ClocksWallClockDatetime {
+  seconds : UInt64
+  nanoseconds : UInt
 }
-pub impl Eq for WasiNodeStat
-pub impl Show for WasiNodeStat
 
-pub(all) enum WasiNodeType {
-  File
+pub(all) type FilesystemPreopensDescriptor
+
+pub(all) enum FilesystemTypesAdvice {
+  Normal
+  Sequential
+  Random
+  WillNeed
+  DontNeed
+  NoReuse
+}
+
+pub(all) type FilesystemTypesDatetime
+
+pub(all) struct FilesystemTypesDescriptor(Int)
+#deprecated
+pub fn FilesystemTypesDescriptor::inner(Self) -> Int
+
+pub(all) type FilesystemTypesDescriptorFlags
+
+pub(all) struct FilesystemTypesDescriptorStat {
+  link_count : FilesystemTypesLinkCount
+  size : FilesystemTypesFilesize
+  data_access_timestamp : FilesystemTypesDatetime?
+  data_modification_timestamp : FilesystemTypesDatetime?
+  status_change_timestamp : FilesystemTypesDatetime?
+}
+
+pub(all) enum FilesystemTypesDescriptorType {
+  Unknown
+  BlockDevice
+  CharacterDevice
   Directory
-  Symlink
-  Other
+  Fifo
+  SymbolicLink
+  RegularFile
+  Socket
 }
-pub impl Eq for WasiNodeType
-pub impl Show for WasiNodeType
+
+pub(all) struct FilesystemTypesDirectoryEntry {
+  name : String
+}
+
+pub(all) struct FilesystemTypesDirectoryEntryStream(Int)
+#deprecated
+pub fn FilesystemTypesDirectoryEntryStream::inner(Self) -> Int
+
+pub(all) type FilesystemTypesError
+
+pub(all) enum FilesystemTypesErrorCode {
+  Access
+  WouldBlock
+  Already
+  BadDescriptor
+  Busy
+  Deadlock
+  Quota
+  Exist
+  FileTooLarge
+  IllegalByteSequence
+  InProgress
+  Interrupted
+  Invalid
+  Io
+  IsDirectory
+  Loop
+  TooManyLinks
+  MessageSize
+  NameTooLong
+  NoDevice
+  NoEntry
+  NoLock
+  InsufficientMemory
+  InsufficientSpace
+  NotDirectory
+  NotEmpty
+  NotRecoverable
+  Unsupported
+  NoTty
+  NoSuchDevice
+  Overflow
+  NotPermitted
+  Pipe
+  ReadOnly
+  InvalidSeek
+  TextFileBusy
+  CrossDevice
+}
+
+pub(all) type FilesystemTypesFilesize
+
+pub(all) type FilesystemTypesGenerated
+
+pub(all) type FilesystemTypesInputStream
+
+pub(all) type FilesystemTypesLinkCount
+
+pub(all) struct FilesystemTypesMetadataHashValue {
+  lower : UInt64
+  upper : UInt64
+}
+
+pub(all) enum FilesystemTypesNewTimestamp {
+  NoChange
+  Now
+  Timestamp(FilesystemTypesDatetime)
+}
+
+pub(all) type FilesystemTypesOpenFlags
+
+pub(all) type FilesystemTypesOutputStream
+
+pub(all) type FilesystemTypesPathFlags
+
+pub(all) type HttpIncomingHandlerIncomingRequest
+
+pub(all) type HttpIncomingHandlerResponseOutparam
+
+pub(all) type HttpOutgoingHandlerErrorCode
+
+pub(all) type HttpOutgoingHandlerFutureIncomingResponse
+
+pub(all) type HttpOutgoingHandlerOutgoingRequest
+
+pub(all) type HttpOutgoingHandlerRequestOptions
+
+pub(all) struct HttpTypesDnsErrorPayload {
+  rcode : String?
+  info_code : UInt?
+}
+
+pub(all) type HttpTypesDuration
+
+pub(all) enum HttpTypesErrorCode {
+  DnsTimeout
+  DnsError(HttpTypesDnsErrorPayload)
+  DestinationNotFound
+  DestinationUnavailable
+  DestinationIpProhibited
+  DestinationIpUnroutable
+  ConnectionRefused
+  ConnectionTerminated
+  ConnectionTimeout
+  ConnectionReadTimeout
+  ConnectionWriteTimeout
+  ConnectionLimitReached
+  TlsProtocolError
+  TlsCertificateError
+  TlsAlertReceived(HttpTypesTlsAlertReceivedPayload)
+  HttpRequestDenied
+  HttpRequestLengthRequired
+  HttpRequestBodySize(UInt64?)
+  HttpRequestMethodInvalid
+  HttpRequestUriInvalid
+  HttpRequestUriTooLong
+  HttpRequestHeaderSectionSize(UInt?)
+  HttpRequestHeaderSize(HttpTypesFieldSizePayload?)
+  HttpRequestTrailerSectionSize(UInt?)
+  HttpRequestTrailerSize(HttpTypesFieldSizePayload)
+  HttpResponseIncomplete
+  HttpResponseHeaderSectionSize(UInt?)
+  HttpResponseHeaderSize(HttpTypesFieldSizePayload)
+  HttpResponseBodySize(UInt64?)
+  HttpResponseTrailerSectionSize(UInt?)
+  HttpResponseTrailerSize(HttpTypesFieldSizePayload)
+  HttpResponseTransferCoding(String?)
+  HttpResponseContentCoding(String?)
+  HttpResponseTimeout
+  HttpUpgradeFailed
+  HttpProtocolError
+  LoopDetected
+  ConfigurationError
+  InternalError(String?)
+}
+
+pub(all) type HttpTypesFieldKey
+
+pub(all) type HttpTypesFieldName
+
+pub(all) struct HttpTypesFieldSizePayload {
+  field_name : String?
+  field_size : UInt?
+}
+
+pub(all) type HttpTypesFieldValue
+
+pub(all) struct HttpTypesFields(Int)
+#deprecated
+pub fn HttpTypesFields::inner(Self) -> Int
+
+pub(all) struct HttpTypesFutureIncomingResponse(Int)
+#deprecated
+pub fn HttpTypesFutureIncomingResponse::inner(Self) -> Int
+
+pub(all) struct HttpTypesFutureTrailers(Int)
+#deprecated
+pub fn HttpTypesFutureTrailers::inner(Self) -> Int
+
+pub(all) type HttpTypesGenerated
+
+pub(all) enum HttpTypesHeaderError {
+  InvalidSyntax
+  Forbidden
+  Immutable
+}
+
+pub(all) type HttpTypesHeaders
+
+pub(all) struct HttpTypesIncomingBody(Int)
+#deprecated
+pub fn HttpTypesIncomingBody::inner(Self) -> Int
+
+pub(all) struct HttpTypesIncomingRequest(Int)
+#deprecated
+pub fn HttpTypesIncomingRequest::inner(Self) -> Int
+
+pub(all) struct HttpTypesIncomingResponse(Int)
+#deprecated
+pub fn HttpTypesIncomingResponse::inner(Self) -> Int
+
+pub(all) type HttpTypesIoError
+
+pub(all) enum HttpTypesMethod {
+  Get
+  Head
+  Post
+  Put
+  Delete
+  Connect
+  Options
+  Trace
+  Patch
+  Other(String)
+}
+
+pub(all) struct HttpTypesOutgoingBody(Int)
+#deprecated
+pub fn HttpTypesOutgoingBody::inner(Self) -> Int
+
+pub(all) struct HttpTypesOutgoingRequest(Int)
+#deprecated
+pub fn HttpTypesOutgoingRequest::inner(Self) -> Int
+
+pub(all) struct HttpTypesOutgoingResponse(Int)
+#deprecated
+pub fn HttpTypesOutgoingResponse::inner(Self) -> Int
+
+pub(all) type HttpTypesOutputStream
+
+pub(all) type HttpTypesPollable
+
+pub(all) struct HttpTypesRequestOptions(Int)
+#deprecated
+pub fn HttpTypesRequestOptions::inner(Self) -> Int
+
+pub(all) struct HttpTypesResponseOutparam(Int)
+#deprecated
+pub fn HttpTypesResponseOutparam::inner(Self) -> Int
+
+pub(all) enum HttpTypesScheme {
+  Http
+  Https
+  Other(String)
+}
+
+pub(all) type HttpTypesStatusCode
+
+pub(all) struct HttpTypesTlsAlertReceivedPayload {
+  alert_id : Byte?
+  alert_message : String?
+}
+
+pub(all) type HttpTypesTrailers
+
+pub(all) struct IoErrorError(Int)
+#deprecated
+pub fn IoErrorError::inner(Self) -> Int
+
+pub(all) struct IoPollPollable(Int)
+#deprecated
+pub fn IoPollPollable::inner(Self) -> Int
+
+pub(all) type IoStreamsError
+
+pub(all) type IoStreamsGenerated
+
+pub(all) struct IoStreamsInputStream(Int)
+#deprecated
+pub fn IoStreamsInputStream::inner(Self) -> Int
+
+pub(all) struct IoStreamsOutputStream(Int)
+#deprecated
+pub fn IoStreamsOutputStream::inner(Self) -> Int
+
+pub(all) type IoStreamsPollable
+
+pub(all) enum IoStreamsStreamError {
+  LastOperationFailed(IoStreamsError)
+  Closed
+}
+
+pub(all) type SocketsInstanceNetworkNetwork
+
+pub(all) type SocketsIpNameLookupErrorCode
+
+pub(all) type SocketsIpNameLookupIpAddress
+
+pub(all) type SocketsIpNameLookupNetwork
+
+pub(all) type SocketsIpNameLookupPollable
+
+pub(all) struct SocketsIpNameLookupResolveAddressStream(Int)
+#deprecated
+pub fn SocketsIpNameLookupResolveAddressStream::inner(Self) -> Int
+
+pub(all) type SocketsNetworkError
+
+pub(all) enum SocketsNetworkErrorCode {
+  Unknown
+  AccessDenied
+  NotSupported
+  InvalidArgument
+  OutOfMemory
+  Timeout
+  ConcurrencyConflict
+  NotInProgress
+  WouldBlock
+  InvalidState
+  NewSocketLimit
+  AddressNotBindable
+  AddressInUse
+  RemoteUnreachable
+  ConnectionRefused
+  ConnectionReset
+  ConnectionAborted
+  DatagramTooLarge
+  NameUnresolvable
+  TemporaryResolverFailure
+  PermanentResolverFailure
+}
+
+pub(all) enum SocketsNetworkIpAddress {
+  Ipv4(SocketsNetworkIpv4Address)
+  Ipv6(SocketsNetworkIpv6Address)
+}
+
+pub(all) enum SocketsNetworkIpAddressFamily {
+  Ipv4
+  Ipv6
+}
+
+pub(all) enum SocketsNetworkIpSocketAddress {
+  Ipv4(SocketsNetworkIpv4SocketAddress)
+  Ipv6(SocketsNetworkIpv6SocketAddress)
+}
+
+pub(all) type SocketsNetworkIpv4Address
+
+pub(all) struct SocketsNetworkIpv4SocketAddress {
+  port : UInt
+  address : SocketsNetworkIpv4Address
+}
+
+pub(all) type SocketsNetworkIpv6Address
+
+pub(all) struct SocketsNetworkIpv6SocketAddress {
+  port : UInt
+  flow_info : UInt
+  address : SocketsNetworkIpv6Address
+  scope_id : UInt
+}
+
+pub(all) type SocketsTcpCreateSocketErrorCode
+
+pub(all) type SocketsTcpCreateSocketIpAddressFamily
+
+pub(all) type SocketsTcpCreateSocketTcpSocket
+
+pub(all) type SocketsTcpDuration
+
+pub(all) type SocketsTcpErrorCode
+
+pub(all) type SocketsTcpGenerated
+
+pub(all) type SocketsTcpInputStream
+
+pub(all) type SocketsTcpIpAddressFamily
+
+pub(all) type SocketsTcpIpSocketAddress
+
+pub(all) type SocketsTcpNetwork
+
+pub(all) type SocketsTcpOutputStream
+
+pub(all) type SocketsTcpPollable
+
+pub(all) enum SocketsTcpShutdownType {
+  Receive
+  Send
+  Both
+}
+
+pub(all) struct SocketsTcpTcpSocket(Int)
+#deprecated
+pub fn SocketsTcpTcpSocket::inner(Self) -> Int
+
+pub(all) type SocketsUdpCreateSocketErrorCode
+
+pub(all) type SocketsUdpCreateSocketIpAddressFamily
+
+pub(all) type SocketsUdpCreateSocketUdpSocket
+
+pub(all) type SocketsUdpErrorCode
+
+pub(all) type SocketsUdpGenerated
+
+pub(all) struct SocketsUdpIncomingDatagram {
+  data : Bytes
+  remote_address : SocketsUdpIpSocketAddress
+}
+
+pub(all) struct SocketsUdpIncomingDatagramStream(Int)
+#deprecated
+pub fn SocketsUdpIncomingDatagramStream::inner(Self) -> Int
+
+pub(all) type SocketsUdpIpAddressFamily
+
+pub(all) type SocketsUdpIpSocketAddress
+
+pub(all) type SocketsUdpNetwork
+
+pub(all) struct SocketsUdpOutgoingDatagram {
+  data : Bytes
+  remote_address : SocketsUdpIpSocketAddress?
+}
+
+pub(all) struct SocketsUdpOutgoingDatagramStream(Int)
+#deprecated
+pub fn SocketsUdpOutgoingDatagramStream::inner(Self) -> Int
+
+pub(all) type SocketsUdpPollable
+
+pub(all) struct SocketsUdpUdpSocket(Int)
+#deprecated
+pub fn SocketsUdpUdpSocket::inner(Self) -> Int
 
 // Type aliases
 
 // Traits
-pub(open) trait WasiCliProvider {
-  read_stdin(Self, Int) -> Bytes
-  write_stdout(Self, Bytes) -> Int
-  write_stderr(Self, Bytes) -> Int
+pub(open) trait WasiCliEnvironmentAdapter {
+  get_environment(Self) -> Array[Bytes]
+  get_arguments(Self) -> Array[String]
+  initial_cwd(Self) -> String?
 }
 
-pub(open) trait WasiFsProvider {
-  read_file(Self, String) -> Bytes raise WasiError
-  exists(Self, String) -> Bool
-  stat(Self, String) -> WasiNodeStat raise WasiError
-  readdir(Self, String) -> Array[WasiDirEntry] raise WasiError
-  write_file(Self, String, Bytes) -> Unit raise WasiError
-  mkdir(Self, String) -> Unit raise WasiError
-  mkdir_p(Self, String) -> Unit raise WasiError
-  remove(Self, String) -> Unit raise WasiError
-  rmdir(Self, String) -> Unit raise WasiError
-  rename(Self, String, String) -> Unit raise WasiError
+pub(open) trait WasiCliExitAdapter {
+  exit_with_code(Self, Byte) -> Unit
+}
+
+pub(open) trait WasiCliRunAdapter {
+}
+
+pub(open) trait WasiCliStderrAdapter {
+  get_stderr(Self) -> CliStderrOutputStream
+}
+
+pub(open) trait WasiCliStdinAdapter {
+  get_stdin(Self) -> CliStdinInputStream
+}
+
+pub(open) trait WasiCliStdoutAdapter {
+  get_stdout(Self) -> CliStdoutOutputStream
+}
+
+pub(open) trait WasiCliTerminalInputAdapter {
+}
+
+pub(open) trait WasiCliTerminalOutputAdapter {
+}
+
+pub(open) trait WasiCliTerminalStderrAdapter {
+  get_terminal_stderr(Self) -> CliTerminalStderrTerminalOutput?
+}
+
+pub(open) trait WasiCliTerminalStdinAdapter {
+  get_terminal_stdin(Self) -> CliTerminalStdinTerminalInput?
+}
+
+pub(open) trait WasiCliTerminalStdoutAdapter {
+  get_terminal_stdout(Self) -> CliTerminalStdoutTerminalOutput?
+}
+
+pub(open) trait WasiClocksMonotonicClockAdapter {
+  now(Self) -> ClocksMonotonicClockInstant
+  resolution(Self) -> ClocksMonotonicClockDuration
+  subscribe_instant(Self, ClocksMonotonicClockInstant) -> ClocksMonotonicClockPollable
+  subscribe_duration(Self, ClocksMonotonicClockDuration) -> ClocksMonotonicClockPollable
+}
+
+pub(open) trait WasiClocksTimezoneAdapter {
+  display(Self, ClocksTimezoneDatetime) -> ClocksTimezoneTimezoneDisplay
+  utc_offset(Self, ClocksTimezoneDatetime) -> Int
+}
+
+pub(open) trait WasiClocksWallClockAdapter {
+  now(Self) -> ClocksWallClockDatetime
+  resolution(Self) -> ClocksWallClockDatetime
+}
+
+pub(open) trait WasiFilesystemPreopensAdapter {
+  get_directories(Self) -> Array[Bytes]
+}
+
+pub(open) trait WasiFilesystemTypesAdapter {
+  descriptor_read_via_stream(Self, FilesystemTypesFilesize) -> Result[FilesystemTypesInputStream, FilesystemTypesErrorCode]
+  descriptor_write_via_stream(Self, FilesystemTypesFilesize) -> Result[FilesystemTypesOutputStream, FilesystemTypesErrorCode]
+  descriptor_append_via_stream(Self) -> Result[FilesystemTypesOutputStream, FilesystemTypesErrorCode]
+  descriptor_advise(Self, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesAdvice) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_sync_data(Self) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_get_flags(Self) -> Result[FilesystemTypesDescriptorFlags, FilesystemTypesErrorCode]
+  descriptor_get_type(Self) -> Result[FilesystemTypesDescriptorType, FilesystemTypesErrorCode]
+  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_set_times(Self, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_read(Self, FilesystemTypesFilesize, FilesystemTypesFilesize) -> Result[Bytes, FilesystemTypesErrorCode]
+  descriptor_write(Self, Bytes, FilesystemTypesFilesize) -> Result[FilesystemTypesFilesize, FilesystemTypesErrorCode]
+  descriptor_read_directory(Self) -> Result[FilesystemTypesDirectoryEntryStream, FilesystemTypesErrorCode]
+  descriptor_sync(Self) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_create_directory_at(Self, String) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, FilesystemTypesErrorCode]
+  descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesDescriptorStat, FilesystemTypesErrorCode]
+  descriptor_set_times_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_link_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesDescriptor, String) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_readlink_at(Self, String) -> Result[String, FilesystemTypesErrorCode]
+  descriptor_remove_directory_at(Self, String) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_symlink_at(Self, String, String) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_unlink_file_at(Self, String) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+  descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Bool
+  descriptor_metadata_hash(Self) -> Result[FilesystemTypesMetadataHashValue, FilesystemTypesErrorCode]
+  descriptor_metadata_hash_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesMetadataHashValue, FilesystemTypesErrorCode]
+  directory_entry_stream_read_directory_entry(Self) -> Result[FilesystemTypesDirectoryEntry?, FilesystemTypesErrorCode]
+  filesystem_error_code(Self, FilesystemTypesError) -> FilesystemTypesErrorCode?
+}
+
+pub(open) trait WasiHttpIncomingHandlerAdapter {
+  handle(Self, HttpIncomingHandlerIncomingRequest, HttpIncomingHandlerResponseOutparam) -> Unit
+}
+
+pub(open) trait WasiHttpOutgoingHandlerAdapter {
+  handle(Self, HttpOutgoingHandlerOutgoingRequest, HttpOutgoingHandlerRequestOptions?) -> Result[HttpOutgoingHandlerFutureIncomingResponse, HttpOutgoingHandlerErrorCode]
+}
+
+pub(open) trait WasiHttpTypesAdapter {
+  fields_constructor(Self) -> Unit
+  fields_get(Self, HttpTypesFieldName) -> Array[HttpTypesFieldValue]
+  fields_has(Self, HttpTypesFieldName) -> Bool
+  fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[HttpTypesGenerated, HttpTypesHeaderError]
+  fields_delete(Self, HttpTypesFieldName) -> Result[HttpTypesGenerated, HttpTypesHeaderError]
+  fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[HttpTypesGenerated, HttpTypesHeaderError]
+  fields_entries(Self) -> Array[Bytes]
+  fields_clone(Self) -> HttpTypesFields
+  incoming_request_method(Self) -> HttpTypesMethod
+  incoming_request_path_with_query(Self) -> String?
+  incoming_request_scheme(Self) -> HttpTypesScheme?
+  incoming_request_authority(Self) -> String?
+  incoming_request_headers(Self) -> HttpTypesHeaders
+  incoming_request_consume(Self) -> Result[HttpTypesIncomingBody, Unit]
+  outgoing_request_constructor(Self, HttpTypesHeaders) -> Unit
+  outgoing_request_body(Self) -> Result[HttpTypesOutgoingBody, Unit]
+  outgoing_request_method(Self) -> HttpTypesMethod
+  outgoing_request_path_with_query(Self) -> String?
+  outgoing_request_scheme(Self) -> HttpTypesScheme?
+  outgoing_request_authority(Self) -> String?
+  outgoing_request_headers(Self) -> HttpTypesHeaders
+  request_options_constructor(Self) -> Unit
+  request_options_connect_timeout(Self) -> HttpTypesDuration?
+  request_options_first_byte_timeout(Self) -> HttpTypesDuration?
+  request_options_between_bytes_timeout(Self) -> HttpTypesDuration?
+  response_outparam_send_informational(Self, UInt, HttpTypesHeaders) -> Result[HttpTypesGenerated, HttpTypesErrorCode]
+  incoming_response_status(Self) -> HttpTypesStatusCode
+  incoming_response_headers(Self) -> HttpTypesHeaders
+  incoming_response_consume(Self) -> Result[HttpTypesIncomingBody, Unit]
+  future_trailers_subscribe(Self) -> HttpTypesPollable
+  future_trailers_get(Self) -> Result[Result[HttpTypesTrailers?, HttpTypesErrorCode], Unit]?
+  outgoing_response_constructor(Self, HttpTypesHeaders) -> Unit
+  outgoing_response_status_code(Self) -> HttpTypesStatusCode
+  outgoing_response_headers(Self) -> HttpTypesHeaders
+  outgoing_response_body(Self) -> Result[HttpTypesOutgoingBody, Unit]
+  outgoing_body_write(Self) -> Result[HttpTypesOutputStream, Unit]
+  future_incoming_response_subscribe(Self) -> HttpTypesPollable
+  future_incoming_response_get(Self) -> Result[Result[HttpTypesIncomingResponse, HttpTypesErrorCode], Unit]?
+  http_error_code(Self, HttpTypesIoError) -> HttpTypesErrorCode?
+}
+
+pub(open) trait WasiIoErrorAdapter {
+  error_to_debug_string(Self) -> String
+}
+
+pub(open) trait WasiIoPollAdapter {
+  pollable_ready(Self) -> Bool
+  pollable_block(Self) -> Unit
+  poll(Self, Array[IoPollPollable]) -> Array[UInt]
+}
+
+pub(open) trait WasiIoStreamsAdapter {
+  input_stream_read(Self, UInt64) -> Result[Bytes, IoStreamsStreamError]
+  input_stream_blocking_read(Self, UInt64) -> Result[Bytes, IoStreamsStreamError]
+  input_stream_skip(Self, UInt64) -> Result[UInt64, IoStreamsStreamError]
+  input_stream_blocking_skip(Self, UInt64) -> Result[UInt64, IoStreamsStreamError]
+  input_stream_subscribe(Self) -> IoStreamsPollable
+  output_stream_check_write(Self) -> Result[UInt64, IoStreamsStreamError]
+  output_stream_write(Self, Bytes) -> Result[IoStreamsGenerated, IoStreamsStreamError]
+  output_stream_blocking_write_and_flush(Self, Bytes) -> Result[IoStreamsGenerated, IoStreamsStreamError]
+  output_stream_flush(Self) -> Result[IoStreamsGenerated, IoStreamsStreamError]
+  output_stream_blocking_flush(Self) -> Result[IoStreamsGenerated, IoStreamsStreamError]
+  output_stream_subscribe(Self) -> IoStreamsPollable
+  output_stream_write_zeroes(Self, UInt64) -> Result[IoStreamsGenerated, IoStreamsStreamError]
+  output_stream_blocking_write_zeroes_and_flush(Self, UInt64) -> Result[IoStreamsGenerated, IoStreamsStreamError]
+  output_stream_splice(Self, IoStreamsInputStream, UInt64) -> Result[UInt64, IoStreamsStreamError]
+  output_stream_blocking_splice(Self, IoStreamsInputStream, UInt64) -> Result[UInt64, IoStreamsStreamError]
+}
+
+pub(open) trait WasiRandomInsecureAdapter {
+  get_insecure_random_bytes(Self, UInt64) -> Bytes
+  get_insecure_random_u64(Self) -> UInt64
+}
+
+pub(open) trait WasiRandomInsecureSeedAdapter {
+  insecure_seed(Self) -> Bytes
+}
+
+pub(open) trait WasiRandomRandomAdapter {
+  get_random_bytes(Self, UInt64) -> Bytes
+  get_random_u64(Self) -> UInt64
+}
+
+pub(open) trait WasiSocketsInstanceNetworkAdapter {
+  instance_network(Self) -> SocketsInstanceNetworkNetwork
+}
+
+pub(open) trait WasiSocketsIpNameLookupAdapter {
+  resolve_address_stream_resolve_next_address(Self) -> Result[SocketsIpNameLookupIpAddress?, SocketsIpNameLookupErrorCode]
+  resolve_address_stream_subscribe(Self) -> SocketsIpNameLookupPollable
+  resolve_addresses(Self, SocketsIpNameLookupNetwork, String) -> Result[SocketsIpNameLookupResolveAddressStream, SocketsIpNameLookupErrorCode]
+}
+
+pub(open) trait WasiSocketsNetworkAdapter {
+  network_error_code(Self, SocketsNetworkError) -> SocketsNetworkErrorCode?
+}
+
+pub(open) trait WasiSocketsTcpAdapter {
+  tcp_socket_start_bind(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_finish_bind(Self) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_start_connect(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_finish_connect(Self) -> Result[Bytes, SocketsTcpErrorCode]
+  tcp_socket_start_listen(Self) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_finish_listen(Self) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_accept(Self) -> Result[Bytes, SocketsTcpErrorCode]
+  tcp_socket_local_address(Self) -> Result[SocketsTcpIpSocketAddress, SocketsTcpErrorCode]
+  tcp_socket_remote_address(Self) -> Result[SocketsTcpIpSocketAddress, SocketsTcpErrorCode]
+  tcp_socket_is_listening(Self) -> Bool
+  tcp_socket_address_family(Self) -> SocketsTcpIpAddressFamily
+  tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_keep_alive_enabled(Self) -> Result[Bool, SocketsTcpErrorCode]
+  tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_keep_alive_idle_time(Self) -> Result[SocketsTcpDuration, SocketsTcpErrorCode]
+  tcp_socket_set_keep_alive_idle_time(Self, SocketsTcpDuration) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_keep_alive_interval(Self) -> Result[SocketsTcpDuration, SocketsTcpErrorCode]
+  tcp_socket_set_keep_alive_interval(Self, SocketsTcpDuration) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_keep_alive_count(Self) -> Result[UInt, SocketsTcpErrorCode]
+  tcp_socket_set_keep_alive_count(Self, UInt) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_hop_limit(Self) -> Result[Byte, SocketsTcpErrorCode]
+  tcp_socket_set_hop_limit(Self, Byte) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_receive_buffer_size(Self) -> Result[UInt64, SocketsTcpErrorCode]
+  tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_send_buffer_size(Self) -> Result[UInt64, SocketsTcpErrorCode]
+  tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+  tcp_socket_subscribe(Self) -> SocketsTcpPollable
+  tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[SocketsTcpGenerated, SocketsTcpErrorCode]
+}
+
+pub(open) trait WasiSocketsTcpCreateSocketAdapter {
+  create_tcp_socket(Self, SocketsTcpCreateSocketIpAddressFamily) -> Result[SocketsTcpCreateSocketTcpSocket, SocketsTcpCreateSocketErrorCode]
+}
+
+pub(open) trait WasiSocketsUdpAdapter {
+  udp_socket_start_bind(Self, SocketsUdpNetwork, SocketsUdpIpSocketAddress) -> Result[SocketsUdpGenerated, SocketsUdpErrorCode]
+  udp_socket_finish_bind(Self) -> Result[SocketsUdpGenerated, SocketsUdpErrorCode]
+  udp_socket_local_address(Self) -> Result[SocketsUdpIpSocketAddress, SocketsUdpErrorCode]
+  udp_socket_remote_address(Self) -> Result[SocketsUdpIpSocketAddress, SocketsUdpErrorCode]
+  udp_socket_address_family(Self) -> SocketsUdpIpAddressFamily
+  udp_socket_unicast_hop_limit(Self) -> Result[Byte, SocketsUdpErrorCode]
+  udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[SocketsUdpGenerated, SocketsUdpErrorCode]
+  udp_socket_receive_buffer_size(Self) -> Result[UInt64, SocketsUdpErrorCode]
+  udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[SocketsUdpGenerated, SocketsUdpErrorCode]
+  udp_socket_send_buffer_size(Self) -> Result[UInt64, SocketsUdpErrorCode]
+  udp_socket_set_send_buffer_size(Self, UInt64) -> Result[SocketsUdpGenerated, SocketsUdpErrorCode]
+  udp_socket_subscribe(Self) -> SocketsUdpPollable
+  incoming_datagram_stream_receive(Self, UInt64) -> Result[Array[SocketsUdpIncomingDatagram], SocketsUdpErrorCode]
+  incoming_datagram_stream_subscribe(Self) -> SocketsUdpPollable
+  outgoing_datagram_stream_check_send(Self) -> Result[UInt64, SocketsUdpErrorCode]
+  outgoing_datagram_stream_send(Self, Array[SocketsUdpOutgoingDatagram]) -> Result[UInt64, SocketsUdpErrorCode]
+  outgoing_datagram_stream_subscribe(Self) -> SocketsUdpPollable
+}
+
+pub(open) trait WasiSocketsUdpCreateSocketAdapter {
+  create_udp_socket(Self, SocketsUdpCreateSocketIpAddressFamily) -> Result[SocketsUdpCreateSocketUdpSocket, SocketsUdpCreateSocketErrorCode]
 }
 

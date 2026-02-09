@@ -4,61 +4,384 @@ package "mizchi/wasi_posix/p3"
 // Values
 
 // Errors
-pub(all) suberror WasiError {
-  NotFound(String)
-  AlreadyExists(String)
-  NotDirectory(String)
-  IsDirectory(String)
-  NotEmpty(String)
-  Io(String)
-  Unsupported(String)
-}
-pub impl Eq for WasiError
-pub impl Show for WasiError
 
 // Types and methods
-pub(all) struct WasiDirEntry {
-  name : String
-  node_type : WasiNodeType
-}
-pub impl Eq for WasiDirEntry
-pub impl Show for WasiDirEntry
+pub(all) type ClocksMonotonicClockDuration
 
-pub(all) struct WasiNodeStat {
-  node_type : WasiNodeType
-  size : Int
-}
-pub impl Eq for WasiNodeStat
-pub impl Show for WasiNodeStat
+pub(all) type ClocksMonotonicClockMark
 
-pub(all) enum WasiNodeType {
-  File
+pub(all) type ClocksSystemClockDuration
+
+pub(all) struct ClocksSystemClockInstant {
+  seconds : Int64
+  nanoseconds : UInt
+}
+
+pub(all) type ClocksTimezoneInstant
+
+pub(all) type ClocksTypesDuration
+
+pub(all) type FilesystemPreopensDescriptor
+
+pub(all) enum FilesystemTypesAdvice {
+  Normal
+  Sequential
+  Random
+  WillNeed
+  DontNeed
+  NoReuse
+}
+
+pub(all) struct FilesystemTypesDescriptor(Int)
+#deprecated
+pub fn FilesystemTypesDescriptor::inner(Self) -> Int
+
+pub(all) type FilesystemTypesDescriptorFlags
+
+pub(all) struct FilesystemTypesDescriptorStat {
+  link_count : FilesystemTypesLinkCount
+  size : FilesystemTypesFilesize
+  data_access_timestamp : FilesystemTypesInstant?
+  data_modification_timestamp : FilesystemTypesInstant?
+  status_change_timestamp : FilesystemTypesInstant?
+}
+
+pub(all) enum FilesystemTypesDescriptorType {
+  Unknown
+  BlockDevice
+  CharacterDevice
   Directory
-  Symlink
-  Other
+  Fifo
+  SymbolicLink
+  RegularFile
+  Socket
 }
-pub impl Eq for WasiNodeType
-pub impl Show for WasiNodeType
+
+pub(all) struct FilesystemTypesDirectoryEntry {
+  name : String
+}
+
+pub(all) enum FilesystemTypesErrorCode {
+  Access
+  Already
+  BadDescriptor
+  Busy
+  Deadlock
+  Quota
+  Exist
+  FileTooLarge
+  IllegalByteSequence
+  InProgress
+  Interrupted
+  Invalid
+  Io
+  IsDirectory
+  Loop
+  TooManyLinks
+  MessageSize
+  NameTooLong
+  NoDevice
+  NoEntry
+  NoLock
+  InsufficientMemory
+  InsufficientSpace
+  NotDirectory
+  NotEmpty
+  NotRecoverable
+  Unsupported
+  NoTty
+  NoSuchDevice
+  Overflow
+  NotPermitted
+  Pipe
+  ReadOnly
+  InvalidSeek
+  TextFileBusy
+  CrossDevice
+}
+
+pub(all) type FilesystemTypesFilesize
+
+pub(all) type FilesystemTypesGenerated
+
+pub(all) type FilesystemTypesInstant
+
+pub(all) type FilesystemTypesLinkCount
+
+pub(all) struct FilesystemTypesMetadataHashValue {
+  lower : UInt64
+  upper : UInt64
+}
+
+pub(all) enum FilesystemTypesNewTimestamp {
+  NoChange
+  Now
+  Timestamp(FilesystemTypesInstant)
+}
+
+pub(all) type FilesystemTypesOpenFlags
+
+pub(all) type FilesystemTypesPathFlags
+
+pub(all) struct HttpTypesDnsErrorPayload {
+  rcode : String?
+  info_code : UInt?
+}
+
+pub(all) type HttpTypesDuration
+
+pub(all) enum HttpTypesErrorCode {
+  DnsTimeout
+  DnsError(HttpTypesDnsErrorPayload)
+  DestinationNotFound
+  DestinationUnavailable
+  DestinationIpProhibited
+  DestinationIpUnroutable
+  ConnectionRefused
+  ConnectionTerminated
+  ConnectionTimeout
+  ConnectionReadTimeout
+  ConnectionWriteTimeout
+  ConnectionLimitReached
+  TlsProtocolError
+  TlsCertificateError
+  TlsAlertReceived(HttpTypesTlsAlertReceivedPayload)
+  HttpRequestDenied
+  HttpRequestLengthRequired
+  HttpRequestBodySize(UInt64?)
+  HttpRequestMethodInvalid
+  HttpRequestUriInvalid
+  HttpRequestUriTooLong
+  HttpRequestHeaderSectionSize(UInt?)
+  HttpRequestHeaderSize(HttpTypesFieldSizePayload?)
+  HttpRequestTrailerSectionSize(UInt?)
+  HttpRequestTrailerSize(HttpTypesFieldSizePayload)
+  HttpResponseIncomplete
+  HttpResponseHeaderSectionSize(UInt?)
+  HttpResponseHeaderSize(HttpTypesFieldSizePayload)
+  HttpResponseBodySize(UInt64?)
+  HttpResponseTrailerSectionSize(UInt?)
+  HttpResponseTrailerSize(HttpTypesFieldSizePayload)
+  HttpResponseTransferCoding(String?)
+  HttpResponseContentCoding(String?)
+  HttpResponseTimeout
+  HttpUpgradeFailed
+  HttpProtocolError
+  LoopDetected
+  ConfigurationError
+  InternalError(String?)
+}
+
+pub(all) type HttpTypesFieldName
+
+pub(all) struct HttpTypesFieldSizePayload {
+  field_name : String?
+  field_size : UInt?
+}
+
+pub(all) type HttpTypesFieldValue
+
+pub(all) struct HttpTypesFields(Int)
+#deprecated
+pub fn HttpTypesFields::inner(Self) -> Int
+
+pub(all) type HttpTypesGenerated
+
+pub(all) enum HttpTypesHeaderError {
+  InvalidSyntax
+  Forbidden
+  Immutable
+}
+
+pub(all) type HttpTypesHeaders
+
+pub(all) enum HttpTypesMethod {
+  Get
+  Head
+  Post
+  Put
+  Delete
+  Connect
+  Options
+  Trace
+  Patch
+  Other(String)
+}
+
+pub(all) struct HttpTypesRequest(Int)
+#deprecated
+pub fn HttpTypesRequest::inner(Self) -> Int
+
+pub(all) struct HttpTypesRequestOptions(Int)
+#deprecated
+pub fn HttpTypesRequestOptions::inner(Self) -> Int
+
+pub(all) enum HttpTypesRequestOptionsError {
+  NotSupported
+  Immutable
+}
+
+pub(all) struct HttpTypesResponse(Int)
+#deprecated
+pub fn HttpTypesResponse::inner(Self) -> Int
+
+pub(all) enum HttpTypesScheme {
+  Http
+  Https
+  Other(String)
+}
+
+pub(all) type HttpTypesStatusCode
+
+pub(all) struct HttpTypesTlsAlertReceivedPayload {
+  alert_id : Byte?
+  alert_message : String?
+}
+
+pub(all) type HttpTypesTrailers
+
+pub(all) enum IpNameLookupErrorCode {
+  Unknown
+  AccessDenied
+  InvalidArgument
+  NameUnresolvable
+  TemporaryResolverFailure
+  PermanentResolverFailure
+}
+
+pub(all) type TerminalStderrTerminalOutput
+
+pub(all) type TerminalStdinTerminalInput
+
+pub(all) type TerminalStdoutTerminalOutput
+
+pub(all) enum TypesErrorCode {
+  Io
+  IllegalByteSequence
+  Pipe
+}
 
 // Type aliases
 
 // Traits
-pub(open) trait WasiCliProvider {
-  read_stdin(Self, Int) -> Bytes
-  write_stdout(Self, Bytes) -> Int
-  write_stderr(Self, Bytes) -> Int
+pub(open) trait WasiClocksMonotonicClockAdapter {
+  now(Self) -> ClocksMonotonicClockMark
+  get_resolution(Self) -> ClocksMonotonicClockDuration
 }
 
-pub(open) trait WasiFsProvider {
-  read_file(Self, String) -> Bytes raise WasiError
-  exists(Self, String) -> Bool
-  stat(Self, String) -> WasiNodeStat raise WasiError
-  readdir(Self, String) -> Array[WasiDirEntry] raise WasiError
-  write_file(Self, String, Bytes) -> Unit raise WasiError
-  mkdir(Self, String) -> Unit raise WasiError
-  mkdir_p(Self, String) -> Unit raise WasiError
-  remove(Self, String) -> Unit raise WasiError
-  rmdir(Self, String) -> Unit raise WasiError
-  rename(Self, String, String) -> Unit raise WasiError
+pub(open) trait WasiClocksSystemClockAdapter {
+  now(Self) -> ClocksSystemClockInstant
+  get_resolution(Self) -> ClocksSystemClockDuration
+}
+
+pub(open) trait WasiClocksTimezoneAdapter {
+  iana_id(Self) -> String?
+  utc_offset(Self, ClocksTimezoneInstant) -> Int64?
+  to_debug_string(Self) -> String
+}
+
+pub(open) trait WasiClocksTypesAdapter {
+}
+
+pub(open) trait WasiEnvironmentAdapter {
+  get_environment(Self) -> Array[Bytes]
+  get_arguments(Self) -> Array[String]
+  get_initial_cwd(Self) -> String?
+}
+
+pub(open) trait WasiExitAdapter {
+  exit_with_code(Self, Byte) -> Unit
+}
+
+pub(open) trait WasiFilesystemPreopensAdapter {
+  get_directories(Self) -> Array[Bytes]
+}
+
+pub(open) trait WasiFilesystemTypesAdapter {
+  descriptor_read_via_stream(Self, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesAdvice) -> Result[FilesystemTypesGenerated, FilesystemTypesErrorCode]
+}
+
+pub(open) trait WasiHttpClientAdapter {
+}
+
+pub(open) trait WasiHttpHandlerAdapter {
+}
+
+pub(open) trait WasiHttpTypesAdapter {
+  fields_constructor(Self) -> Unit
+  fields_get(Self, HttpTypesFieldName) -> Array[HttpTypesFieldValue]
+  fields_has(Self, HttpTypesFieldName) -> Bool
+  fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[HttpTypesGenerated, HttpTypesHeaderError]
+  fields_delete(Self, HttpTypesFieldName) -> Result[HttpTypesGenerated, HttpTypesHeaderError]
+  fields_get_and_delete(Self, HttpTypesFieldName) -> Result[Array[HttpTypesFieldValue], HttpTypesHeaderError]
+  fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[HttpTypesGenerated, HttpTypesHeaderError]
+  fields_copy_all(Self) -> Array[Bytes]
+  fields_clone(Self) -> HttpTypesFields
+  request_get_method(Self) -> HttpTypesMethod
+  request_get_path_with_query(Self) -> String?
+  request_get_scheme(Self) -> HttpTypesScheme?
+  request_get_authority(Self) -> String?
+  request_get_options(Self) -> HttpTypesRequestOptions?
+  request_get_headers(Self) -> HttpTypesHeaders
+  request_options_constructor(Self) -> Unit
+  request_options_get_connect_timeout(Self) -> HttpTypesDuration?
+  request_options_set_connect_timeout(Self, HttpTypesDuration?) -> Result[HttpTypesGenerated, HttpTypesRequestOptionsError]
+  request_options_get_first_byte_timeout(Self) -> HttpTypesDuration?
+  request_options_set_first_byte_timeout(Self, HttpTypesDuration?) -> Result[HttpTypesGenerated, HttpTypesRequestOptionsError]
+  request_options_get_between_bytes_timeout(Self) -> HttpTypesDuration?
+  request_options_set_between_bytes_timeout(Self, HttpTypesDuration?) -> Result[HttpTypesGenerated, HttpTypesRequestOptionsError]
+  request_options_clone(Self) -> HttpTypesRequestOptions
+  response_get_status_code(Self) -> HttpTypesStatusCode
+  response_get_headers(Self) -> HttpTypesHeaders
+}
+
+pub(open) trait WasiIpNameLookupAdapter {
+}
+
+pub(open) trait WasiRandomInsecureAdapter {
+  get_insecure_random_bytes(Self, UInt64) -> Bytes
+  get_insecure_random_u64(Self) -> UInt64
+}
+
+pub(open) trait WasiRandomInsecureSeedAdapter {
+  get_insecure_seed(Self) -> Bytes
+}
+
+pub(open) trait WasiRandomRandomAdapter {
+  get_random_bytes(Self, UInt64) -> Bytes
+  get_random_u64(Self) -> UInt64
+}
+
+pub(open) trait WasiRunAdapter {
+}
+
+pub(open) trait WasiStderrAdapter {
+}
+
+pub(open) trait WasiStdinAdapter {
+}
+
+pub(open) trait WasiStdoutAdapter {
+}
+
+pub(open) trait WasiTerminalInputAdapter {
+}
+
+pub(open) trait WasiTerminalOutputAdapter {
+}
+
+pub(open) trait WasiTerminalStderrAdapter {
+  get_terminal_stderr(Self) -> TerminalStderrTerminalOutput?
+}
+
+pub(open) trait WasiTerminalStdinAdapter {
+  get_terminal_stdin(Self) -> TerminalStdinTerminalInput?
+}
+
+pub(open) trait WasiTerminalStdoutAdapter {
+  get_terminal_stdout(Self) -> TerminalStdoutTerminalOutput?
+}
+
+pub(open) trait WasiTypesAdapter {
 }
 
