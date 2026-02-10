@@ -20,25 +20,45 @@ pub(all) suberror WasiError {
 }
 
 // Types and methods
-pub(all) type CliStderrOutputStream
+pub(all) struct CliStderrOutputStream(Int)
+#deprecated
+pub fn CliStderrOutputStream::inner(Self) -> Int
 
-pub(all) type CliStdinInputStream
+pub(all) struct CliStdinInputStream(Int)
+#deprecated
+pub fn CliStdinInputStream::inner(Self) -> Int
 
-pub(all) type CliStdoutOutputStream
+pub(all) struct CliStdoutOutputStream(Int)
+#deprecated
+pub fn CliStdoutOutputStream::inner(Self) -> Int
 
-pub(all) type CliTerminalStderrTerminalOutput
+pub(all) struct CliTerminalStderrTerminalOutput(Int)
+#deprecated
+pub fn CliTerminalStderrTerminalOutput::inner(Self) -> Int
 
-pub(all) type CliTerminalStdinTerminalInput
+pub(all) struct CliTerminalStdinTerminalInput(Int)
+#deprecated
+pub fn CliTerminalStdinTerminalInput::inner(Self) -> Int
 
-pub(all) type CliTerminalStdoutTerminalOutput
+pub(all) struct CliTerminalStdoutTerminalOutput(Int)
+#deprecated
+pub fn CliTerminalStdoutTerminalOutput::inner(Self) -> Int
 
-pub(all) type ClocksMonotonicClockDuration
+pub(all) struct ClocksMonotonicClockDuration(UInt64)
+#deprecated
+pub fn ClocksMonotonicClockDuration::inner(Self) -> UInt64
 
-pub(all) type ClocksMonotonicClockInstant
+pub(all) struct ClocksMonotonicClockInstant(UInt64)
+#deprecated
+pub fn ClocksMonotonicClockInstant::inner(Self) -> UInt64
 
-pub(all) type ClocksMonotonicClockPollable
+pub(all) struct ClocksMonotonicClockPollable(Int)
+#deprecated
+pub fn ClocksMonotonicClockPollable::inner(Self) -> Int
 
-pub(all) type ClocksTimezoneDatetime
+pub(all) struct ClocksTimezoneDatetime(UInt64)
+#deprecated
+pub fn ClocksTimezoneDatetime::inner(Self) -> UInt64
 
 pub(all) struct ClocksTimezoneTimezoneDisplay {
   utc_offset : Int
@@ -51,7 +71,9 @@ pub(all) struct ClocksWallClockDatetime {
   nanoseconds : UInt
 }
 
-pub(all) type FilesystemPreopensDescriptor
+pub(all) struct FilesystemPreopensDescriptor(Int)
+#deprecated
+pub fn FilesystemPreopensDescriptor::inner(Self) -> Int
 
 pub(all) enum FilesystemTypesAdvice {
   Normal
@@ -62,13 +84,17 @@ pub(all) enum FilesystemTypesAdvice {
   NoReuse
 }
 
-pub(all) type FilesystemTypesDatetime
+pub(all) struct FilesystemTypesDatetime(UInt64)
+#deprecated
+pub fn FilesystemTypesDatetime::inner(Self) -> UInt64
 
 pub(all) struct FilesystemTypesDescriptor(Int)
 #deprecated
 pub fn FilesystemTypesDescriptor::inner(Self) -> Int
 
-pub(all) type FilesystemTypesDescriptorFlags
+pub(all) struct FilesystemTypesDescriptorFlags(UInt)
+#deprecated
+pub fn FilesystemTypesDescriptorFlags::inner(Self) -> UInt
 
 pub(all) struct FilesystemTypesDescriptorStat {
   link_count : FilesystemTypesLinkCount
@@ -97,7 +123,9 @@ pub(all) struct FilesystemTypesDirectoryEntryStream(Int)
 #deprecated
 pub fn FilesystemTypesDirectoryEntryStream::inner(Self) -> Int
 
-pub(all) type FilesystemTypesError
+pub(all) struct FilesystemTypesError(Int)
+#deprecated
+pub fn FilesystemTypesError::inner(Self) -> Int
 
 pub(all) enum FilesystemTypesErrorCode {
   Access
@@ -139,11 +167,17 @@ pub(all) enum FilesystemTypesErrorCode {
   CrossDevice
 }
 
-pub(all) type FilesystemTypesFilesize
+pub(all) struct FilesystemTypesFilesize(UInt64)
+#deprecated
+pub fn FilesystemTypesFilesize::inner(Self) -> UInt64
 
-pub(all) type FilesystemTypesInputStream
+pub(all) struct FilesystemTypesInputStream(Int)
+#deprecated
+pub fn FilesystemTypesInputStream::inner(Self) -> Int
 
-pub(all) type FilesystemTypesLinkCount
+pub(all) struct FilesystemTypesLinkCount(UInt64)
+#deprecated
+pub fn FilesystemTypesLinkCount::inner(Self) -> UInt64
 
 pub(all) struct FilesystemTypesMetadataHashValue {
   lower : UInt64
@@ -156,30 +190,50 @@ pub(all) enum FilesystemTypesNewTimestamp {
   Timestamp(FilesystemTypesDatetime)
 }
 
-pub(all) type FilesystemTypesOpenFlags
+pub(all) struct FilesystemTypesOpenFlags(Int)
+#deprecated
+pub fn FilesystemTypesOpenFlags::inner(Self) -> Int
 
-pub(all) type FilesystemTypesOutputStream
+pub(all) struct FilesystemTypesOutputStream(Int)
+#deprecated
+pub fn FilesystemTypesOutputStream::inner(Self) -> Int
 
-pub(all) type FilesystemTypesPathFlags
+pub(all) struct FilesystemTypesPathFlags(UInt)
+#deprecated
+pub fn FilesystemTypesPathFlags::inner(Self) -> UInt
 
-pub(all) type HttpIncomingHandlerIncomingRequest
+pub(all) struct HttpIncomingHandlerIncomingRequest(Int)
+#deprecated
+pub fn HttpIncomingHandlerIncomingRequest::inner(Self) -> Int
 
-pub(all) type HttpIncomingHandlerResponseOutparam
+pub(all) struct HttpIncomingHandlerResponseOutparam(Int)
+#deprecated
+pub fn HttpIncomingHandlerResponseOutparam::inner(Self) -> Int
 
-pub(all) type HttpOutgoingHandlerErrorCode
+pub(all) struct HttpOutgoingHandlerErrorCode(Int)
+#deprecated
+pub fn HttpOutgoingHandlerErrorCode::inner(Self) -> Int
 
-pub(all) type HttpOutgoingHandlerFutureIncomingResponse
+pub(all) struct HttpOutgoingHandlerFutureIncomingResponse(Int)
+#deprecated
+pub fn HttpOutgoingHandlerFutureIncomingResponse::inner(Self) -> Int
 
-pub(all) type HttpOutgoingHandlerOutgoingRequest
+pub(all) struct HttpOutgoingHandlerOutgoingRequest(Int)
+#deprecated
+pub fn HttpOutgoingHandlerOutgoingRequest::inner(Self) -> Int
 
-pub(all) type HttpOutgoingHandlerRequestOptions
+pub(all) struct HttpOutgoingHandlerRequestOptions(Int)
+#deprecated
+pub fn HttpOutgoingHandlerRequestOptions::inner(Self) -> Int
 
 pub(all) struct HttpTypesDnsErrorPayload {
   rcode : String?
   info_code : UInt?
 }
 
-pub(all) type HttpTypesDuration
+pub(all) struct HttpTypesDuration(UInt64)
+#deprecated
+pub fn HttpTypesDuration::inner(Self) -> UInt64
 
 pub(all) enum HttpTypesErrorCode {
   DnsTimeout
@@ -223,16 +277,22 @@ pub(all) enum HttpTypesErrorCode {
   InternalError(String?)
 }
 
-pub(all) type HttpTypesFieldKey
+pub(all) struct HttpTypesFieldKey(String)
+#deprecated
+pub fn HttpTypesFieldKey::inner(Self) -> String
 
-pub(all) type HttpTypesFieldName
+pub(all) struct HttpTypesFieldName(String)
+#deprecated
+pub fn HttpTypesFieldName::inner(Self) -> String
 
 pub(all) struct HttpTypesFieldSizePayload {
   field_name : String?
   field_size : UInt?
 }
 
-pub(all) type HttpTypesFieldValue
+pub(all) struct HttpTypesFieldValue(Bytes)
+#deprecated
+pub fn HttpTypesFieldValue::inner(Self) -> Bytes
 
 pub(all) struct HttpTypesFields(Int)
 #deprecated
@@ -252,7 +312,9 @@ pub(all) enum HttpTypesHeaderError {
   Immutable
 }
 
-pub(all) type HttpTypesHeaders
+pub(all) struct HttpTypesHeaders(Int)
+#deprecated
+pub fn HttpTypesHeaders::inner(Self) -> Int
 
 pub(all) struct HttpTypesIncomingBody(Int)
 #deprecated
@@ -266,7 +328,9 @@ pub(all) struct HttpTypesIncomingResponse(Int)
 #deprecated
 pub fn HttpTypesIncomingResponse::inner(Self) -> Int
 
-pub(all) type HttpTypesIoError
+pub(all) struct HttpTypesIoError(Int)
+#deprecated
+pub fn HttpTypesIoError::inner(Self) -> Int
 
 pub(all) enum HttpTypesMethod {
   Get
@@ -293,9 +357,13 @@ pub(all) struct HttpTypesOutgoingResponse(Int)
 #deprecated
 pub fn HttpTypesOutgoingResponse::inner(Self) -> Int
 
-pub(all) type HttpTypesOutputStream
+pub(all) struct HttpTypesOutputStream(Int)
+#deprecated
+pub fn HttpTypesOutputStream::inner(Self) -> Int
 
-pub(all) type HttpTypesPollable
+pub(all) struct HttpTypesPollable(Int)
+#deprecated
+pub fn HttpTypesPollable::inner(Self) -> Int
 
 pub(all) struct HttpTypesRequestOptions(Int)
 #deprecated
@@ -311,14 +379,18 @@ pub(all) enum HttpTypesScheme {
   Other(String)
 }
 
-pub(all) type HttpTypesStatusCode
+pub(all) struct HttpTypesStatusCode(Int)
+#deprecated
+pub fn HttpTypesStatusCode::inner(Self) -> Int
 
 pub(all) struct HttpTypesTlsAlertReceivedPayload {
   alert_id : Byte?
   alert_message : String?
 }
 
-pub(all) type HttpTypesTrailers
+pub(all) struct HttpTypesTrailers(Int)
+#deprecated
+pub fn HttpTypesTrailers::inner(Self) -> Int
 
 pub(all) struct IoErrorError(Int)
 #deprecated
@@ -341,21 +413,33 @@ pub(all) enum IoStreamsStreamError {
   Closed
 }
 
-pub(all) type SocketsInstanceNetworkNetwork
+pub(all) struct SocketsInstanceNetworkNetwork(Int)
+#deprecated
+pub fn SocketsInstanceNetworkNetwork::inner(Self) -> Int
 
-pub(all) type SocketsIpNameLookupErrorCode
+pub(all) struct SocketsIpNameLookupErrorCode(Int)
+#deprecated
+pub fn SocketsIpNameLookupErrorCode::inner(Self) -> Int
 
-pub(all) type SocketsIpNameLookupIpAddress
+pub(all) struct SocketsIpNameLookupIpAddress(Int)
+#deprecated
+pub fn SocketsIpNameLookupIpAddress::inner(Self) -> Int
 
-pub(all) type SocketsIpNameLookupNetwork
+pub(all) struct SocketsIpNameLookupNetwork(Int)
+#deprecated
+pub fn SocketsIpNameLookupNetwork::inner(Self) -> Int
 
-pub(all) type SocketsIpNameLookupPollable
+pub(all) struct SocketsIpNameLookupPollable(Int)
+#deprecated
+pub fn SocketsIpNameLookupPollable::inner(Self) -> Int
 
 pub(all) struct SocketsIpNameLookupResolveAddressStream(Int)
 #deprecated
 pub fn SocketsIpNameLookupResolveAddressStream::inner(Self) -> Int
 
-pub(all) type SocketsNetworkError
+pub(all) struct SocketsNetworkError(Int)
+#deprecated
+pub fn SocketsNetworkError::inner(Self) -> Int
 
 pub(all) enum SocketsNetworkErrorCode {
   Unknown
@@ -396,14 +480,18 @@ pub(all) enum SocketsNetworkIpSocketAddress {
   Ipv6(SocketsNetworkIpv6SocketAddress)
 }
 
-pub(all) type SocketsNetworkIpv4Address
+pub(all) struct SocketsNetworkIpv4Address(UInt)
+#deprecated
+pub fn SocketsNetworkIpv4Address::inner(Self) -> UInt
 
 pub(all) struct SocketsNetworkIpv4SocketAddress {
   port : UInt
   address : SocketsNetworkIpv4Address
 }
 
-pub(all) type SocketsNetworkIpv6Address
+pub(all) struct SocketsNetworkIpv6Address(UInt64)
+#deprecated
+pub fn SocketsNetworkIpv6Address::inner(Self) -> UInt64
 
 pub(all) struct SocketsNetworkIpv6SocketAddress {
   port : UInt
@@ -412,27 +500,49 @@ pub(all) struct SocketsNetworkIpv6SocketAddress {
   scope_id : UInt
 }
 
-pub(all) type SocketsTcpCreateSocketErrorCode
+pub(all) struct SocketsTcpCreateSocketErrorCode(Int)
+#deprecated
+pub fn SocketsTcpCreateSocketErrorCode::inner(Self) -> Int
 
-pub(all) type SocketsTcpCreateSocketIpAddressFamily
+pub(all) struct SocketsTcpCreateSocketIpAddressFamily(Int)
+#deprecated
+pub fn SocketsTcpCreateSocketIpAddressFamily::inner(Self) -> Int
 
-pub(all) type SocketsTcpCreateSocketTcpSocket
+pub(all) struct SocketsTcpCreateSocketTcpSocket(Int)
+#deprecated
+pub fn SocketsTcpCreateSocketTcpSocket::inner(Self) -> Int
 
-pub(all) type SocketsTcpDuration
+pub(all) struct SocketsTcpDuration(UInt64)
+#deprecated
+pub fn SocketsTcpDuration::inner(Self) -> UInt64
 
-pub(all) type SocketsTcpErrorCode
+pub(all) struct SocketsTcpErrorCode(Int)
+#deprecated
+pub fn SocketsTcpErrorCode::inner(Self) -> Int
 
-pub(all) type SocketsTcpInputStream
+pub(all) struct SocketsTcpInputStream(Int)
+#deprecated
+pub fn SocketsTcpInputStream::inner(Self) -> Int
 
-pub(all) type SocketsTcpIpAddressFamily
+pub(all) struct SocketsTcpIpAddressFamily(Int)
+#deprecated
+pub fn SocketsTcpIpAddressFamily::inner(Self) -> Int
 
-pub(all) type SocketsTcpIpSocketAddress
+pub(all) struct SocketsTcpIpSocketAddress(Int)
+#deprecated
+pub fn SocketsTcpIpSocketAddress::inner(Self) -> Int
 
-pub(all) type SocketsTcpNetwork
+pub(all) struct SocketsTcpNetwork(Int)
+#deprecated
+pub fn SocketsTcpNetwork::inner(Self) -> Int
 
-pub(all) type SocketsTcpOutputStream
+pub(all) struct SocketsTcpOutputStream(Int)
+#deprecated
+pub fn SocketsTcpOutputStream::inner(Self) -> Int
 
-pub(all) type SocketsTcpPollable
+pub(all) struct SocketsTcpPollable(Int)
+#deprecated
+pub fn SocketsTcpPollable::inner(Self) -> Int
 
 pub(all) enum SocketsTcpShutdownType {
   Receive
@@ -444,13 +554,21 @@ pub(all) struct SocketsTcpTcpSocket(Int)
 #deprecated
 pub fn SocketsTcpTcpSocket::inner(Self) -> Int
 
-pub(all) type SocketsUdpCreateSocketErrorCode
+pub(all) struct SocketsUdpCreateSocketErrorCode(Int)
+#deprecated
+pub fn SocketsUdpCreateSocketErrorCode::inner(Self) -> Int
 
-pub(all) type SocketsUdpCreateSocketIpAddressFamily
+pub(all) struct SocketsUdpCreateSocketIpAddressFamily(Int)
+#deprecated
+pub fn SocketsUdpCreateSocketIpAddressFamily::inner(Self) -> Int
 
-pub(all) type SocketsUdpCreateSocketUdpSocket
+pub(all) struct SocketsUdpCreateSocketUdpSocket(Int)
+#deprecated
+pub fn SocketsUdpCreateSocketUdpSocket::inner(Self) -> Int
 
-pub(all) type SocketsUdpErrorCode
+pub(all) struct SocketsUdpErrorCode(Int)
+#deprecated
+pub fn SocketsUdpErrorCode::inner(Self) -> Int
 
 pub(all) struct SocketsUdpIncomingDatagram {
   data : Bytes
@@ -461,11 +579,17 @@ pub(all) struct SocketsUdpIncomingDatagramStream(Int)
 #deprecated
 pub fn SocketsUdpIncomingDatagramStream::inner(Self) -> Int
 
-pub(all) type SocketsUdpIpAddressFamily
+pub(all) struct SocketsUdpIpAddressFamily(Int)
+#deprecated
+pub fn SocketsUdpIpAddressFamily::inner(Self) -> Int
 
-pub(all) type SocketsUdpIpSocketAddress
+pub(all) struct SocketsUdpIpSocketAddress(Int)
+#deprecated
+pub fn SocketsUdpIpSocketAddress::inner(Self) -> Int
 
-pub(all) type SocketsUdpNetwork
+pub(all) struct SocketsUdpNetwork(Int)
+#deprecated
+pub fn SocketsUdpNetwork::inner(Self) -> Int
 
 pub(all) struct SocketsUdpOutgoingDatagram {
   data : Bytes
@@ -476,7 +600,9 @@ pub(all) struct SocketsUdpOutgoingDatagramStream(Int)
 #deprecated
 pub fn SocketsUdpOutgoingDatagramStream::inner(Self) -> Int
 
-pub(all) type SocketsUdpPollable
+pub(all) struct SocketsUdpPollable(Int)
+#deprecated
+pub fn SocketsUdpPollable::inner(Self) -> Int
 
 pub(all) struct SocketsUdpUdpSocket(Int)
 #deprecated
