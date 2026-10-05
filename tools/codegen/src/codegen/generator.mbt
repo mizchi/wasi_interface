@@ -2,7 +2,7 @@
 pub(all) suberror GenerateError {
   WitParse(String)
   GeneratedCodeParse(String)
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 priv struct InterfaceShape {
@@ -17,7 +17,7 @@ priv struct InterfaceShape {
 pub(all) struct GeneratedModule {
   file_name : String
   code : String
-} derive(Show, Eq)
+} derive(Debug, Eq)
 
 ///|
 priv struct GeneratedMethod {
@@ -100,7 +100,7 @@ fn escape_keyword(name : String) -> String {
 
 ///|
 fn to_snake_case(name : String) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   let mut wrote_any = false
   let mut pending_sep = false
   for ch in name.to_array() {
@@ -123,7 +123,7 @@ fn to_snake_case(name : String) -> String {
 
 ///|
 fn to_pascal_case(name : String) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   let mut capitalize_next = true
   for ch in name.to_array() {
     if is_ascii_alnum(ch) {
@@ -152,7 +152,7 @@ fn to_pascal_case(name : String) -> String {
 
 ///|
 fn pascal_to_snake_case(name : String) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   let mut wrote_any = false
   let mut prev_was_lower_or_digit = false
   for ch in name.to_array() {
@@ -164,7 +164,7 @@ fn pascal_to_snake_case(name : String) -> String {
       }
       buf.write_char(to_ascii_lower(ch))
       wrote_any = true
-      prev_was_lower_or_digit = not(is_upper)
+      prev_was_lower_or_digit = !is_upper
     } else {
       if wrote_any {
         buf.write_char('_')
@@ -192,7 +192,7 @@ fn contains_string(items : Array[String], value : String) -> Bool {
 
 ///|
 fn push_unique_string(items : Array[String], value : String) -> Unit {
-  if not(contains_string(items, value)) {
+  if !contains_string(items, value) {
     items.push(value)
   }
 }
@@ -236,8 +236,7 @@ fn list_wit_file_paths_in_dir(
   dir : String,
 ) -> Result[Array[String], GenerateError] {
   let entries = @fs.read_dir(dir) catch {
-    e =>
-      return Err(GenerateError::WitParse("read_dir failed: " + e.to_string()))
+    e => return Err(GenerateError::WitParse("read_dir failed: " + repr(e)))
   }
   let files : Array[String] = []
   for entry in entries {
@@ -256,7 +255,7 @@ fn list_wit_file_paths_in_dir(
 
 ///|
 fn sanitize_package_version(line : String) -> String {
-  if not(starts_with_keyword(line, "package ")) {
+  if !starts_with_keyword(line, "package ") {
     return line
   }
   let chars = line.to_array()
@@ -274,7 +273,7 @@ fn sanitize_package_version(line : String) -> String {
   if at_index < 0 || semi_index < 0 || at_index > semi_index {
     return line
   }
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   for i in 0..<at_index {
     buf.write_char(chars[i])
   }
@@ -314,7 +313,7 @@ fn should_skip_line_for_parse(line : String) -> Bool {
 fn sanitize_wit_lines(source : String) -> Array[String] {
   let lines : Array[String] = []
   for line in source.split("\n") {
-    let line_text = line.to_string()
+    let line_text = line.to_owned()
     if should_skip_line_for_parse(line_text) {
       continue
     }
@@ -326,7 +325,7 @@ fn sanitize_wit_lines(source : String) -> Array[String] {
 
 ///|
 fn join_lines(lines : Array[String]) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   for line in lines {
     buf.write_string(line)
     buf.write_char('\n')
@@ -399,7 +398,7 @@ fn parse_wit_file_path_with_sanitize(
   path : String,
 ) -> Result[@wit.WitFile, GenerateError] {
   let source = @fs.read_file_to_string(path) catch {
-    e => return Err(GenerateError::WitParse("read failed: " + e.to_string()))
+    e => return Err(GenerateError::WitParse("read failed: " + repr(e)))
   }
   adaptive_parse_sanitized_source(path, source)
 }
@@ -684,7 +683,7 @@ fn emit_record_typedef(
   prefix : String,
   imported_aliases : Map[String, String],
 ) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("pub(all) struct ")
   buf.write_string(name)
   buf.write_string(" {\n")
@@ -701,7 +700,7 @@ fn emit_record_typedef(
 
 ///|
 fn emit_enum_typedef(name : String, cases : Array[String]) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("pub(all) enum ")
   buf.write_string(name)
   buf.write_string(" {\n")
@@ -721,7 +720,7 @@ fn emit_variant_typedef(
   prefix : String,
   imported_aliases : Map[String, String],
 ) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("pub(all) enum ")
   buf.write_string(name)
   buf.write_string(" {\n")
@@ -774,14 +773,14 @@ fn method_name_from_function(func : @wit.Function) -> String {
 
 ///|
 fn unique_method_name(base : String, used : Array[String]) -> String {
-  if not(contains_string(used, base)) {
+  if !contains_string(used, base) {
     used.push(base)
     return base
   }
   let mut i = 2
   while true {
     let candidate = base + "_" + i.to_string()
-    if not(contains_string(used, candidate)) {
+    if !contains_string(used, candidate) {
       used.push(candidate)
       return candidate
     }
@@ -798,7 +797,7 @@ fn emit_trait_method(
   prefix : String,
   imported_aliases : Map[String, String],
 ) -> Unit {
-  buf.write_string("  ")
+  buf.write_string("  fn ")
   buf.write_string(method_name)
   buf.write_string("(Self")
   for param in func.params {
@@ -821,7 +820,7 @@ fn emit_default_trait_impl(
 ) -> Unit {
   buf.write_string("impl ")
   buf.write_string(trait_name)
-  buf.write_string(" with ")
+  buf.write_string(" with fn ")
   buf.write_string(generated_method.method_name)
   buf.write_string("(_self")
   for i in 0..<generated_method.param_count {
@@ -854,7 +853,7 @@ fn resolved_interface_prefix(
   pkg : @wit.RPackageName?,
   interface_name : String,
 ) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   match pkg {
     Some(pkg_name) => buf.write_string(to_pascal_case(pkg_name.name))
     None => ()
@@ -867,7 +866,7 @@ fn resolved_interface_prefix(
 fn collect_resolved_aliases_by_prefix(
   infos : Array[@wit.ResolvedInterfaceInfo],
 ) -> Map[String, Map[String, String]] {
-  let aliases_by_prefix : Map[String, Map[String, String]] = {}
+  let aliases_by_prefix : Map[String, Map[String, String]] = Map([])
   for info in infos {
     let interface_name = match info.name {
       Some(name) => name
@@ -941,7 +940,7 @@ fn collect_resolved_interface_infos_from_paths(
 
 ///|
 fn build_import_aliases(shape : InterfaceShape) -> Map[String, String] {
-  let imported_aliases : Map[String, String] = {}
+  let imported_aliases : Map[String, String] = Map([])
   for source_type, target_type in shape.resolved_aliases {
     imported_aliases.set(source_type, target_type)
   }
@@ -997,7 +996,7 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
       @wit.InterfaceItem::Use(_) => ()
     }
   }
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   for item in shape.items {
     match item {
       @wit.InterfaceItem::TypeDef(type_def) => {
@@ -1009,7 +1008,7 @@ fn emit_interface_contract(shape : InterfaceShape) -> String {
   }
   let fallback_types : Array[String] = []
   for ref_name in referenced_types {
-    if not(contains_string(defined_types, ref_name)) {
+    if !contains_string(defined_types, ref_name) {
       push_unique_string(fallback_types, ref_name)
     }
   }
@@ -1143,14 +1142,14 @@ fn build_error_variants(shapes : Array[InterfaceShape]) -> Array[ErrorVariant] {
   for ty in error_types {
     let base = "From" + to_pascal_case(ty)
     let variant_name = unique_method_name(base, used_names)
-    variants.push({ variant_name, payload_type: Some(ty) })
+    variants.push({ variant_name, payload_type: Some(ty), })
   }
   variants
 }
 
 ///|
 fn emit_wasi_error_module(variants : Array[ErrorVariant]) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("///| Generated by wasi_interface WIT adapter generator.\n")
   buf.write_string(
     "///| This file is intended to be generated; do not edit manually.\n\n",
@@ -1182,7 +1181,7 @@ fn interface_prefix(
   world_name : String?,
   interface_name : String,
 ) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   match pkg {
     Some(pkg_name) => buf.write_string(to_pascal_case(pkg_name.name))
     None => ()
@@ -1223,7 +1222,7 @@ fn push_interface_shape(
     Some(aliases) => aliases
     None => {}
   }
-  shapes.push({ key, prefix, pkg, resolved_aliases, items })
+  shapes.push({ key, prefix, pkg, resolved_aliases, items, })
 }
 
 ///|
@@ -1284,7 +1283,7 @@ fn module_file_name(shape : InterfaceShape) -> String {
 
 ///|
 fn emit_raw_module_code(shape : InterfaceShape) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   buf.write_string("///| Generated by wasi_interface WIT adapter generator.\n")
   buf.write_string(
     "///| This file is intended to be generated; do not edit manually.\n",
@@ -1302,7 +1301,7 @@ fn format_generated_code(raw : String) -> Result[String, GenerateError] {
   let parsed = @parser.parse_string(raw)
   let (_impls, reports) = parsed
   if reports.length() > 0 {
-    return Err(GenerateError::GeneratedCodeParse(reports[0].to_string()))
+    return Err(GenerateError::GeneratedCodeParse(Show::to_string(reports[0])))
   }
   Ok(raw)
 }
@@ -1315,13 +1314,13 @@ fn generate_modules_from_shapes(
   let error_variants = build_error_variants(shapes)
   let error_raw = emit_wasi_error_module(error_variants)
   match format_generated_code(error_raw) {
-    Ok(code) => modules.push({ file_name: "gen_wasi_error.mbt", code })
+    Ok(code) => modules.push({ file_name: "gen_wasi_error.mbt", code, })
     Err(err) => return Err(err)
   }
   for shape in shapes {
     let raw = emit_raw_module_code(shape)
     match format_generated_code(raw) {
-      Ok(code) => modules.push({ file_name: module_file_name(shape), code })
+      Ok(code) => modules.push({ file_name: module_file_name(shape), code, })
       Err(err) => return Err(err)
     }
   }
@@ -1330,10 +1329,10 @@ fn generate_modules_from_shapes(
 
 ///|
 fn combine_modules(modules : Array[GeneratedModule]) -> String {
-  let buf = StringBuilder::new()
+  let buf = StringBuilder()
   for generated in modules {
     buf.write_string(generated.code)
-    if not(generated.code.has_suffix("\n")) {
+    if !generated.code.has_suffix("\n") {
       buf.write_char('\n')
     }
     buf.write_char('\n')
@@ -1355,7 +1354,7 @@ fn generate_trait_adapter_modules_from_wit_files_with_aliases(
 pub fn generate_trait_adapter_modules_from_wit_files(
   wit_files : Array[@wit.WitFile],
 ) -> Result[Array[GeneratedModule], GenerateError] {
-  let empty_aliases : Map[String, Map[String, String]] = {}
+  let empty_aliases : Map[String, Map[String, String]] = Map([])
   generate_trait_adapter_modules_from_wit_files_with_aliases(
     wit_files, empty_aliases,
   )
@@ -1481,3 +1480,31 @@ pub fn generate_trait_adapter_modules_from_wit_path(
 ) -> Result[Array[GeneratedModule], GenerateError] {
   generate_trait_adapter_modules_from_wit_paths([path])
 }
+
+///|
+pub impl Show for GenerateError with fn to_string(self) {
+  repr(self)
+}
+
+///|
+pub extend GenerateError with Show::{to_string, output}
+
+///|
+pub extend GenerateError with Eq::{equal, not_equal}
+
+///|
+pub impl Show for GeneratedModule with fn to_string(self) {
+  repr(self)
+}
+
+///|
+pub extend GeneratedModule with Show::{to_string, output}
+
+///|
+pub extend GeneratedModule with Eq::{equal, not_equal}
+
+///|
+pub extend GenerateError with Debug::{to_repr}
+
+///|
+pub extend GeneratedModule with Debug::{to_repr}

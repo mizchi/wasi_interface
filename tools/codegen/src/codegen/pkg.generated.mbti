@@ -3,6 +3,7 @@ package "mizchi/wasi_interface_codegen/codegen"
 
 import {
   "mizchi/wit",
+  "moonbitlang/core/debug",
 }
 
 // Values
@@ -34,19 +35,26 @@ pub fn generate_trait_adapters_from_wit_sources(Array[String]) -> Result[String,
 pub(all) suberror GenerateError {
   WitParse(String)
   GeneratedCodeParse(String)
-}
-pub impl Eq for GenerateError
+} derive(Eq, @debug.Debug)
+pub fn GenerateError::equal(Self, Self) -> Bool
+pub fn GenerateError::not_equal(Self, Self) -> Bool
+pub fn GenerateError::output(Self, &Logger) -> Unit
+pub fn GenerateError::to_repr(Self) -> @debug.Repr
+pub fn GenerateError::to_string(Self) -> String
 pub impl Show for GenerateError
 
 // Types and methods
 pub(all) struct GeneratedModule {
   file_name : String
   code : String
-}
-pub impl Eq for GeneratedModule
+} derive(Eq, @debug.Debug)
+pub fn GeneratedModule::equal(Self, Self) -> Bool
+pub fn GeneratedModule::not_equal(Self, Self) -> Bool
+pub fn GeneratedModule::output(Self, &Logger) -> Unit
+pub fn GeneratedModule::to_repr(Self) -> @debug.Repr
+pub fn GeneratedModule::to_string(Self) -> String
 pub impl Show for GeneratedModule
 
 // Type aliases
 
 // Traits
-

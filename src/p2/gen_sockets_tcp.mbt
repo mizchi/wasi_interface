@@ -41,133 +41,152 @@ pub(all) struct SocketsTcpPollable(Int)
 
 ///|
 pub(open) trait WasiSocketsTcpAdapter {
-  tcp_socket_start_bind(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[
+  fn tcp_socket_start_bind(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[
     Unit,
     WasiError,
   ] = _
-  tcp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
-  tcp_socket_start_connect(Self, SocketsTcpNetwork, SocketsTcpIpSocketAddress) -> Result[
-    Unit,
-    WasiError,
-  ] = _
-  tcp_socket_finish_connect(Self) -> Result[Bytes, WasiError] = _
-  tcp_socket_start_listen(Self) -> Result[Unit, WasiError] = _
-  tcp_socket_finish_listen(Self) -> Result[Unit, WasiError] = _
-  tcp_socket_accept(Self) -> Result[Bytes, WasiError] = _
-  tcp_socket_local_address(Self) -> Result[SocketsTcpIpSocketAddress, WasiError] = _
-  tcp_socket_remote_address(Self) -> Result[
+  fn tcp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
+  fn tcp_socket_start_connect(
+    Self,
+    SocketsTcpNetwork,
+    SocketsTcpIpSocketAddress,
+  ) -> Result[Unit, WasiError] = _
+  fn tcp_socket_finish_connect(Self) -> Result[Bytes, WasiError] = _
+  fn tcp_socket_start_listen(Self) -> Result[Unit, WasiError] = _
+  fn tcp_socket_finish_listen(Self) -> Result[Unit, WasiError] = _
+  fn tcp_socket_accept(Self) -> Result[Bytes, WasiError] = _
+  fn tcp_socket_local_address(Self) -> Result[
     SocketsTcpIpSocketAddress,
     WasiError,
   ] = _
-  tcp_socket_is_listening(Self) -> Result[Bool, WasiError] = _
-  tcp_socket_address_family(Self) -> Result[
+  fn tcp_socket_remote_address(Self) -> Result[
+    SocketsTcpIpSocketAddress,
+    WasiError,
+  ] = _
+  fn tcp_socket_is_listening(Self) -> Result[Bool, WasiError] = _
+  fn tcp_socket_address_family(Self) -> Result[
     SocketsTcpIpAddressFamily,
     WasiError,
   ] = _
-  tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[Unit, WasiError] = _
-  tcp_socket_keep_alive_enabled(Self) -> Result[Bool, WasiError] = _
-  tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[Unit, WasiError] = _
-  tcp_socket_keep_alive_idle_time(Self) -> Result[SocketsTcpDuration, WasiError] = _
-  tcp_socket_set_keep_alive_idle_time(Self, SocketsTcpDuration) -> Result[
+  fn tcp_socket_set_listen_backlog_size(Self, UInt64) -> Result[Unit, WasiError] = _
+  fn tcp_socket_keep_alive_enabled(Self) -> Result[Bool, WasiError] = _
+  fn tcp_socket_set_keep_alive_enabled(Self, Bool) -> Result[Unit, WasiError] = _
+  fn tcp_socket_keep_alive_idle_time(Self) -> Result[
+    SocketsTcpDuration,
+    WasiError,
+  ] = _
+  fn tcp_socket_set_keep_alive_idle_time(Self, SocketsTcpDuration) -> Result[
     Unit,
     WasiError,
   ] = _
-  tcp_socket_keep_alive_interval(Self) -> Result[SocketsTcpDuration, WasiError] = _
-  tcp_socket_set_keep_alive_interval(Self, SocketsTcpDuration) -> Result[
+  fn tcp_socket_keep_alive_interval(Self) -> Result[
+    SocketsTcpDuration,
+    WasiError,
+  ] = _
+  fn tcp_socket_set_keep_alive_interval(Self, SocketsTcpDuration) -> Result[
     Unit,
     WasiError,
   ] = _
-  tcp_socket_keep_alive_count(Self) -> Result[UInt, WasiError] = _
-  tcp_socket_set_keep_alive_count(Self, UInt) -> Result[Unit, WasiError] = _
-  tcp_socket_hop_limit(Self) -> Result[Byte, WasiError] = _
-  tcp_socket_set_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
-  tcp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
-  tcp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
-  tcp_socket_subscribe(Self) -> Result[SocketsTcpPollable, WasiError] = _
-  tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[Unit, WasiError] = _
+  fn tcp_socket_keep_alive_count(Self) -> Result[UInt, WasiError] = _
+  fn tcp_socket_set_keep_alive_count(Self, UInt) -> Result[Unit, WasiError] = _
+  fn tcp_socket_hop_limit(Self) -> Result[Byte, WasiError] = _
+  fn tcp_socket_set_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
+  fn tcp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
+  fn tcp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
+  fn tcp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
+  fn tcp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
+  fn tcp_socket_subscribe(Self) -> Result[SocketsTcpPollable, WasiError] = _
+  fn tcp_socket_shutdown(Self, SocketsTcpShutdownType) -> Result[
+    Unit,
+    WasiError,
+  ] = _
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_start_bind(_self, _arg0, _arg1) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_start_bind(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_start_bind"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_finish_bind(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_finish_bind(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_finish_bind"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_start_connect(_self, _arg0, _arg1) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_start_connect(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_start_connect"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_finish_connect(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_finish_connect(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_finish_connect"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_start_listen(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_start_listen(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_start_listen"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_finish_listen(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_finish_listen(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_finish_listen"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_accept(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_accept(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_accept"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_local_address(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_local_address(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_local_address"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_remote_address(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_remote_address(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_remote_address"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_is_listening(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_is_listening(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_is_listening"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_address_family(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_address_family(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_address_family"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_listen_backlog_size(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_listen_backlog_size(
+  _self,
+  _arg0,
+) {
   Err(
     WasiError::NotImplemented("SocketsTcp.tcp_socket_set_listen_backlog_size"),
   )
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_keep_alive_enabled(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_keep_alive_enabled(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_keep_alive_enabled"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_keep_alive_enabled(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_keep_alive_enabled(
+  _self,
+  _arg0,
+) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_set_keep_alive_enabled"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_keep_alive_idle_time(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_keep_alive_idle_time(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_keep_alive_idle_time"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_keep_alive_idle_time(
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_keep_alive_idle_time(
   _self,
   _arg0,
 ) {
@@ -177,65 +196,71 @@ impl WasiSocketsTcpAdapter with tcp_socket_set_keep_alive_idle_time(
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_keep_alive_interval(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_keep_alive_interval(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_keep_alive_interval"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_keep_alive_interval(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_keep_alive_interval(
+  _self,
+  _arg0,
+) {
   Err(
     WasiError::NotImplemented("SocketsTcp.tcp_socket_set_keep_alive_interval"),
   )
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_keep_alive_count(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_keep_alive_count(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_keep_alive_count"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_keep_alive_count(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_keep_alive_count(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_set_keep_alive_count"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_hop_limit(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_hop_limit(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_hop_limit"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_hop_limit(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_hop_limit(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_set_hop_limit"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_receive_buffer_size(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_receive_buffer_size(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_receive_buffer_size"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_receive_buffer_size(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_receive_buffer_size(
+  _self,
+  _arg0,
+) {
   Err(
     WasiError::NotImplemented("SocketsTcp.tcp_socket_set_receive_buffer_size"),
   )
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_send_buffer_size(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_send_buffer_size(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_send_buffer_size"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_set_send_buffer_size(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_set_send_buffer_size(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_set_send_buffer_size"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_subscribe(_self) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_subscribe(_self) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_subscribe"))
 }
 
 ///|
-impl WasiSocketsTcpAdapter with tcp_socket_shutdown(_self, _arg0) {
+impl WasiSocketsTcpAdapter with fn tcp_socket_shutdown(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsTcp.tcp_socket_shutdown"))
 }

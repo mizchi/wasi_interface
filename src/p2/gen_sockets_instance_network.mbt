@@ -10,10 +10,10 @@ pub(all) struct SocketsInstanceNetworkNetwork(Int)
 
 ///|
 pub(open) trait WasiSocketsInstanceNetworkAdapter {
-  instance_network(Self) -> Result[SocketsInstanceNetworkNetwork, WasiError] = _
+  fn instance_network(Self) -> Result[SocketsInstanceNetworkNetwork, WasiError] = _
 }
 
 ///|
-impl WasiSocketsInstanceNetworkAdapter with instance_network(_self) {
+impl WasiSocketsInstanceNetworkAdapter with fn instance_network(_self) {
   Err(WasiError::NotImplemented("SocketsInstanceNetwork.instance_network"))
 }

@@ -16,34 +16,34 @@ pub(all) struct ClocksMonotonicClockPollable(Int)
 
 ///|
 pub(open) trait WasiClocksMonotonicClockAdapter {
-  now(Self) -> Result[ClocksMonotonicClockInstant, WasiError] = _
-  resolution(Self) -> Result[ClocksMonotonicClockDuration, WasiError] = _
-  subscribe_instant(Self, ClocksMonotonicClockInstant) -> Result[
+  fn now(Self) -> Result[ClocksMonotonicClockInstant, WasiError] = _
+  fn resolution(Self) -> Result[ClocksMonotonicClockDuration, WasiError] = _
+  fn subscribe_instant(Self, ClocksMonotonicClockInstant) -> Result[
     ClocksMonotonicClockPollable,
     WasiError,
   ] = _
-  subscribe_duration(Self, ClocksMonotonicClockDuration) -> Result[
+  fn subscribe_duration(Self, ClocksMonotonicClockDuration) -> Result[
     ClocksMonotonicClockPollable,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with now(_self) {
+impl WasiClocksMonotonicClockAdapter with fn now(_self) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.now"))
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with resolution(_self) {
+impl WasiClocksMonotonicClockAdapter with fn resolution(_self) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.resolution"))
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with subscribe_instant(_self, _arg0) {
+impl WasiClocksMonotonicClockAdapter with fn subscribe_instant(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.subscribe_instant"))
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with subscribe_duration(_self, _arg0) {
+impl WasiClocksMonotonicClockAdapter with fn subscribe_duration(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.subscribe_duration"))
 }

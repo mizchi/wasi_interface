@@ -10,10 +10,10 @@ pub(all) struct CliStdinInputStream(Int)
 
 ///|
 pub(open) trait WasiCliStdinAdapter {
-  get_stdin(Self) -> Result[CliStdinInputStream, WasiError] = _
+  fn get_stdin(Self) -> Result[CliStdinInputStream, WasiError] = _
 }
 
 ///|
-impl WasiCliStdinAdapter with get_stdin(_self) {
+impl WasiCliStdinAdapter with fn get_stdin(_self) {
   Err(WasiError::NotImplemented("CliStdin.get_stdin"))
 }

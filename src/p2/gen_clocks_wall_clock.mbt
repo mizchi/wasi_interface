@@ -13,16 +13,16 @@ pub(all) struct ClocksWallClockDatetime {
 
 ///|
 pub(open) trait WasiClocksWallClockAdapter {
-  now(Self) -> Result[ClocksWallClockDatetime, WasiError] = _
-  resolution(Self) -> Result[ClocksWallClockDatetime, WasiError] = _
+  fn now(Self) -> Result[ClocksWallClockDatetime, WasiError] = _
+  fn resolution(Self) -> Result[ClocksWallClockDatetime, WasiError] = _
 }
 
 ///|
-impl WasiClocksWallClockAdapter with now(_self) {
+impl WasiClocksWallClockAdapter with fn now(_self) {
   Err(WasiError::NotImplemented("ClocksWallClock.now"))
 }
 
 ///|
-impl WasiClocksWallClockAdapter with resolution(_self) {
+impl WasiClocksWallClockAdapter with fn resolution(_self) {
   Err(WasiError::NotImplemented("ClocksWallClock.resolution"))
 }

@@ -7,10 +7,10 @@
 ///|
 /// Module key: RandomInsecureSeed
 pub(open) trait WasiRandomInsecureSeedAdapter {
-  get_insecure_seed(Self) -> Result[Bytes, WasiError] = _
+  fn get_insecure_seed(Self) -> Result[Bytes, WasiError] = _
 }
 
 ///|
-impl WasiRandomInsecureSeedAdapter with get_insecure_seed(_self) {
+impl WasiRandomInsecureSeedAdapter with fn get_insecure_seed(_self) {
   Err(WasiError::NotImplemented("RandomInsecureSeed.get_insecure_seed"))
 }

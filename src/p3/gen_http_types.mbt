@@ -129,85 +129,89 @@ pub(all) struct HttpTypesResponse(Int)
 
 ///|
 pub(open) trait WasiHttpTypesAdapter {
-  fields_constructor(Self) -> Result[Unit, WasiError] = _
-  fields_from_list(Self, Array[Bytes]) -> Result[HttpTypesFields, WasiError] = _
-  fields_get(Self, HttpTypesFieldName) -> Result[
+  fn fields_constructor(Self) -> Result[Unit, WasiError] = _
+  fn fields_from_list(Self, Array[Bytes]) -> Result[HttpTypesFields, WasiError] = _
+  fn fields_get(Self, HttpTypesFieldName) -> Result[
     Array[HttpTypesFieldValue],
     WasiError,
   ] = _
-  fields_has(Self, HttpTypesFieldName) -> Result[Bool, WasiError] = _
-  fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[
+  fn fields_has(Self, HttpTypesFieldName) -> Result[Bool, WasiError] = _
+  fn fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[
     Unit,
     WasiError,
   ] = _
-  fields_delete(Self, HttpTypesFieldName) -> Result[Unit, WasiError] = _
-  fields_get_and_delete(Self, HttpTypesFieldName) -> Result[
+  fn fields_delete(Self, HttpTypesFieldName) -> Result[Unit, WasiError] = _
+  fn fields_get_and_delete(Self, HttpTypesFieldName) -> Result[
     Array[HttpTypesFieldValue],
     WasiError,
   ] = _
-  fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[
+  fn fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[
     Unit,
     WasiError,
   ] = _
-  fields_copy_all(Self) -> Result[Array[Bytes], WasiError] = _
-  fields_clone(Self) -> Result[HttpTypesFields, WasiError] = _
-  request_new(
+  fn fields_copy_all(Self) -> Result[Array[Bytes], WasiError] = _
+  fn fields_clone(Self) -> Result[HttpTypesFields, WasiError] = _
+  fn request_new(
     Self,
     HttpTypesHeaders,
     Bytes?,
     Result[HttpTypesTrailers?, HttpTypesErrorCode],
     HttpTypesRequestOptions?,
   ) -> Result[Bytes, WasiError] = _
-  request_get_method(Self) -> Result[HttpTypesMethod, WasiError] = _
-  request_set_method(Self, HttpTypesMethod) -> Result[Unit, WasiError] = _
-  request_get_path_with_query(Self) -> Result[String?, WasiError] = _
-  request_set_path_with_query(Self, String?) -> Result[Unit, WasiError] = _
-  request_get_scheme(Self) -> Result[HttpTypesScheme?, WasiError] = _
-  request_set_scheme(Self, HttpTypesScheme?) -> Result[Unit, WasiError] = _
-  request_get_authority(Self) -> Result[String?, WasiError] = _
-  request_set_authority(Self, String?) -> Result[Unit, WasiError] = _
-  request_get_options(Self) -> Result[HttpTypesRequestOptions?, WasiError] = _
-  request_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
-  request_consume_body(Self, HttpTypesRequest, Result[Unit, HttpTypesErrorCode]) -> Result[
-    Bytes,
-    WasiError,
-  ] = _
-  request_options_constructor(Self) -> Result[Unit, WasiError] = _
-  request_options_get_connect_timeout(Self) -> Result[
+  fn request_get_method(Self) -> Result[HttpTypesMethod, WasiError] = _
+  fn request_set_method(Self, HttpTypesMethod) -> Result[Unit, WasiError] = _
+  fn request_get_path_with_query(Self) -> Result[String?, WasiError] = _
+  fn request_set_path_with_query(Self, String?) -> Result[Unit, WasiError] = _
+  fn request_get_scheme(Self) -> Result[HttpTypesScheme?, WasiError] = _
+  fn request_set_scheme(Self, HttpTypesScheme?) -> Result[Unit, WasiError] = _
+  fn request_get_authority(Self) -> Result[String?, WasiError] = _
+  fn request_set_authority(Self, String?) -> Result[Unit, WasiError] = _
+  fn request_get_options(Self) -> Result[HttpTypesRequestOptions?, WasiError] = _
+  fn request_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
+  fn request_consume_body(
+    Self,
+    HttpTypesRequest,
+    Result[Unit, HttpTypesErrorCode],
+  ) -> Result[Bytes, WasiError] = _
+  fn request_options_constructor(Self) -> Result[Unit, WasiError] = _
+  fn request_options_get_connect_timeout(Self) -> Result[
     ClocksTypesDuration?,
     WasiError,
   ] = _
-  request_options_set_connect_timeout(Self, ClocksTypesDuration?) -> Result[
+  fn request_options_set_connect_timeout(Self, ClocksTypesDuration?) -> Result[
     Unit,
     WasiError,
   ] = _
-  request_options_get_first_byte_timeout(Self) -> Result[
+  fn request_options_get_first_byte_timeout(Self) -> Result[
     ClocksTypesDuration?,
     WasiError,
   ] = _
-  request_options_set_first_byte_timeout(Self, ClocksTypesDuration?) -> Result[
+  fn request_options_set_first_byte_timeout(Self, ClocksTypesDuration?) -> Result[
     Unit,
     WasiError,
   ] = _
-  request_options_get_between_bytes_timeout(Self) -> Result[
+  fn request_options_get_between_bytes_timeout(Self) -> Result[
     ClocksTypesDuration?,
     WasiError,
   ] = _
-  request_options_set_between_bytes_timeout(Self, ClocksTypesDuration?) -> Result[
+  fn request_options_set_between_bytes_timeout(Self, ClocksTypesDuration?) -> Result[
     Unit,
     WasiError,
   ] = _
-  request_options_clone(Self) -> Result[HttpTypesRequestOptions, WasiError] = _
-  response_new(
+  fn request_options_clone(Self) -> Result[HttpTypesRequestOptions, WasiError] = _
+  fn response_new(
     Self,
     HttpTypesHeaders,
     Bytes?,
     Result[HttpTypesTrailers?, HttpTypesErrorCode],
   ) -> Result[Bytes, WasiError] = _
-  response_get_status_code(Self) -> Result[HttpTypesStatusCode, WasiError] = _
-  response_set_status_code(Self, HttpTypesStatusCode) -> Result[Unit, WasiError] = _
-  response_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
-  response_consume_body(
+  fn response_get_status_code(Self) -> Result[HttpTypesStatusCode, WasiError] = _
+  fn response_set_status_code(Self, HttpTypesStatusCode) -> Result[
+    Unit,
+    WasiError,
+  ] = _
+  fn response_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
+  fn response_consume_body(
     Self,
     HttpTypesResponse,
     Result[Unit, HttpTypesErrorCode],
@@ -215,136 +219,139 @@ pub(open) trait WasiHttpTypesAdapter {
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_constructor(_self) {
+impl WasiHttpTypesAdapter with fn fields_constructor(_self) {
   Err(WasiError::NotImplemented("HttpTypes.fields_constructor"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_from_list(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn fields_from_list(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.fields_from_list"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_get(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn fields_get(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.fields_get"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_has(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn fields_has(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.fields_has"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_set(_self, _arg0, _arg1) {
+impl WasiHttpTypesAdapter with fn fields_set(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("HttpTypes.fields_set"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_delete(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn fields_delete(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.fields_delete"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_get_and_delete(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn fields_get_and_delete(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.fields_get_and_delete"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_append(_self, _arg0, _arg1) {
+impl WasiHttpTypesAdapter with fn fields_append(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("HttpTypes.fields_append"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_copy_all(_self) {
+impl WasiHttpTypesAdapter with fn fields_copy_all(_self) {
   Err(WasiError::NotImplemented("HttpTypes.fields_copy_all"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with fields_clone(_self) {
+impl WasiHttpTypesAdapter with fn fields_clone(_self) {
   Err(WasiError::NotImplemented("HttpTypes.fields_clone"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_new(_self, _arg0, _arg1, _arg2, _arg3) {
+impl WasiHttpTypesAdapter with fn request_new(_self, _arg0, _arg1, _arg2, _arg3) {
   Err(WasiError::NotImplemented("HttpTypes.request_new"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_get_method(_self) {
+impl WasiHttpTypesAdapter with fn request_get_method(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_get_method"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_set_method(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn request_set_method(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.request_set_method"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_get_path_with_query(_self) {
+impl WasiHttpTypesAdapter with fn request_get_path_with_query(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_get_path_with_query"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_set_path_with_query(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn request_set_path_with_query(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.request_set_path_with_query"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_get_scheme(_self) {
+impl WasiHttpTypesAdapter with fn request_get_scheme(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_get_scheme"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_set_scheme(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn request_set_scheme(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.request_set_scheme"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_get_authority(_self) {
+impl WasiHttpTypesAdapter with fn request_get_authority(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_get_authority"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_set_authority(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn request_set_authority(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.request_set_authority"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_get_options(_self) {
+impl WasiHttpTypesAdapter with fn request_get_options(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_get_options"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_get_headers(_self) {
+impl WasiHttpTypesAdapter with fn request_get_headers(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_get_headers"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_consume_body(_self, _arg0, _arg1) {
+impl WasiHttpTypesAdapter with fn request_consume_body(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("HttpTypes.request_consume_body"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_constructor(_self) {
+impl WasiHttpTypesAdapter with fn request_options_constructor(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_options_constructor"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_get_connect_timeout(_self) {
+impl WasiHttpTypesAdapter with fn request_options_get_connect_timeout(_self) {
   Err(
     WasiError::NotImplemented("HttpTypes.request_options_get_connect_timeout"),
   )
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_set_connect_timeout(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn request_options_set_connect_timeout(
+  _self,
+  _arg0,
+) {
   Err(
     WasiError::NotImplemented("HttpTypes.request_options_set_connect_timeout"),
   )
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_get_first_byte_timeout(_self) {
+impl WasiHttpTypesAdapter with fn request_options_get_first_byte_timeout(_self) {
   Err(
     WasiError::NotImplemented(
       "HttpTypes.request_options_get_first_byte_timeout",
@@ -353,7 +360,7 @@ impl WasiHttpTypesAdapter with request_options_get_first_byte_timeout(_self) {
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_set_first_byte_timeout(
+impl WasiHttpTypesAdapter with fn request_options_set_first_byte_timeout(
   _self,
   _arg0,
 ) {
@@ -365,7 +372,9 @@ impl WasiHttpTypesAdapter with request_options_set_first_byte_timeout(
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_get_between_bytes_timeout(_self) {
+impl WasiHttpTypesAdapter with fn request_options_get_between_bytes_timeout(
+  _self,
+) {
   Err(
     WasiError::NotImplemented(
       "HttpTypes.request_options_get_between_bytes_timeout",
@@ -374,7 +383,7 @@ impl WasiHttpTypesAdapter with request_options_get_between_bytes_timeout(_self) 
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_set_between_bytes_timeout(
+impl WasiHttpTypesAdapter with fn request_options_set_between_bytes_timeout(
   _self,
   _arg0,
 ) {
@@ -386,31 +395,31 @@ impl WasiHttpTypesAdapter with request_options_set_between_bytes_timeout(
 }
 
 ///|
-impl WasiHttpTypesAdapter with request_options_clone(_self) {
+impl WasiHttpTypesAdapter with fn request_options_clone(_self) {
   Err(WasiError::NotImplemented("HttpTypes.request_options_clone"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with response_new(_self, _arg0, _arg1, _arg2) {
+impl WasiHttpTypesAdapter with fn response_new(_self, _arg0, _arg1, _arg2) {
   Err(WasiError::NotImplemented("HttpTypes.response_new"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with response_get_status_code(_self) {
+impl WasiHttpTypesAdapter with fn response_get_status_code(_self) {
   Err(WasiError::NotImplemented("HttpTypes.response_get_status_code"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with response_set_status_code(_self, _arg0) {
+impl WasiHttpTypesAdapter with fn response_set_status_code(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpTypes.response_set_status_code"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with response_get_headers(_self) {
+impl WasiHttpTypesAdapter with fn response_get_headers(_self) {
   Err(WasiError::NotImplemented("HttpTypes.response_get_headers"))
 }
 
 ///|
-impl WasiHttpTypesAdapter with response_consume_body(_self, _arg0, _arg1) {
+impl WasiHttpTypesAdapter with fn response_consume_body(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("HttpTypes.response_consume_body"))
 }

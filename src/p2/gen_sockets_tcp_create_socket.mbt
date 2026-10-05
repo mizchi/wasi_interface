@@ -16,13 +16,13 @@ pub(all) struct SocketsTcpCreateSocketErrorCode(Int)
 
 ///|
 pub(open) trait WasiSocketsTcpCreateSocketAdapter {
-  create_tcp_socket(Self, SocketsTcpCreateSocketIpAddressFamily) -> Result[
+  fn create_tcp_socket(Self, SocketsTcpCreateSocketIpAddressFamily) -> Result[
     SocketsTcpCreateSocketTcpSocket,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiSocketsTcpCreateSocketAdapter with create_tcp_socket(_self, _arg0) {
+impl WasiSocketsTcpCreateSocketAdapter with fn create_tcp_socket(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsTcpCreateSocket.create_tcp_socket"))
 }

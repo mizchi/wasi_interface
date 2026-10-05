@@ -22,22 +22,22 @@ pub(all) struct SocketsIpNameLookupNetwork(Int)
 
 ///|
 pub(open) trait WasiSocketsIpNameLookupAdapter {
-  resolve_address_stream_resolve_next_address(Self) -> Result[
+  fn resolve_address_stream_resolve_next_address(Self) -> Result[
     SocketsIpNameLookupIpAddress?,
     WasiError,
   ] = _
-  resolve_address_stream_subscribe(Self) -> Result[
+  fn resolve_address_stream_subscribe(Self) -> Result[
     SocketsIpNameLookupPollable,
     WasiError,
   ] = _
-  resolve_addresses(Self, SocketsIpNameLookupNetwork, String) -> Result[
+  fn resolve_addresses(Self, SocketsIpNameLookupNetwork, String) -> Result[
     SocketsIpNameLookupResolveAddressStream,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiSocketsIpNameLookupAdapter with resolve_address_stream_resolve_next_address(
+impl WasiSocketsIpNameLookupAdapter with fn resolve_address_stream_resolve_next_address(
   _self,
 ) {
   Err(
@@ -48,7 +48,9 @@ impl WasiSocketsIpNameLookupAdapter with resolve_address_stream_resolve_next_add
 }
 
 ///|
-impl WasiSocketsIpNameLookupAdapter with resolve_address_stream_subscribe(_self) {
+impl WasiSocketsIpNameLookupAdapter with fn resolve_address_stream_subscribe(
+  _self,
+) {
   Err(
     WasiError::NotImplemented(
       "SocketsIpNameLookup.resolve_address_stream_subscribe",
@@ -57,6 +59,10 @@ impl WasiSocketsIpNameLookupAdapter with resolve_address_stream_subscribe(_self)
 }
 
 ///|
-impl WasiSocketsIpNameLookupAdapter with resolve_addresses(_self, _arg0, _arg1) {
+impl WasiSocketsIpNameLookupAdapter with fn resolve_addresses(
+  _self,
+  _arg0,
+  _arg1,
+) {
   Err(WasiError::NotImplemented("SocketsIpNameLookup.resolve_addresses"))
 }

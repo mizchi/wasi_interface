@@ -10,10 +10,10 @@ pub(all) struct IoErrorError(Int)
 
 ///|
 pub(open) trait WasiIoErrorAdapter {
-  error_to_debug_string(Self) -> Result[String, WasiError] = _
+  fn error_to_debug_string(Self) -> Result[String, WasiError] = _
 }
 
 ///|
-impl WasiIoErrorAdapter with error_to_debug_string(_self) {
+impl WasiIoErrorAdapter with fn error_to_debug_string(_self) {
   Err(WasiError::NotImplemented("IoError.error_to_debug_string"))
 }

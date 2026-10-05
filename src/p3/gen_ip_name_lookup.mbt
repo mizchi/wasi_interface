@@ -20,13 +20,13 @@ pub(all) type IpNameLookupIpAddress
 
 ///|
 pub(open) trait WasiIpNameLookupAdapter {
-  resolve_addresses(Self, String) -> Result[
+  fn resolve_addresses(Self, String) -> Result[
     Array[IpNameLookupIpAddress],
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiIpNameLookupAdapter with resolve_addresses(_self, _arg0) {
+impl WasiIpNameLookupAdapter with fn resolve_addresses(_self, _arg0) {
   Err(WasiError::NotImplemented("IpNameLookup.resolve_addresses"))
 }

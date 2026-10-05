@@ -1,6 +1,6 @@
 ///|
 fn find_module_code(
-  modules : Array[GeneratedModule],
+  modules : Array[@codegen.GeneratedModule],
   file_name : String,
 ) -> String? {
   for generated in modules {
@@ -32,7 +32,7 @@ test "generate trait adapters from WIT source for fs/clock/http/socket" {
     #|    connect: func(addr: string, port: u16) -> result<u32, string>;
     #|  }
     #|}
-  let generated = generate_trait_adapters_from_wit_source(source)
+  let generated = @codegen.generate_trait_adapters_from_wit_source(source)
   let code = match generated {
     Ok(code) => code
     Err(err) => {
@@ -73,7 +73,9 @@ test "generate trait adapter modules split by interface" {
     #|interface clock {
     #|  now: func() -> u64;
     #|}
-  let generated = generate_trait_adapter_modules_from_wit_source(source)
+  let generated = @codegen.generate_trait_adapter_modules_from_wit_source(
+    source,
+  )
   guard generated is Ok(modules) else { abort("expected generator success") }
   assert_eq(modules.length(), 3)
   assert_true(find_module_code(modules, "gen_wasi_error.mbt") is Some(_))
@@ -87,7 +89,7 @@ test "generate trait adapters keeps identifier conversion stable" {
     #|interface http-handler {
     #|  send-request: func(target-url: string) -> string;
     #|}
-  let generated = generate_trait_adapters_from_wit_source(source)
+  let generated = @codegen.generate_trait_adapters_from_wit_source(source)
   guard generated is Ok(code) else { abort("expected generator success") }
   assert_true(code.contains("pub(open) trait WasiHttpHandlerAdapter"))
   assert_true(
@@ -111,7 +113,7 @@ test "generate trait adapters from multiple WIT sources" {
     #|  now: func() -> u64;
     #|}
   let sources : Array[String] = [filesystem_source, clocks_source]
-  let generated = generate_trait_adapters_from_wit_sources(sources)
+  let generated = @codegen.generate_trait_adapters_from_wit_sources(sources)
   guard generated is Ok(code) else { abort("expected generator success") }
   assert_true(code.contains("pub(open) trait WasiFilesystemTypesAdapter"))
   assert_true(code.contains("pub(open) trait WasiClocksWallClockAdapter"))
@@ -128,7 +130,7 @@ test "generate trait adapters emit interface scoped types" {
     #|  }
     #|  get: func() -> node-stat;
     #|}
-  let generated = generate_trait_adapters_from_wit_source(source)
+  let generated = @codegen.generate_trait_adapters_from_wit_source(source)
   guard generated is Ok(code) else { abort("expected generator success") }
   assert_true(code.contains("pub(all) struct FilesystemTypesNodeStat"))
   assert_true(
@@ -145,7 +147,7 @@ test "generate trait adapters emit fallback alias for unresolved ids" {
     #|interface api {
     #|  call: func(input: external-type) -> external-type;
     #|}
-  let generated = generate_trait_adapters_from_wit_source(source)
+  let generated = @codegen.generate_trait_adapters_from_wit_source(source)
   let code = match generated {
     Ok(code) => code
     Err(err) => {
@@ -171,7 +173,9 @@ test "generate trait adapters emit alias for use-imported types" {
     #|  use types.{request, response, error-code};
     #|  send: func(request: request) -> result<response, error-code>;
     #|}
-  let generated = generate_trait_adapter_modules_from_wit_source(source)
+  let generated = @codegen.generate_trait_adapter_modules_from_wit_source(
+    source,
+  )
   let modules = match generated {
     Ok(modules) => modules
     Err(err) => {
@@ -188,16 +192,28 @@ test "generate trait adapters emit alias for use-imported types" {
       "send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _",
     ),
   )
-  assert_true(not(client_module.contains("pub(all) type HttpClientRequest")))
-  assert_true(not(client_module.contains("pub(all) type HttpClientResponse")))
-  assert_true(not(client_module.contains("pub(all) type HttpClientErrorCode")))
+  assert_true(!client_module.contains("pub(all) type HttpClientRequest"))
+  assert_true(!client_module.contains("pub(all) type HttpClientResponse"))
+  assert_true(!client_module.contains("pub(all) type HttpClientErrorCode"))
 }
 
 ///|
 test "generate trait adapters reports WIT parse errors" {
-  let generated = generate_trait_adapters_from_wit_source("interface broken {")
+  let generated = @codegen.generate_trait_adapters_from_wit_source(
+    "interface broken {",
+  )
   match generated {
-    Err(GenerateError::WitParse(_)) => ()
-    _ => abort("expected GenerateError::WitParse")
+    Err(@codegen.GenerateError::WitParse(_)) => ()
+    _ => abort("expected @codegen.GenerateError::WitParse")
   }
+}
+
+///|
+test "generated trait methods use current MoonBit syntax" {
+  let source = "interface clock { now: func() -> u64; }"
+  guard @codegen.generate_trait_adapters_from_wit_source(source) is Ok(code) else {
+    abort("expected generator success")
+  }
+  assert_true(code.contains("  fn now(Self)"))
+  assert_true(code.contains("impl WasiClockAdapter with fn now("))
 }

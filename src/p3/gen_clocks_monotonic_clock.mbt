@@ -10,28 +10,28 @@ pub(all) type ClocksMonotonicClockMark
 
 ///|
 pub(open) trait WasiClocksMonotonicClockAdapter {
-  now(Self) -> Result[ClocksMonotonicClockMark, WasiError] = _
-  get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
-  wait_until(Self, ClocksMonotonicClockMark) -> Result[Unit, WasiError] = _
-  wait_for(Self, ClocksTypesDuration) -> Result[Unit, WasiError] = _
+  fn now(Self) -> Result[ClocksMonotonicClockMark, WasiError] = _
+  fn get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
+  fn wait_until(Self, ClocksMonotonicClockMark) -> Result[Unit, WasiError] = _
+  fn wait_for(Self, ClocksTypesDuration) -> Result[Unit, WasiError] = _
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with now(_self) {
+impl WasiClocksMonotonicClockAdapter with fn now(_self) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.now"))
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with get_resolution(_self) {
+impl WasiClocksMonotonicClockAdapter with fn get_resolution(_self) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.get_resolution"))
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with wait_until(_self, _arg0) {
+impl WasiClocksMonotonicClockAdapter with fn wait_until(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.wait_until"))
 }
 
 ///|
-impl WasiClocksMonotonicClockAdapter with wait_for(_self, _arg0) {
+impl WasiClocksMonotonicClockAdapter with fn wait_for(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksMonotonicClock.wait_for"))
 }

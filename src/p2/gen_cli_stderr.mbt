@@ -10,10 +10,10 @@ pub(all) struct CliStderrOutputStream(Int)
 
 ///|
 pub(open) trait WasiCliStderrAdapter {
-  get_stderr(Self) -> Result[CliStderrOutputStream, WasiError] = _
+  fn get_stderr(Self) -> Result[CliStderrOutputStream, WasiError] = _
 }
 
 ///|
-impl WasiCliStderrAdapter with get_stderr(_self) {
+impl WasiCliStderrAdapter with fn get_stderr(_self) {
   Err(WasiError::NotImplemented("CliStderr.get_stderr"))
 }

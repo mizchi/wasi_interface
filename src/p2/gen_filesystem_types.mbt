@@ -130,116 +130,125 @@ pub(all) struct FilesystemTypesError(Int)
 
 ///|
 pub(open) trait WasiFilesystemTypesAdapter {
-  descriptor_read_via_stream(Self, FilesystemTypesFilesize) -> Result[
+  fn descriptor_read_via_stream(Self, FilesystemTypesFilesize) -> Result[
     FilesystemTypesInputStream,
     WasiError,
   ] = _
-  descriptor_write_via_stream(Self, FilesystemTypesFilesize) -> Result[
+  fn descriptor_write_via_stream(Self, FilesystemTypesFilesize) -> Result[
     FilesystemTypesOutputStream,
     WasiError,
   ] = _
-  descriptor_append_via_stream(Self) -> Result[
+  fn descriptor_append_via_stream(Self) -> Result[
     FilesystemTypesOutputStream,
     WasiError,
   ] = _
-  descriptor_advise(
+  fn descriptor_advise(
     Self,
     FilesystemTypesFilesize,
     FilesystemTypesFilesize,
     FilesystemTypesAdvice,
   ) -> Result[Unit, WasiError] = _
-  descriptor_sync_data(Self) -> Result[Unit, WasiError] = _
-  descriptor_get_flags(Self) -> Result[
+  fn descriptor_sync_data(Self) -> Result[Unit, WasiError] = _
+  fn descriptor_get_flags(Self) -> Result[
     FilesystemTypesDescriptorFlags,
     WasiError,
   ] = _
-  descriptor_get_type(Self) -> Result[FilesystemTypesDescriptorType, WasiError] = _
-  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[Unit, WasiError] = _
-  descriptor_set_times(
+  fn descriptor_get_type(Self) -> Result[
+    FilesystemTypesDescriptorType,
+    WasiError,
+  ] = _
+  fn descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[
+    Unit,
+    WasiError,
+  ] = _
+  fn descriptor_set_times(
     Self,
     FilesystemTypesNewTimestamp,
     FilesystemTypesNewTimestamp,
   ) -> Result[Unit, WasiError] = _
-  descriptor_read(Self, FilesystemTypesFilesize, FilesystemTypesFilesize) -> Result[
+  fn descriptor_read(Self, FilesystemTypesFilesize, FilesystemTypesFilesize) -> Result[
     Bytes,
     WasiError,
   ] = _
-  descriptor_write(Self, Bytes, FilesystemTypesFilesize) -> Result[
+  fn descriptor_write(Self, Bytes, FilesystemTypesFilesize) -> Result[
     FilesystemTypesFilesize,
     WasiError,
   ] = _
-  descriptor_read_directory(Self) -> Result[
+  fn descriptor_read_directory(Self) -> Result[
     FilesystemTypesDirectoryEntryStream,
     WasiError,
   ] = _
-  descriptor_sync(Self) -> Result[Unit, WasiError] = _
-  descriptor_create_directory_at(Self, String) -> Result[Unit, WasiError] = _
-  descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
-  descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[
+  fn descriptor_sync(Self) -> Result[Unit, WasiError] = _
+  fn descriptor_create_directory_at(Self, String) -> Result[Unit, WasiError] = _
+  fn descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
+  fn descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[
     FilesystemTypesDescriptorStat,
     WasiError,
   ] = _
-  descriptor_set_times_at(
+  fn descriptor_set_times_at(
     Self,
     FilesystemTypesPathFlags,
     String,
     FilesystemTypesNewTimestamp,
     FilesystemTypesNewTimestamp,
   ) -> Result[Unit, WasiError] = _
-  descriptor_link_at(
+  fn descriptor_link_at(
     Self,
     FilesystemTypesPathFlags,
     String,
     FilesystemTypesDescriptor,
     String,
   ) -> Result[Unit, WasiError] = _
-  descriptor_readlink_at(Self, String) -> Result[String, WasiError] = _
-  descriptor_remove_directory_at(Self, String) -> Result[Unit, WasiError] = _
-  descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[
+  fn descriptor_readlink_at(Self, String) -> Result[String, WasiError] = _
+  fn descriptor_remove_directory_at(Self, String) -> Result[Unit, WasiError] = _
+  fn descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[
     Unit,
     WasiError,
   ] = _
-  descriptor_symlink_at(Self, String, String) -> Result[Unit, WasiError] = _
-  descriptor_unlink_file_at(Self, String) -> Result[Unit, WasiError] = _
-  descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Result[
+  fn descriptor_symlink_at(Self, String, String) -> Result[Unit, WasiError] = _
+  fn descriptor_unlink_file_at(Self, String) -> Result[Unit, WasiError] = _
+  fn descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Result[
     Bool,
     WasiError,
   ] = _
-  descriptor_metadata_hash(Self) -> Result[
+  fn descriptor_metadata_hash(Self) -> Result[
     FilesystemTypesMetadataHashValue,
     WasiError,
   ] = _
-  descriptor_metadata_hash_at(Self, FilesystemTypesPathFlags, String) -> Result[
+  fn descriptor_metadata_hash_at(Self, FilesystemTypesPathFlags, String) -> Result[
     FilesystemTypesMetadataHashValue,
     WasiError,
   ] = _
-  directory_entry_stream_read_directory_entry(Self) -> Result[
+  fn directory_entry_stream_read_directory_entry(Self) -> Result[
     FilesystemTypesDirectoryEntry?,
     WasiError,
   ] = _
-  filesystem_error_code(Self, FilesystemTypesError) -> Result[
+  fn filesystem_error_code(Self, FilesystemTypesError) -> Result[
     FilesystemTypesErrorCode?,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_read_via_stream(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn descriptor_read_via_stream(_self, _arg0) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_read_via_stream"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_write_via_stream(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn descriptor_write_via_stream(
+  _self,
+  _arg0,
+) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_write_via_stream"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_append_via_stream(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_append_via_stream(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_append_via_stream"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_advise(
+impl WasiFilesystemTypesAdapter with fn descriptor_advise(
   _self,
   _arg0,
   _arg1,
@@ -249,52 +258,56 @@ impl WasiFilesystemTypesAdapter with descriptor_advise(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_sync_data(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_sync_data(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_sync_data"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_get_flags(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_get_flags(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_get_flags"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_get_type(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_get_type(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_get_type"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_set_size(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn descriptor_set_size(_self, _arg0) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_set_size"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_set_times(_self, _arg0, _arg1) {
+impl WasiFilesystemTypesAdapter with fn descriptor_set_times(
+  _self,
+  _arg0,
+  _arg1,
+) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_set_times"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_read(_self, _arg0, _arg1) {
+impl WasiFilesystemTypesAdapter with fn descriptor_read(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_read"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_write(_self, _arg0, _arg1) {
+impl WasiFilesystemTypesAdapter with fn descriptor_write(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_write"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_read_directory(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_read_directory(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_read_directory"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_sync(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_sync(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_sync"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_create_directory_at(
+impl WasiFilesystemTypesAdapter with fn descriptor_create_directory_at(
   _self,
   _arg0,
 ) {
@@ -304,17 +317,17 @@ impl WasiFilesystemTypesAdapter with descriptor_create_directory_at(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_stat(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_stat(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_stat"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_stat_at(_self, _arg0, _arg1) {
+impl WasiFilesystemTypesAdapter with fn descriptor_stat_at(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_stat_at"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_set_times_at(
+impl WasiFilesystemTypesAdapter with fn descriptor_set_times_at(
   _self,
   _arg0,
   _arg1,
@@ -325,7 +338,7 @@ impl WasiFilesystemTypesAdapter with descriptor_set_times_at(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_link_at(
+impl WasiFilesystemTypesAdapter with fn descriptor_link_at(
   _self,
   _arg0,
   _arg1,
@@ -336,12 +349,12 @@ impl WasiFilesystemTypesAdapter with descriptor_link_at(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_readlink_at(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn descriptor_readlink_at(_self, _arg0) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_readlink_at"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_remove_directory_at(
+impl WasiFilesystemTypesAdapter with fn descriptor_remove_directory_at(
   _self,
   _arg0,
 ) {
@@ -351,7 +364,7 @@ impl WasiFilesystemTypesAdapter with descriptor_remove_directory_at(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_rename_at(
+impl WasiFilesystemTypesAdapter with fn descriptor_rename_at(
   _self,
   _arg0,
   _arg1,
@@ -361,27 +374,31 @@ impl WasiFilesystemTypesAdapter with descriptor_rename_at(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_symlink_at(_self, _arg0, _arg1) {
+impl WasiFilesystemTypesAdapter with fn descriptor_symlink_at(
+  _self,
+  _arg0,
+  _arg1,
+) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_symlink_at"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_unlink_file_at(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn descriptor_unlink_file_at(_self, _arg0) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_unlink_file_at"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_is_same_object(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn descriptor_is_same_object(_self, _arg0) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_is_same_object"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_metadata_hash(_self) {
+impl WasiFilesystemTypesAdapter with fn descriptor_metadata_hash(_self) {
   Err(WasiError::NotImplemented("FilesystemTypes.descriptor_metadata_hash"))
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with descriptor_metadata_hash_at(
+impl WasiFilesystemTypesAdapter with fn descriptor_metadata_hash_at(
   _self,
   _arg0,
   _arg1,
@@ -390,7 +407,7 @@ impl WasiFilesystemTypesAdapter with descriptor_metadata_hash_at(
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with directory_entry_stream_read_directory_entry(
+impl WasiFilesystemTypesAdapter with fn directory_entry_stream_read_directory_entry(
   _self,
 ) {
   Err(
@@ -401,6 +418,6 @@ impl WasiFilesystemTypesAdapter with directory_entry_stream_read_directory_entry
 }
 
 ///|
-impl WasiFilesystemTypesAdapter with filesystem_error_code(_self, _arg0) {
+impl WasiFilesystemTypesAdapter with fn filesystem_error_code(_self, _arg0) {
   Err(WasiError::NotImplemented("FilesystemTypes.filesystem_error_code"))
 }

@@ -13,7 +13,7 @@ pub(all) struct HttpIncomingHandlerResponseOutparam(Int)
 
 ///|
 pub(open) trait WasiHttpIncomingHandlerAdapter {
-  handle(
+  fn handle(
     Self,
     HttpIncomingHandlerIncomingRequest,
     HttpIncomingHandlerResponseOutparam,
@@ -21,6 +21,6 @@ pub(open) trait WasiHttpIncomingHandlerAdapter {
 }
 
 ///|
-impl WasiHttpIncomingHandlerAdapter with handle(_self, _arg0, _arg1) {
+impl WasiHttpIncomingHandlerAdapter with fn handle(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("HttpIncomingHandler.handle"))
 }

@@ -7,22 +7,22 @@
 ///|
 /// Module key: CliEnvironment
 pub(open) trait WasiCliEnvironmentAdapter {
-  get_environment(Self) -> Result[Array[Bytes], WasiError] = _
-  get_arguments(Self) -> Result[Array[String], WasiError] = _
-  initial_cwd(Self) -> Result[String?, WasiError] = _
+  fn get_environment(Self) -> Result[Array[Bytes], WasiError] = _
+  fn get_arguments(Self) -> Result[Array[String], WasiError] = _
+  fn initial_cwd(Self) -> Result[String?, WasiError] = _
 }
 
 ///|
-impl WasiCliEnvironmentAdapter with get_environment(_self) {
+impl WasiCliEnvironmentAdapter with fn get_environment(_self) {
   Err(WasiError::NotImplemented("CliEnvironment.get_environment"))
 }
 
 ///|
-impl WasiCliEnvironmentAdapter with get_arguments(_self) {
+impl WasiCliEnvironmentAdapter with fn get_arguments(_self) {
   Err(WasiError::NotImplemented("CliEnvironment.get_arguments"))
 }
 
 ///|
-impl WasiCliEnvironmentAdapter with initial_cwd(_self) {
+impl WasiCliEnvironmentAdapter with fn initial_cwd(_self) {
   Err(WasiError::NotImplemented("CliEnvironment.initial_cwd"))
 }

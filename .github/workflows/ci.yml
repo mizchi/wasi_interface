@@ -19,6 +19,16 @@ jobs:
       - name: Moon update
         run: moon update
       - name: Moon check
-        run: moon check --deny-warn --target wasm-gc
+        run: moon check --deny-warn --target all
       - name: Moon test
-        run: moon test --target wasm-gc
+        run: moon test --target all
+      - name: Format check
+        run: moon fmt --check
+      - name: Check standalone codegen
+        run: moon -C tools/codegen check --deny-warn --target all
+      - name: Test standalone codegen
+        run: moon -C tools/codegen test --target all
+      - name: Format standalone codegen
+        run: moon -C tools/codegen fmt --check
+      - name: Generate and compile Preview1 contracts on all backends
+        run: bash scripts/check-codegen.sh

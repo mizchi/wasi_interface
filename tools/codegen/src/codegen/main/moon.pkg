@@ -1,9 +1,8 @@
 import {
-  "mizchi/wasi_interface_codegen/codegen" as @codegen,
-  "moonbitlang/x/fs" as @fs,
-  "moonbitlang/x/sys" as @sys,
+  "mizchi/wasi_interface_codegen/codegen",
+  "moonbitlang/x/fs",
+  "moonbitlang/x/sys",
+  "moonbitlang/core/env",
 }
 
-options(
-  "is-main": true,
-)
+pkgtype(kind: "executable")
