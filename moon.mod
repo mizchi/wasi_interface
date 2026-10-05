@@ -1,0 +1,17 @@
+name = "mizchi/wasi_interface"
+
+version = "0.3.0"
+
+readme = "README.mbt.md"
+
+repository = "https://github.com/mizchi/wasi_interface"
+
+license = "MIT"
+
+keywords = [ "wasi", "interface", "moonbit" ]
+
+description = "WASI Preview2/Preview3 contract definitions for host integration boundaries."
+
+source = "src"
+
+preferred_target = "wasm-gc"

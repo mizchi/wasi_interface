@@ -43,134 +43,146 @@ pub(all) struct SocketsUdpPollable(Int)
 
 ///|
 pub(open) trait WasiSocketsUdpAdapter {
-  udp_socket_start_bind(Self, SocketsUdpNetwork, SocketsUdpIpSocketAddress) -> Result[
+  fn udp_socket_start_bind(Self, SocketsUdpNetwork, SocketsUdpIpSocketAddress) -> Result[
     Unit,
     WasiError,
   ] = _
-  udp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
-  udp_socket_local_address(Self) -> Result[SocketsUdpIpSocketAddress, WasiError] = _
-  udp_socket_remote_address(Self) -> Result[
+  fn udp_socket_finish_bind(Self) -> Result[Unit, WasiError] = _
+  fn udp_socket_local_address(Self) -> Result[
     SocketsUdpIpSocketAddress,
     WasiError,
   ] = _
-  udp_socket_address_family(Self) -> Result[
+  fn udp_socket_remote_address(Self) -> Result[
+    SocketsUdpIpSocketAddress,
+    WasiError,
+  ] = _
+  fn udp_socket_address_family(Self) -> Result[
     SocketsUdpIpAddressFamily,
     WasiError,
   ] = _
-  udp_socket_unicast_hop_limit(Self) -> Result[Byte, WasiError] = _
-  udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
-  udp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
-  udp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
-  udp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
-  udp_socket_subscribe(Self) -> Result[SocketsUdpPollable, WasiError] = _
-  incoming_datagram_stream_receive(Self, UInt64) -> Result[
+  fn udp_socket_unicast_hop_limit(Self) -> Result[Byte, WasiError] = _
+  fn udp_socket_set_unicast_hop_limit(Self, Byte) -> Result[Unit, WasiError] = _
+  fn udp_socket_receive_buffer_size(Self) -> Result[UInt64, WasiError] = _
+  fn udp_socket_set_receive_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
+  fn udp_socket_send_buffer_size(Self) -> Result[UInt64, WasiError] = _
+  fn udp_socket_set_send_buffer_size(Self, UInt64) -> Result[Unit, WasiError] = _
+  fn udp_socket_subscribe(Self) -> Result[SocketsUdpPollable, WasiError] = _
+  fn incoming_datagram_stream_receive(Self, UInt64) -> Result[
     Array[SocketsUdpIncomingDatagram],
     WasiError,
   ] = _
-  incoming_datagram_stream_subscribe(Self) -> Result[
+  fn incoming_datagram_stream_subscribe(Self) -> Result[
     SocketsUdpPollable,
     WasiError,
   ] = _
-  outgoing_datagram_stream_check_send(Self) -> Result[UInt64, WasiError] = _
-  outgoing_datagram_stream_send(Self, Array[SocketsUdpOutgoingDatagram]) -> Result[
+  fn outgoing_datagram_stream_check_send(Self) -> Result[UInt64, WasiError] = _
+  fn outgoing_datagram_stream_send(Self, Array[SocketsUdpOutgoingDatagram]) -> Result[
     UInt64,
     WasiError,
   ] = _
-  outgoing_datagram_stream_subscribe(Self) -> Result[
+  fn outgoing_datagram_stream_subscribe(Self) -> Result[
     SocketsUdpPollable,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_start_bind(_self, _arg0, _arg1) {
+impl WasiSocketsUdpAdapter with fn udp_socket_start_bind(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_start_bind"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_finish_bind(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_finish_bind(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_finish_bind"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_local_address(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_local_address(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_local_address"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_remote_address(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_remote_address(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_remote_address"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_address_family(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_address_family(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_address_family"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_unicast_hop_limit(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_unicast_hop_limit(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_unicast_hop_limit"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_set_unicast_hop_limit(_self, _arg0) {
+impl WasiSocketsUdpAdapter with fn udp_socket_set_unicast_hop_limit(
+  _self,
+  _arg0,
+) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_set_unicast_hop_limit"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_receive_buffer_size(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_receive_buffer_size(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_receive_buffer_size"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_set_receive_buffer_size(_self, _arg0) {
+impl WasiSocketsUdpAdapter with fn udp_socket_set_receive_buffer_size(
+  _self,
+  _arg0,
+) {
   Err(
     WasiError::NotImplemented("SocketsUdp.udp_socket_set_receive_buffer_size"),
   )
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_send_buffer_size(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_send_buffer_size(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_send_buffer_size"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_set_send_buffer_size(_self, _arg0) {
+impl WasiSocketsUdpAdapter with fn udp_socket_set_send_buffer_size(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_set_send_buffer_size"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with udp_socket_subscribe(_self) {
+impl WasiSocketsUdpAdapter with fn udp_socket_subscribe(_self) {
   Err(WasiError::NotImplemented("SocketsUdp.udp_socket_subscribe"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with incoming_datagram_stream_receive(_self, _arg0) {
+impl WasiSocketsUdpAdapter with fn incoming_datagram_stream_receive(
+  _self,
+  _arg0,
+) {
   Err(WasiError::NotImplemented("SocketsUdp.incoming_datagram_stream_receive"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with incoming_datagram_stream_subscribe(_self) {
+impl WasiSocketsUdpAdapter with fn incoming_datagram_stream_subscribe(_self) {
   Err(
     WasiError::NotImplemented("SocketsUdp.incoming_datagram_stream_subscribe"),
   )
 }
 
 ///|
-impl WasiSocketsUdpAdapter with outgoing_datagram_stream_check_send(_self) {
+impl WasiSocketsUdpAdapter with fn outgoing_datagram_stream_check_send(_self) {
   Err(
     WasiError::NotImplemented("SocketsUdp.outgoing_datagram_stream_check_send"),
   )
 }
 
 ///|
-impl WasiSocketsUdpAdapter with outgoing_datagram_stream_send(_self, _arg0) {
+impl WasiSocketsUdpAdapter with fn outgoing_datagram_stream_send(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsUdp.outgoing_datagram_stream_send"))
 }
 
 ///|
-impl WasiSocketsUdpAdapter with outgoing_datagram_stream_subscribe(_self) {
+impl WasiSocketsUdpAdapter with fn outgoing_datagram_stream_subscribe(_self) {
   Err(
     WasiError::NotImplemented("SocketsUdp.outgoing_datagram_stream_subscribe"),
   )

@@ -10,10 +10,10 @@ pub(all) type TerminalStdinTerminalInput
 
 ///|
 pub(open) trait WasiTerminalStdinAdapter {
-  get_terminal_stdin(Self) -> Result[TerminalStdinTerminalInput?, WasiError] = _
+  fn get_terminal_stdin(Self) -> Result[TerminalStdinTerminalInput?, WasiError] = _
 }
 
 ///|
-impl WasiTerminalStdinAdapter with get_terminal_stdin(_self) {
+impl WasiTerminalStdinAdapter with fn get_terminal_stdin(_self) {
   Err(WasiError::NotImplemented("TerminalStdin.get_terminal_stdin"))
 }

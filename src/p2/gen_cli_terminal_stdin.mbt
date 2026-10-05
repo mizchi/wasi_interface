@@ -10,10 +10,13 @@ pub(all) struct CliTerminalStdinTerminalInput(Int)
 
 ///|
 pub(open) trait WasiCliTerminalStdinAdapter {
-  get_terminal_stdin(Self) -> Result[CliTerminalStdinTerminalInput?, WasiError] = _
+  fn get_terminal_stdin(Self) -> Result[
+    CliTerminalStdinTerminalInput?,
+    WasiError,
+  ] = _
 }
 
 ///|
-impl WasiCliTerminalStdinAdapter with get_terminal_stdin(_self) {
+impl WasiCliTerminalStdinAdapter with fn get_terminal_stdin(_self) {
   Err(WasiError::NotImplemented("CliTerminalStdin.get_terminal_stdin"))
 }

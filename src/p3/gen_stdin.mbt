@@ -10,10 +10,10 @@ pub(all) type StdinErrorCode
 
 ///|
 pub(open) trait WasiStdinAdapter {
-  read_via_stream(Self) -> Result[Bytes, WasiError] = _
+  fn read_via_stream(Self) -> Result[Bytes, WasiError] = _
 }
 
 ///|
-impl WasiStdinAdapter with read_via_stream(_self) {
+impl WasiStdinAdapter with fn read_via_stream(_self) {
   Err(WasiError::NotImplemented("Stdin.read_via_stream"))
 }

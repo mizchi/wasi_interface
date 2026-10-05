@@ -1,5 +1,5 @@
 import {
-  "mizchi/wit" as @wit,
-  "moonbitlang/parser" as @parser,
-  "moonbitlang/x/fs" as @fs,
+  "mizchi/wit",
+  "moonbitlang/parser",
+  "moonbitlang/x/fs",
 }

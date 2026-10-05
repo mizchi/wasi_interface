@@ -7,22 +7,22 @@
 ///|
 /// Module key: ClocksTimezone
 pub(open) trait WasiClocksTimezoneAdapter {
-  iana_id(Self) -> Result[String?, WasiError] = _
-  utc_offset(Self, ClocksSystemClockInstant) -> Result[Int64?, WasiError] = _
-  to_debug_string(Self) -> Result[String, WasiError] = _
+  fn iana_id(Self) -> Result[String?, WasiError] = _
+  fn utc_offset(Self, ClocksSystemClockInstant) -> Result[Int64?, WasiError] = _
+  fn to_debug_string(Self) -> Result[String, WasiError] = _
 }
 
 ///|
-impl WasiClocksTimezoneAdapter with iana_id(_self) {
+impl WasiClocksTimezoneAdapter with fn iana_id(_self) {
   Err(WasiError::NotImplemented("ClocksTimezone.iana_id"))
 }
 
 ///|
-impl WasiClocksTimezoneAdapter with utc_offset(_self, _arg0) {
+impl WasiClocksTimezoneAdapter with fn utc_offset(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksTimezone.utc_offset"))
 }
 
 ///|
-impl WasiClocksTimezoneAdapter with to_debug_string(_self) {
+impl WasiClocksTimezoneAdapter with fn to_debug_string(_self) {
   Err(WasiError::NotImplemented("ClocksTimezone.to_debug_string"))
 }

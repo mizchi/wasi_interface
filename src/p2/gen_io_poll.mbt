@@ -10,22 +10,22 @@ pub(all) struct IoPollPollable(Int)
 
 ///|
 pub(open) trait WasiIoPollAdapter {
-  pollable_ready(Self) -> Result[Bool, WasiError] = _
-  pollable_block(Self) -> Result[Unit, WasiError] = _
-  poll(Self, Array[IoPollPollable]) -> Result[Array[UInt], WasiError] = _
+  fn pollable_ready(Self) -> Result[Bool, WasiError] = _
+  fn pollable_block(Self) -> Result[Unit, WasiError] = _
+  fn poll(Self, Array[IoPollPollable]) -> Result[Array[UInt], WasiError] = _
 }
 
 ///|
-impl WasiIoPollAdapter with pollable_ready(_self) {
+impl WasiIoPollAdapter with fn pollable_ready(_self) {
   Err(WasiError::NotImplemented("IoPoll.pollable_ready"))
 }
 
 ///|
-impl WasiIoPollAdapter with pollable_block(_self) {
+impl WasiIoPollAdapter with fn pollable_block(_self) {
   Err(WasiError::NotImplemented("IoPoll.pollable_block"))
 }
 
 ///|
-impl WasiIoPollAdapter with poll(_self, _arg0) {
+impl WasiIoPollAdapter with fn poll(_self, _arg0) {
   Err(WasiError::NotImplemented("IoPoll.poll"))
 }

@@ -13,16 +13,16 @@ pub(all) struct ClocksSystemClockInstant {
 
 ///|
 pub(open) trait WasiClocksSystemClockAdapter {
-  now(Self) -> Result[ClocksSystemClockInstant, WasiError] = _
-  get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
+  fn now(Self) -> Result[ClocksSystemClockInstant, WasiError] = _
+  fn get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
 }
 
 ///|
-impl WasiClocksSystemClockAdapter with now(_self) {
+impl WasiClocksSystemClockAdapter with fn now(_self) {
   Err(WasiError::NotImplemented("ClocksSystemClock.now"))
 }
 
 ///|
-impl WasiClocksSystemClockAdapter with get_resolution(_self) {
+impl WasiClocksSystemClockAdapter with fn get_resolution(_self) {
   Err(WasiError::NotImplemented("ClocksSystemClock.get_resolution"))
 }

@@ -17,19 +17,19 @@ pub(all) struct ClocksTimezoneDatetime(UInt64)
 
 ///|
 pub(open) trait WasiClocksTimezoneAdapter {
-  display(Self, ClocksTimezoneDatetime) -> Result[
+  fn display(Self, ClocksTimezoneDatetime) -> Result[
     ClocksTimezoneTimezoneDisplay,
     WasiError,
   ] = _
-  utc_offset(Self, ClocksTimezoneDatetime) -> Result[Int, WasiError] = _
+  fn utc_offset(Self, ClocksTimezoneDatetime) -> Result[Int, WasiError] = _
 }
 
 ///|
-impl WasiClocksTimezoneAdapter with display(_self, _arg0) {
+impl WasiClocksTimezoneAdapter with fn display(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksTimezone.display"))
 }
 
 ///|
-impl WasiClocksTimezoneAdapter with utc_offset(_self, _arg0) {
+impl WasiClocksTimezoneAdapter with fn utc_offset(_self, _arg0) {
   Err(WasiError::NotImplemented("ClocksTimezone.utc_offset"))
 }

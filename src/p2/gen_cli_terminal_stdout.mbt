@@ -10,13 +10,13 @@ pub(all) struct CliTerminalStdoutTerminalOutput(Int)
 
 ///|
 pub(open) trait WasiCliTerminalStdoutAdapter {
-  get_terminal_stdout(Self) -> Result[
+  fn get_terminal_stdout(Self) -> Result[
     CliTerminalStdoutTerminalOutput?,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiCliTerminalStdoutAdapter with get_terminal_stdout(_self) {
+impl WasiCliTerminalStdoutAdapter with fn get_terminal_stdout(_self) {
   Err(WasiError::NotImplemented("CliTerminalStdout.get_terminal_stdout"))
 }

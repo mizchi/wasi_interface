@@ -7,10 +7,10 @@
 ///|
 /// Module key: HttpClient
 pub(open) trait WasiHttpClientAdapter {
-  send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
+  fn send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
 }
 
 ///|
-impl WasiHttpClientAdapter with send(_self, _arg0) {
+impl WasiHttpClientAdapter with fn send(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpClient.send"))
 }

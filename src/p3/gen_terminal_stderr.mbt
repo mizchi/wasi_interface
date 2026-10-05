@@ -10,10 +10,13 @@ pub(all) type TerminalStderrTerminalOutput
 
 ///|
 pub(open) trait WasiTerminalStderrAdapter {
-  get_terminal_stderr(Self) -> Result[TerminalStderrTerminalOutput?, WasiError] = _
+  fn get_terminal_stderr(Self) -> Result[
+    TerminalStderrTerminalOutput?,
+    WasiError,
+  ] = _
 }
 
 ///|
-impl WasiTerminalStderrAdapter with get_terminal_stderr(_self) {
+impl WasiTerminalStderrAdapter with fn get_terminal_stderr(_self) {
   Err(WasiError::NotImplemented("TerminalStderr.get_terminal_stderr"))
 }

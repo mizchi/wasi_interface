@@ -79,3 +79,7 @@ clean:
 
 # Pre-release check
 release-check: fmt info check test codegen-release-check
+
+# Exercise the generator CLI and compare the bundled Preview1 contracts
+codegen-smoke:
+    bash scripts/check-codegen.sh

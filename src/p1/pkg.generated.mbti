@@ -27,15 +27,14 @@ pub(all) type Preview1WasiSnapshotPreview1Timestamp
 
 // Traits
 pub(open) trait WasiPreview1WasiSnapshotPreview1Adapter {
-  args_sizes_get(Self) -> Result[Bytes, WasiError] = _
-  args_get(Self) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
-  environ_sizes_get(Self) -> Result[Bytes, WasiError] = _
-  environ_get(Self) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
-  clock_time_get(Self, Preview1WasiSnapshotPreview1Clockid, Preview1WasiSnapshotPreview1Timestamp) -> Result[Preview1WasiSnapshotPreview1Timestamp, WasiError] = _
-  fd_read(Self, Preview1WasiSnapshotPreview1Fd, Preview1WasiSnapshotPreview1Size) -> Result[Bytes, WasiError] = _
-  fd_write(Self, Preview1WasiSnapshotPreview1Fd, Bytes) -> Result[Preview1WasiSnapshotPreview1Size, WasiError] = _
-  fd_close(Self, Preview1WasiSnapshotPreview1Fd) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
-  random_get(Self, Preview1WasiSnapshotPreview1Size) -> Result[Bytes, WasiError] = _
-  proc_exit(Self, Preview1WasiSnapshotPreview1Exitcode) -> Result[Unit, WasiError] = _
+  fn args_sizes_get(Self) -> Result[Bytes, WasiError] = _
+  fn args_get(Self) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
+  fn environ_sizes_get(Self) -> Result[Bytes, WasiError] = _
+  fn environ_get(Self) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
+  fn clock_time_get(Self, Preview1WasiSnapshotPreview1Clockid, Preview1WasiSnapshotPreview1Timestamp) -> Result[Preview1WasiSnapshotPreview1Timestamp, WasiError] = _
+  fn fd_read(Self, Preview1WasiSnapshotPreview1Fd, Preview1WasiSnapshotPreview1Size) -> Result[Bytes, WasiError] = _
+  fn fd_write(Self, Preview1WasiSnapshotPreview1Fd, Bytes) -> Result[Preview1WasiSnapshotPreview1Size, WasiError] = _
+  fn fd_close(Self, Preview1WasiSnapshotPreview1Fd) -> Result[Preview1WasiSnapshotPreview1Errno, WasiError] = _
+  fn random_get(Self, Preview1WasiSnapshotPreview1Size) -> Result[Bytes, WasiError] = _
+  fn proc_exit(Self, Preview1WasiSnapshotPreview1Exitcode) -> Result[Unit, WasiError] = _
 }
-

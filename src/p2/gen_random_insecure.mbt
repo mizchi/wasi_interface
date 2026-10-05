@@ -7,16 +7,16 @@
 ///|
 /// Module key: RandomInsecure
 pub(open) trait WasiRandomInsecureAdapter {
-  get_insecure_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
-  get_insecure_random_u64(Self) -> Result[UInt64, WasiError] = _
+  fn get_insecure_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
+  fn get_insecure_random_u64(Self) -> Result[UInt64, WasiError] = _
 }
 
 ///|
-impl WasiRandomInsecureAdapter with get_insecure_random_bytes(_self, _arg0) {
+impl WasiRandomInsecureAdapter with fn get_insecure_random_bytes(_self, _arg0) {
   Err(WasiError::NotImplemented("RandomInsecure.get_insecure_random_bytes"))
 }
 
 ///|
-impl WasiRandomInsecureAdapter with get_insecure_random_u64(_self) {
+impl WasiRandomInsecureAdapter with fn get_insecure_random_u64(_self) {
   Err(WasiError::NotImplemented("RandomInsecure.get_insecure_random_u64"))
 }

@@ -7,22 +7,22 @@
 ///|
 /// Module key: Environment
 pub(open) trait WasiEnvironmentAdapter {
-  get_environment(Self) -> Result[Array[Bytes], WasiError] = _
-  get_arguments(Self) -> Result[Array[String], WasiError] = _
-  get_initial_cwd(Self) -> Result[String?, WasiError] = _
+  fn get_environment(Self) -> Result[Array[Bytes], WasiError] = _
+  fn get_arguments(Self) -> Result[Array[String], WasiError] = _
+  fn get_initial_cwd(Self) -> Result[String?, WasiError] = _
 }
 
 ///|
-impl WasiEnvironmentAdapter with get_environment(_self) {
+impl WasiEnvironmentAdapter with fn get_environment(_self) {
   Err(WasiError::NotImplemented("Environment.get_environment"))
 }
 
 ///|
-impl WasiEnvironmentAdapter with get_arguments(_self) {
+impl WasiEnvironmentAdapter with fn get_arguments(_self) {
   Err(WasiError::NotImplemented("Environment.get_arguments"))
 }
 
 ///|
-impl WasiEnvironmentAdapter with get_initial_cwd(_self) {
+impl WasiEnvironmentAdapter with fn get_initial_cwd(_self) {
   Err(WasiError::NotImplemented("Environment.get_initial_cwd"))
 }

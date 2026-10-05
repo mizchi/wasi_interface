@@ -19,69 +19,72 @@ pub(all) struct IoStreamsOutputStream(Int)
 
 ///|
 pub(open) trait WasiIoStreamsAdapter {
-  input_stream_read(Self, UInt64) -> Result[Bytes, WasiError] = _
-  input_stream_blocking_read(Self, UInt64) -> Result[Bytes, WasiError] = _
-  input_stream_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
-  input_stream_blocking_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
-  input_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
-  output_stream_check_write(Self) -> Result[UInt64, WasiError] = _
-  output_stream_write(Self, Bytes) -> Result[Unit, WasiError] = _
-  output_stream_blocking_write_and_flush(Self, Bytes) -> Result[Unit, WasiError] = _
-  output_stream_flush(Self) -> Result[Unit, WasiError] = _
-  output_stream_blocking_flush(Self) -> Result[Unit, WasiError] = _
-  output_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
-  output_stream_write_zeroes(Self, UInt64) -> Result[Unit, WasiError] = _
-  output_stream_blocking_write_zeroes_and_flush(Self, UInt64) -> Result[
+  fn input_stream_read(Self, UInt64) -> Result[Bytes, WasiError] = _
+  fn input_stream_blocking_read(Self, UInt64) -> Result[Bytes, WasiError] = _
+  fn input_stream_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
+  fn input_stream_blocking_skip(Self, UInt64) -> Result[UInt64, WasiError] = _
+  fn input_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
+  fn output_stream_check_write(Self) -> Result[UInt64, WasiError] = _
+  fn output_stream_write(Self, Bytes) -> Result[Unit, WasiError] = _
+  fn output_stream_blocking_write_and_flush(Self, Bytes) -> Result[
     Unit,
     WasiError,
   ] = _
-  output_stream_splice(Self, IoStreamsInputStream, UInt64) -> Result[
+  fn output_stream_flush(Self) -> Result[Unit, WasiError] = _
+  fn output_stream_blocking_flush(Self) -> Result[Unit, WasiError] = _
+  fn output_stream_subscribe(Self) -> Result[IoPollPollable, WasiError] = _
+  fn output_stream_write_zeroes(Self, UInt64) -> Result[Unit, WasiError] = _
+  fn output_stream_blocking_write_zeroes_and_flush(Self, UInt64) -> Result[
+    Unit,
+    WasiError,
+  ] = _
+  fn output_stream_splice(Self, IoStreamsInputStream, UInt64) -> Result[
     UInt64,
     WasiError,
   ] = _
-  output_stream_blocking_splice(Self, IoStreamsInputStream, UInt64) -> Result[
+  fn output_stream_blocking_splice(Self, IoStreamsInputStream, UInt64) -> Result[
     UInt64,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiIoStreamsAdapter with input_stream_read(_self, _arg0) {
+impl WasiIoStreamsAdapter with fn input_stream_read(_self, _arg0) {
   Err(WasiError::NotImplemented("IoStreams.input_stream_read"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with input_stream_blocking_read(_self, _arg0) {
+impl WasiIoStreamsAdapter with fn input_stream_blocking_read(_self, _arg0) {
   Err(WasiError::NotImplemented("IoStreams.input_stream_blocking_read"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with input_stream_skip(_self, _arg0) {
+impl WasiIoStreamsAdapter with fn input_stream_skip(_self, _arg0) {
   Err(WasiError::NotImplemented("IoStreams.input_stream_skip"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with input_stream_blocking_skip(_self, _arg0) {
+impl WasiIoStreamsAdapter with fn input_stream_blocking_skip(_self, _arg0) {
   Err(WasiError::NotImplemented("IoStreams.input_stream_blocking_skip"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with input_stream_subscribe(_self) {
+impl WasiIoStreamsAdapter with fn input_stream_subscribe(_self) {
   Err(WasiError::NotImplemented("IoStreams.input_stream_subscribe"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_check_write(_self) {
+impl WasiIoStreamsAdapter with fn output_stream_check_write(_self) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_check_write"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_write(_self, _arg0) {
+impl WasiIoStreamsAdapter with fn output_stream_write(_self, _arg0) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_write"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_blocking_write_and_flush(
+impl WasiIoStreamsAdapter with fn output_stream_blocking_write_and_flush(
   _self,
   _arg0,
 ) {
@@ -93,27 +96,27 @@ impl WasiIoStreamsAdapter with output_stream_blocking_write_and_flush(
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_flush(_self) {
+impl WasiIoStreamsAdapter with fn output_stream_flush(_self) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_flush"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_blocking_flush(_self) {
+impl WasiIoStreamsAdapter with fn output_stream_blocking_flush(_self) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_blocking_flush"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_subscribe(_self) {
+impl WasiIoStreamsAdapter with fn output_stream_subscribe(_self) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_subscribe"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_write_zeroes(_self, _arg0) {
+impl WasiIoStreamsAdapter with fn output_stream_write_zeroes(_self, _arg0) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_write_zeroes"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_blocking_write_zeroes_and_flush(
+impl WasiIoStreamsAdapter with fn output_stream_blocking_write_zeroes_and_flush(
   _self,
   _arg0,
 ) {
@@ -125,12 +128,12 @@ impl WasiIoStreamsAdapter with output_stream_blocking_write_zeroes_and_flush(
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_splice(_self, _arg0, _arg1) {
+impl WasiIoStreamsAdapter with fn output_stream_splice(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("IoStreams.output_stream_splice"))
 }
 
 ///|
-impl WasiIoStreamsAdapter with output_stream_blocking_splice(
+impl WasiIoStreamsAdapter with fn output_stream_blocking_splice(
   _self,
   _arg0,
   _arg1,

@@ -7,16 +7,16 @@
 ///|
 /// Module key: RandomRandom
 pub(open) trait WasiRandomRandomAdapter {
-  get_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
-  get_random_u64(Self) -> Result[UInt64, WasiError] = _
+  fn get_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
+  fn get_random_u64(Self) -> Result[UInt64, WasiError] = _
 }
 
 ///|
-impl WasiRandomRandomAdapter with get_random_bytes(_self, _arg0) {
+impl WasiRandomRandomAdapter with fn get_random_bytes(_self, _arg0) {
   Err(WasiError::NotImplemented("RandomRandom.get_random_bytes"))
 }
 
 ///|
-impl WasiRandomRandomAdapter with get_random_u64(_self) {
+impl WasiRandomRandomAdapter with fn get_random_u64(_self) {
   Err(WasiError::NotImplemented("RandomRandom.get_random_u64"))
 }

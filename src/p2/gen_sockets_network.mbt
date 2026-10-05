@@ -73,13 +73,13 @@ pub(all) struct SocketsNetworkError(Int)
 
 ///|
 pub(open) trait WasiSocketsNetworkAdapter {
-  network_error_code(Self, SocketsNetworkError) -> Result[
+  fn network_error_code(Self, SocketsNetworkError) -> Result[
     SocketsNetworkErrorCode?,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiSocketsNetworkAdapter with network_error_code(_self, _arg0) {
+impl WasiSocketsNetworkAdapter with fn network_error_code(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsNetwork.network_error_code"))
 }

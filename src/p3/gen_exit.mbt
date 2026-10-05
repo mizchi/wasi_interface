@@ -7,16 +7,16 @@
 ///|
 /// Module key: Exit
 pub(open) trait WasiExitAdapter {
-  exit(Self, Result[Unit, Unit]) -> Result[Unit, WasiError] = _
-  exit_with_code(Self, Byte) -> Result[Unit, WasiError] = _
+  fn exit(Self, Result[Unit, Unit]) -> Result[Unit, WasiError] = _
+  fn exit_with_code(Self, Byte) -> Result[Unit, WasiError] = _
 }
 
 ///|
-impl WasiExitAdapter with exit(_self, _arg0) {
+impl WasiExitAdapter with fn exit(_self, _arg0) {
   Err(WasiError::NotImplemented("Exit.exit"))
 }
 
 ///|
-impl WasiExitAdapter with exit_with_code(_self, _arg0) {
+impl WasiExitAdapter with fn exit_with_code(_self, _arg0) {
   Err(WasiError::NotImplemented("Exit.exit_with_code"))
 }

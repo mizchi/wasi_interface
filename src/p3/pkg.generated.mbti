@@ -271,146 +271,146 @@ pub(all) enum TypesErrorCode {
 
 // Traits
 pub(open) trait WasiClocksMonotonicClockAdapter {
-  now(Self) -> Result[ClocksMonotonicClockMark, WasiError] = _
-  get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
-  wait_until(Self, ClocksMonotonicClockMark) -> Result[Unit, WasiError] = _
-  wait_for(Self, ClocksTypesDuration) -> Result[Unit, WasiError] = _
+  fn now(Self) -> Result[ClocksMonotonicClockMark, WasiError] = _
+  fn get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
+  fn wait_until(Self, ClocksMonotonicClockMark) -> Result[Unit, WasiError] = _
+  fn wait_for(Self, ClocksTypesDuration) -> Result[Unit, WasiError] = _
 }
 
 pub(open) trait WasiClocksSystemClockAdapter {
-  now(Self) -> Result[ClocksSystemClockInstant, WasiError] = _
-  get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
+  fn now(Self) -> Result[ClocksSystemClockInstant, WasiError] = _
+  fn get_resolution(Self) -> Result[ClocksTypesDuration, WasiError] = _
 }
 
 pub(open) trait WasiClocksTimezoneAdapter {
-  iana_id(Self) -> Result[String?, WasiError] = _
-  utc_offset(Self, ClocksSystemClockInstant) -> Result[Int64?, WasiError] = _
-  to_debug_string(Self) -> Result[String, WasiError] = _
+  fn iana_id(Self) -> Result[String?, WasiError] = _
+  fn utc_offset(Self, ClocksSystemClockInstant) -> Result[Int64?, WasiError] = _
+  fn to_debug_string(Self) -> Result[String, WasiError] = _
 }
 
 pub(open) trait WasiClocksTypesAdapter {
 }
 
 pub(open) trait WasiEnvironmentAdapter {
-  get_environment(Self) -> Result[Array[Bytes], WasiError] = _
-  get_arguments(Self) -> Result[Array[String], WasiError] = _
-  get_initial_cwd(Self) -> Result[String?, WasiError] = _
+  fn get_environment(Self) -> Result[Array[Bytes], WasiError] = _
+  fn get_arguments(Self) -> Result[Array[String], WasiError] = _
+  fn get_initial_cwd(Self) -> Result[String?, WasiError] = _
 }
 
 pub(open) trait WasiExitAdapter {
-  exit(Self, Result[Unit, Unit]) -> Result[Unit, WasiError] = _
-  exit_with_code(Self, Byte) -> Result[Unit, WasiError] = _
+  fn exit(Self, Result[Unit, Unit]) -> Result[Unit, WasiError] = _
+  fn exit_with_code(Self, Byte) -> Result[Unit, WasiError] = _
 }
 
 pub(open) trait WasiFilesystemPreopensAdapter {
-  get_directories(Self) -> Result[Array[Bytes], WasiError] = _
+  fn get_directories(Self) -> Result[Array[Bytes], WasiError] = _
 }
 
 pub(open) trait WasiFilesystemTypesAdapter {
-  descriptor_read_via_stream(Self, FilesystemTypesFilesize) -> Result[Bytes, WasiError] = _
-  descriptor_write_via_stream(Self, Bytes, FilesystemTypesFilesize) -> Result[Result[Unit, FilesystemTypesErrorCode], WasiError] = _
-  descriptor_append_via_stream(Self, Bytes) -> Result[Result[Unit, FilesystemTypesErrorCode], WasiError] = _
-  descriptor_advise(Self, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesAdvice) -> Result[Unit, WasiError] = _
-  descriptor_sync_data(Self) -> Result[Unit, WasiError] = _
-  descriptor_get_flags(Self) -> Result[FilesystemTypesDescriptorFlags, WasiError] = _
-  descriptor_get_type(Self) -> Result[FilesystemTypesDescriptorType, WasiError] = _
-  descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[Unit, WasiError] = _
-  descriptor_set_times(Self, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[Unit, WasiError] = _
-  descriptor_read_directory(Self) -> Result[Bytes, WasiError] = _
-  descriptor_sync(Self) -> Result[Unit, WasiError] = _
-  descriptor_create_directory_at(Self, String) -> Result[Unit, WasiError] = _
-  descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
-  descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
-  descriptor_set_times_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[Unit, WasiError] = _
-  descriptor_link_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesDescriptor, String) -> Result[Unit, WasiError] = _
-  descriptor_open_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesOpenFlags) -> Result[FilesystemTypesDescriptor, WasiError] = _
-  descriptor_readlink_at(Self, String) -> Result[String, WasiError] = _
-  descriptor_remove_directory_at(Self, String) -> Result[Unit, WasiError] = _
-  descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[Unit, WasiError] = _
-  descriptor_symlink_at(Self, String, String) -> Result[Unit, WasiError] = _
-  descriptor_unlink_file_at(Self, String) -> Result[Unit, WasiError] = _
-  descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Result[Bool, WasiError] = _
-  descriptor_metadata_hash(Self) -> Result[FilesystemTypesMetadataHashValue, WasiError] = _
-  descriptor_metadata_hash_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesMetadataHashValue, WasiError] = _
+  fn descriptor_read_via_stream(Self, FilesystemTypesFilesize) -> Result[Bytes, WasiError] = _
+  fn descriptor_write_via_stream(Self, Bytes, FilesystemTypesFilesize) -> Result[Result[Unit, FilesystemTypesErrorCode], WasiError] = _
+  fn descriptor_append_via_stream(Self, Bytes) -> Result[Result[Unit, FilesystemTypesErrorCode], WasiError] = _
+  fn descriptor_advise(Self, FilesystemTypesFilesize, FilesystemTypesFilesize, FilesystemTypesAdvice) -> Result[Unit, WasiError] = _
+  fn descriptor_sync_data(Self) -> Result[Unit, WasiError] = _
+  fn descriptor_get_flags(Self) -> Result[FilesystemTypesDescriptorFlags, WasiError] = _
+  fn descriptor_get_type(Self) -> Result[FilesystemTypesDescriptorType, WasiError] = _
+  fn descriptor_set_size(Self, FilesystemTypesFilesize) -> Result[Unit, WasiError] = _
+  fn descriptor_set_times(Self, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[Unit, WasiError] = _
+  fn descriptor_read_directory(Self) -> Result[Bytes, WasiError] = _
+  fn descriptor_sync(Self) -> Result[Unit, WasiError] = _
+  fn descriptor_create_directory_at(Self, String) -> Result[Unit, WasiError] = _
+  fn descriptor_stat(Self) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
+  fn descriptor_stat_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesDescriptorStat, WasiError] = _
+  fn descriptor_set_times_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesNewTimestamp, FilesystemTypesNewTimestamp) -> Result[Unit, WasiError] = _
+  fn descriptor_link_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesDescriptor, String) -> Result[Unit, WasiError] = _
+  fn descriptor_open_at(Self, FilesystemTypesPathFlags, String, FilesystemTypesOpenFlags) -> Result[FilesystemTypesDescriptor, WasiError] = _
+  fn descriptor_readlink_at(Self, String) -> Result[String, WasiError] = _
+  fn descriptor_remove_directory_at(Self, String) -> Result[Unit, WasiError] = _
+  fn descriptor_rename_at(Self, String, FilesystemTypesDescriptor, String) -> Result[Unit, WasiError] = _
+  fn descriptor_symlink_at(Self, String, String) -> Result[Unit, WasiError] = _
+  fn descriptor_unlink_file_at(Self, String) -> Result[Unit, WasiError] = _
+  fn descriptor_is_same_object(Self, FilesystemTypesDescriptor) -> Result[Bool, WasiError] = _
+  fn descriptor_metadata_hash(Self) -> Result[FilesystemTypesMetadataHashValue, WasiError] = _
+  fn descriptor_metadata_hash_at(Self, FilesystemTypesPathFlags, String) -> Result[FilesystemTypesMetadataHashValue, WasiError] = _
 }
 
 pub(open) trait WasiHttpClientAdapter {
-  send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
+  fn send(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
 }
 
 pub(open) trait WasiHttpHandlerAdapter {
-  handle(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
+  fn handle(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
 }
 
 pub(open) trait WasiHttpTypesAdapter {
-  fields_constructor(Self) -> Result[Unit, WasiError] = _
-  fields_from_list(Self, Array[Bytes]) -> Result[HttpTypesFields, WasiError] = _
-  fields_get(Self, HttpTypesFieldName) -> Result[Array[HttpTypesFieldValue], WasiError] = _
-  fields_has(Self, HttpTypesFieldName) -> Result[Bool, WasiError] = _
-  fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[Unit, WasiError] = _
-  fields_delete(Self, HttpTypesFieldName) -> Result[Unit, WasiError] = _
-  fields_get_and_delete(Self, HttpTypesFieldName) -> Result[Array[HttpTypesFieldValue], WasiError] = _
-  fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[Unit, WasiError] = _
-  fields_copy_all(Self) -> Result[Array[Bytes], WasiError] = _
-  fields_clone(Self) -> Result[HttpTypesFields, WasiError] = _
-  request_new(Self, HttpTypesHeaders, Bytes?, Result[HttpTypesTrailers?, HttpTypesErrorCode], HttpTypesRequestOptions?) -> Result[Bytes, WasiError] = _
-  request_get_method(Self) -> Result[HttpTypesMethod, WasiError] = _
-  request_set_method(Self, HttpTypesMethod) -> Result[Unit, WasiError] = _
-  request_get_path_with_query(Self) -> Result[String?, WasiError] = _
-  request_set_path_with_query(Self, String?) -> Result[Unit, WasiError] = _
-  request_get_scheme(Self) -> Result[HttpTypesScheme?, WasiError] = _
-  request_set_scheme(Self, HttpTypesScheme?) -> Result[Unit, WasiError] = _
-  request_get_authority(Self) -> Result[String?, WasiError] = _
-  request_set_authority(Self, String?) -> Result[Unit, WasiError] = _
-  request_get_options(Self) -> Result[HttpTypesRequestOptions?, WasiError] = _
-  request_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
-  request_consume_body(Self, HttpTypesRequest, Result[Unit, HttpTypesErrorCode]) -> Result[Bytes, WasiError] = _
-  request_options_constructor(Self) -> Result[Unit, WasiError] = _
-  request_options_get_connect_timeout(Self) -> Result[ClocksTypesDuration?, WasiError] = _
-  request_options_set_connect_timeout(Self, ClocksTypesDuration?) -> Result[Unit, WasiError] = _
-  request_options_get_first_byte_timeout(Self) -> Result[ClocksTypesDuration?, WasiError] = _
-  request_options_set_first_byte_timeout(Self, ClocksTypesDuration?) -> Result[Unit, WasiError] = _
-  request_options_get_between_bytes_timeout(Self) -> Result[ClocksTypesDuration?, WasiError] = _
-  request_options_set_between_bytes_timeout(Self, ClocksTypesDuration?) -> Result[Unit, WasiError] = _
-  request_options_clone(Self) -> Result[HttpTypesRequestOptions, WasiError] = _
-  response_new(Self, HttpTypesHeaders, Bytes?, Result[HttpTypesTrailers?, HttpTypesErrorCode]) -> Result[Bytes, WasiError] = _
-  response_get_status_code(Self) -> Result[HttpTypesStatusCode, WasiError] = _
-  response_set_status_code(Self, HttpTypesStatusCode) -> Result[Unit, WasiError] = _
-  response_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
-  response_consume_body(Self, HttpTypesResponse, Result[Unit, HttpTypesErrorCode]) -> Result[Bytes, WasiError] = _
+  fn fields_constructor(Self) -> Result[Unit, WasiError] = _
+  fn fields_from_list(Self, Array[Bytes]) -> Result[HttpTypesFields, WasiError] = _
+  fn fields_get(Self, HttpTypesFieldName) -> Result[Array[HttpTypesFieldValue], WasiError] = _
+  fn fields_has(Self, HttpTypesFieldName) -> Result[Bool, WasiError] = _
+  fn fields_set(Self, HttpTypesFieldName, Array[HttpTypesFieldValue]) -> Result[Unit, WasiError] = _
+  fn fields_delete(Self, HttpTypesFieldName) -> Result[Unit, WasiError] = _
+  fn fields_get_and_delete(Self, HttpTypesFieldName) -> Result[Array[HttpTypesFieldValue], WasiError] = _
+  fn fields_append(Self, HttpTypesFieldName, HttpTypesFieldValue) -> Result[Unit, WasiError] = _
+  fn fields_copy_all(Self) -> Result[Array[Bytes], WasiError] = _
+  fn fields_clone(Self) -> Result[HttpTypesFields, WasiError] = _
+  fn request_new(Self, HttpTypesHeaders, Bytes?, Result[HttpTypesTrailers?, HttpTypesErrorCode], HttpTypesRequestOptions?) -> Result[Bytes, WasiError] = _
+  fn request_get_method(Self) -> Result[HttpTypesMethod, WasiError] = _
+  fn request_set_method(Self, HttpTypesMethod) -> Result[Unit, WasiError] = _
+  fn request_get_path_with_query(Self) -> Result[String?, WasiError] = _
+  fn request_set_path_with_query(Self, String?) -> Result[Unit, WasiError] = _
+  fn request_get_scheme(Self) -> Result[HttpTypesScheme?, WasiError] = _
+  fn request_set_scheme(Self, HttpTypesScheme?) -> Result[Unit, WasiError] = _
+  fn request_get_authority(Self) -> Result[String?, WasiError] = _
+  fn request_set_authority(Self, String?) -> Result[Unit, WasiError] = _
+  fn request_get_options(Self) -> Result[HttpTypesRequestOptions?, WasiError] = _
+  fn request_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
+  fn request_consume_body(Self, HttpTypesRequest, Result[Unit, HttpTypesErrorCode]) -> Result[Bytes, WasiError] = _
+  fn request_options_constructor(Self) -> Result[Unit, WasiError] = _
+  fn request_options_get_connect_timeout(Self) -> Result[ClocksTypesDuration?, WasiError] = _
+  fn request_options_set_connect_timeout(Self, ClocksTypesDuration?) -> Result[Unit, WasiError] = _
+  fn request_options_get_first_byte_timeout(Self) -> Result[ClocksTypesDuration?, WasiError] = _
+  fn request_options_set_first_byte_timeout(Self, ClocksTypesDuration?) -> Result[Unit, WasiError] = _
+  fn request_options_get_between_bytes_timeout(Self) -> Result[ClocksTypesDuration?, WasiError] = _
+  fn request_options_set_between_bytes_timeout(Self, ClocksTypesDuration?) -> Result[Unit, WasiError] = _
+  fn request_options_clone(Self) -> Result[HttpTypesRequestOptions, WasiError] = _
+  fn response_new(Self, HttpTypesHeaders, Bytes?, Result[HttpTypesTrailers?, HttpTypesErrorCode]) -> Result[Bytes, WasiError] = _
+  fn response_get_status_code(Self) -> Result[HttpTypesStatusCode, WasiError] = _
+  fn response_set_status_code(Self, HttpTypesStatusCode) -> Result[Unit, WasiError] = _
+  fn response_get_headers(Self) -> Result[HttpTypesHeaders, WasiError] = _
+  fn response_consume_body(Self, HttpTypesResponse, Result[Unit, HttpTypesErrorCode]) -> Result[Bytes, WasiError] = _
 }
 
 pub(open) trait WasiIpNameLookupAdapter {
-  resolve_addresses(Self, String) -> Result[Array[IpNameLookupIpAddress], WasiError] = _
+  fn resolve_addresses(Self, String) -> Result[Array[IpNameLookupIpAddress], WasiError] = _
 }
 
 pub(open) trait WasiRandomInsecureAdapter {
-  get_insecure_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
-  get_insecure_random_u64(Self) -> Result[UInt64, WasiError] = _
+  fn get_insecure_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
+  fn get_insecure_random_u64(Self) -> Result[UInt64, WasiError] = _
 }
 
 pub(open) trait WasiRandomInsecureSeedAdapter {
-  get_insecure_seed(Self) -> Result[Bytes, WasiError] = _
+  fn get_insecure_seed(Self) -> Result[Bytes, WasiError] = _
 }
 
 pub(open) trait WasiRandomRandomAdapter {
-  get_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
-  get_random_u64(Self) -> Result[UInt64, WasiError] = _
+  fn get_random_bytes(Self, UInt64) -> Result[Bytes, WasiError] = _
+  fn get_random_u64(Self) -> Result[UInt64, WasiError] = _
 }
 
 pub(open) trait WasiRunAdapter {
 }
 
 pub(open) trait WasiStderrAdapter {
-  write_via_stream(Self, Bytes) -> Result[Result[Unit, StderrErrorCode], WasiError] = _
+  fn write_via_stream(Self, Bytes) -> Result[Result[Unit, StderrErrorCode], WasiError] = _
 }
 
 pub(open) trait WasiStdinAdapter {
-  read_via_stream(Self) -> Result[Bytes, WasiError] = _
+  fn read_via_stream(Self) -> Result[Bytes, WasiError] = _
 }
 
 pub(open) trait WasiStdoutAdapter {
-  write_via_stream(Self, Bytes) -> Result[Result[Unit, StdoutErrorCode], WasiError] = _
+  fn write_via_stream(Self, Bytes) -> Result[Result[Unit, StdoutErrorCode], WasiError] = _
 }
 
 pub(open) trait WasiTerminalInputAdapter {
@@ -420,17 +420,16 @@ pub(open) trait WasiTerminalOutputAdapter {
 }
 
 pub(open) trait WasiTerminalStderrAdapter {
-  get_terminal_stderr(Self) -> Result[TerminalStderrTerminalOutput?, WasiError] = _
+  fn get_terminal_stderr(Self) -> Result[TerminalStderrTerminalOutput?, WasiError] = _
 }
 
 pub(open) trait WasiTerminalStdinAdapter {
-  get_terminal_stdin(Self) -> Result[TerminalStdinTerminalInput?, WasiError] = _
+  fn get_terminal_stdin(Self) -> Result[TerminalStdinTerminalInput?, WasiError] = _
 }
 
 pub(open) trait WasiTerminalStdoutAdapter {
-  get_terminal_stdout(Self) -> Result[TerminalStdoutTerminalOutput?, WasiError] = _
+  fn get_terminal_stdout(Self) -> Result[TerminalStdoutTerminalOutput?, WasiError] = _
 }
 
 pub(open) trait WasiTypesAdapter {
 }
-

@@ -16,13 +16,13 @@ pub(all) struct SocketsUdpCreateSocketErrorCode(Int)
 
 ///|
 pub(open) trait WasiSocketsUdpCreateSocketAdapter {
-  create_udp_socket(Self, SocketsUdpCreateSocketIpAddressFamily) -> Result[
+  fn create_udp_socket(Self, SocketsUdpCreateSocketIpAddressFamily) -> Result[
     SocketsUdpCreateSocketUdpSocket,
     WasiError,
   ] = _
 }
 
 ///|
-impl WasiSocketsUdpCreateSocketAdapter with create_udp_socket(_self, _arg0) {
+impl WasiSocketsUdpCreateSocketAdapter with fn create_udp_socket(_self, _arg0) {
   Err(WasiError::NotImplemented("SocketsUdpCreateSocket.create_udp_socket"))
 }

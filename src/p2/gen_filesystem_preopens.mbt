@@ -10,10 +10,10 @@ pub(all) struct FilesystemPreopensDescriptor(Int)
 
 ///|
 pub(open) trait WasiFilesystemPreopensAdapter {
-  get_directories(Self) -> Result[Array[Bytes], WasiError] = _
+  fn get_directories(Self) -> Result[Array[Bytes], WasiError] = _
 }
 
 ///|
-impl WasiFilesystemPreopensAdapter with get_directories(_self) {
+impl WasiFilesystemPreopensAdapter with fn get_directories(_self) {
   Err(WasiError::NotImplemented("FilesystemPreopens.get_directories"))
 }

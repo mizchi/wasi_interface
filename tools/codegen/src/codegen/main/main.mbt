@@ -22,18 +22,18 @@ fn join_path(dir : String, entry : String) -> String {
 
 ///|
 fn ensure_output_dir(path : String) -> Unit {
-  if not(@fs.path_exists(path)) {
+  if !@fs.path_exists(path) {
     @fs.create_dir(path) catch {
-      e => exit_with_error("create_dir failed: " + e.to_string())
+      e => exit_with_error("create_dir failed: " + repr(e))
     }
   }
   let is_dir = @fs.is_dir(path) catch {
     e => {
-      exit_with_error("is_dir failed: " + e.to_string())
+      exit_with_error("is_dir failed: " + repr(e))
       false
     }
   }
-  if not(is_dir) {
+  if !is_dir {
     exit_with_error("output path is not a directory: " + path)
   }
 }
@@ -42,21 +42,21 @@ fn ensure_output_dir(path : String) -> Unit {
 fn clear_old_generated_files(dir : String) -> Unit {
   let entries = @fs.read_dir(dir) catch {
     e => {
-      exit_with_error("read_dir failed: " + e.to_string())
+      exit_with_error("read_dir failed: " + repr(e))
       []
     }
   }
   for entry in entries {
-    if not(entry.has_prefix("gen_")) || not(entry.has_suffix(".mbt")) {
+    if !entry.has_prefix("gen_") || !entry.has_suffix(".mbt") {
       continue
     }
     let path = join_path(dir, entry)
     let is_file = @fs.is_file(path) catch { _ => false }
-    if not(is_file) {
+    if !is_file {
       continue
     }
     @fs.remove_file(path) catch {
-      e => exit_with_error("remove_file failed: " + e.to_string())
+      e => exit_with_error("remove_file failed: " + repr(e))
     }
   }
 }
@@ -69,7 +69,7 @@ fn output_dir_profile(output_dir : String) -> String? {
     if segment == "" || segment == "." {
       continue
     }
-    last = segment.to_string()
+    last = segment.to_owned()
   }
   if last == "" {
     None
@@ -111,7 +111,7 @@ fn annotate_generated_module_code(output_dir : String, code : String) -> String 
 
 ///|
 fn main {
-  let args = @sys.get_cli_args()
+  let args = cli_args()
   if args.length() < 3 {
     print_usage()
     exit_with_error("invalid arguments")
@@ -135,7 +135,7 @@ fn main {
           generated_module.code,
         )
         @fs.write_string_to_file(output_path, annotated_code) catch {
-          e => exit_with_error("write failed: " + e.to_string())
+          e => exit_with_error("write failed: " + repr(e))
         }
         println("generated: " + output_path)
       }
@@ -147,4 +147,22 @@ fn main {
     }
     Err(err) => exit_with_error("generate failed: " + err.to_string())
   }
+}
+
+///|
+#cfg(target="js")
+fn cli_args() -> Array[String] {
+  // Node includes its executable before the script name.
+  let args = @env.args()
+  if args.is_empty() {
+    []
+  } else {
+    args[1:].to_owned()
+  }
+}
+
+///|
+#cfg(not(target="js"))
+fn cli_args() -> Array[String] {
+  @env.args()
 }

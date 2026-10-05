@@ -10,10 +10,10 @@ pub(all) struct CliStdoutOutputStream(Int)
 
 ///|
 pub(open) trait WasiCliStdoutAdapter {
-  get_stdout(Self) -> Result[CliStdoutOutputStream, WasiError] = _
+  fn get_stdout(Self) -> Result[CliStdoutOutputStream, WasiError] = _
 }
 
 ///|
-impl WasiCliStdoutAdapter with get_stdout(_self) {
+impl WasiCliStdoutAdapter with fn get_stdout(_self) {
   Err(WasiError::NotImplemented("CliStdout.get_stdout"))
 }

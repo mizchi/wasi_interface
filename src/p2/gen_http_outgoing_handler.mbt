@@ -19,7 +19,7 @@ pub(all) struct HttpOutgoingHandlerErrorCode(Int)
 
 ///|
 pub(open) trait WasiHttpOutgoingHandlerAdapter {
-  handle(
+  fn handle(
     Self,
     HttpOutgoingHandlerOutgoingRequest,
     HttpOutgoingHandlerRequestOptions?,
@@ -27,6 +27,6 @@ pub(open) trait WasiHttpOutgoingHandlerAdapter {
 }
 
 ///|
-impl WasiHttpOutgoingHandlerAdapter with handle(_self, _arg0, _arg1) {
+impl WasiHttpOutgoingHandlerAdapter with fn handle(_self, _arg0, _arg1) {
   Err(WasiError::NotImplemented("HttpOutgoingHandler.handle"))
 }

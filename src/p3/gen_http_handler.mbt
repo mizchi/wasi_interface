@@ -7,10 +7,10 @@
 ///|
 /// Module key: HttpHandler
 pub(open) trait WasiHttpHandlerAdapter {
-  handle(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
+  fn handle(Self, HttpTypesRequest) -> Result[HttpTypesResponse, WasiError] = _
 }
 
 ///|
-impl WasiHttpHandlerAdapter with handle(_self, _arg0) {
+impl WasiHttpHandlerAdapter with fn handle(_self, _arg0) {
   Err(WasiError::NotImplemented("HttpHandler.handle"))
 }
